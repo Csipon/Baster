@@ -57,7 +57,7 @@ public class BasterScreen implements Screen {
 
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        game.font.draw(game.batch, "Score: " + score, 0, 780);
+        game.font.draw(game.batch, "Score: " + score, 0, GameConstants.WORLD_HEIGHT - 10);
 
         game.batch.draw(heroImg, hero.x, hero.y);
         drawAllItems();
