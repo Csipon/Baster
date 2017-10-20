@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -89,11 +90,17 @@ public class MenuScreen implements Screen {
         });
 
         //Add buttons to table
-        mainTable.add(playButton);
+        mainTable.add(playButton)
+                .width(Value.percentWidth(.75F, mainTable))
+                .height(Value.percentHeight(.10F, mainTable));
         mainTable.row();
-        mainTable.add(optionsButton);
+        mainTable.add(optionsButton)
+                .width(Value.percentWidth(.75F, mainTable))
+                .height(Value.percentHeight(.10F, mainTable));
         mainTable.row();
-        mainTable.add(exitButton);
+        mainTable.add(exitButton)
+                .width(Value.percentWidth(.75F, mainTable))
+                .height(Value.percentHeight(.10F, mainTable));
 
         //Add table to stage
         stage.addActor(mainTable);
