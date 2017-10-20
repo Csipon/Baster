@@ -18,6 +18,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.BasterGame;
 import com.team.baster.hero.BasterScreen;
 
+import static com.team.baster.GameConstants.*;
+
 /**
  * Created by Smeet on 20.10.2017.
  */
@@ -33,8 +35,7 @@ public class MenuScreen implements Screen {
     private OrthographicCamera camera;
     private TextureAtlas atlas;
     protected Skin skin;
-    private static final int WORLD_WIDTH = 800;
-    private static final int WORLD_HEIGHT = 480;
+
 
     public MenuScreen(BasterGame game)
     {
