@@ -33,6 +33,7 @@ public class BasterScreen implements Screen {
     Rectangle hero;
     Rectangle lastDropItem;
     Array<Rectangle> items;
+    DropItemCalculator dropItemCalculator;
 
     Vector3 touchPos;
 
@@ -117,6 +118,7 @@ public class BasterScreen implements Screen {
         hero = new Rectangle();
         configHero();
         items = new Array<>();
+        dropItemCalculator = new DropItemCalculator();
     }
 
 
@@ -128,11 +130,7 @@ public class BasterScreen implements Screen {
     }
 
     private void dropItem() {
-        Rectangle item = new Rectangle();
-        item.x = MathUtils.random(0, WORLD_WIDTH - ITEM_WIDTH);
-        item.y = 0;
-        item.width = ITEM_WIDTH;
-        item.height = ITEM_HEIGHT;
+        Rectangle item = dropItemCalculator.generateItem(lastDropItem);
         items.add(item);
         score += 5;
         lastDropTime = TimeUtils.nanoTime();
