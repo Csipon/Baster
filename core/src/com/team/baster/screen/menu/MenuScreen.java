@@ -1,5 +1,6 @@
 package com.team.baster.screen.menu;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.team.baster.BasterGame;
+import com.team.baster.hero.BasterScreen;
 
 /**
  * Created by Smeet on 20.10.2017.
@@ -21,6 +24,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MenuScreen implements Screen {
 
+
+    final BasterGame game;
 
     private SpriteBatch batch;
     protected Stage stage;
@@ -31,8 +36,10 @@ public class MenuScreen implements Screen {
     private static final int WORLD_WIDTH = 800;
     private static final int WORLD_HEIGHT = 480;
 
-    public MenuScreen()
+    public MenuScreen(BasterGame game)
     {
+
+        this.game = game;
         atlas = new TextureAtlas(Gdx.files.internal("skin/freezing-ui.atlas"));
         skin = new Skin(Gdx.files.internal("skin/freezing-ui.json"), atlas);
 
@@ -70,7 +77,8 @@ public class MenuScreen implements Screen {
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                ((Game)Gdx.app.getApplicationListener()).setScreen(new PlayScreen());
+                game.setScreen(new BasterScreen(game));
+                dispose();
             }
         });
         exitButton.addListener(new ClickListener(){
