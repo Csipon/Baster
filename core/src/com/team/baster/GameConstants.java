@@ -1,5 +1,7 @@
 package com.team.baster;
 
+import com.badlogic.gdx.Gdx;
+
 /**
  * Created by Pasha on 10/20/2017.
  */
@@ -10,8 +12,8 @@ public final class GameConstants {
     }
 
 
-    public static final int WORLD_WIDTH = 480;
-    public static final int WORLD_HEIGHT = 800;
+    public static final int WORLD_WIDTH = Gdx.graphics.getWidth();
+    public static final int WORLD_HEIGHT = Gdx.graphics.getHeight();
 
     public static final int ITEM_WIDTH = 80;
     public static final int ITEM_HEIGHT = 44;
