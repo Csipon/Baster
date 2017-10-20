@@ -41,9 +41,6 @@ public class DropItemCalculator {
 
         Integer first = possDaip.get(FIRST_DIAP);
         Integer last = possDaip.get(LAST_DIAP);
-        System.out.println("SIZE + >>>> " + possDaip.size());
-        System.out.println("First " + first);
-        System.out.println("Last " + last);
         if (first != null && last != null) {
             if (MathUtils.random() > 0.5) {
                 return MathUtils.random(0, first + ITEM_WIDTH - 1);
