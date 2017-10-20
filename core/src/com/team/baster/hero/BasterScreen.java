@@ -35,7 +35,8 @@ public class BasterScreen implements Screen{
     Vector3 touchPos;
 
     private long lastDropTime;
-
+    private long startDate;
+    private int speed = DEFAULT_SPEED;
     public BasterScreen(BasterGame game) {
         this.game = game;
 
@@ -100,8 +101,8 @@ public class BasterScreen implements Screen{
         camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
     }
     private void initTexture(){
-        heroImg = new Texture("hero.png");
-        bathImg = new Texture("bath.jpg");
+        heroImg = new Texture("shero.png");
+        bathImg = new Texture("lego.jpg");
     }
 
     private void initObjects(){
@@ -149,7 +150,7 @@ public class BasterScreen implements Screen{
     }
 
     private void checkLasDropTime(){
-        if (TimeUtils.nanoTime() - lastDropTime > 1000000000) {
+        if (TimeUtils.nanoTime() - lastDropTime > 1500000000) {
             dropItem();
         }
     }
@@ -159,7 +160,7 @@ public class BasterScreen implements Screen{
         Iterator<Rectangle> iter = items.iterator();
         while (iter.hasNext()){
             Rectangle item = iter.next();
-            item.y += 200 * Gdx.graphics.getDeltaTime();
+            item.y += calculateSpeed() * Gdx.graphics.getDeltaTime();
             if (item.y + ITEM_HEIGHT > WORLD_HEIGHT + ITEM_HEIGHT) {
                 iter.remove();
             }
@@ -172,5 +173,18 @@ public class BasterScreen implements Screen{
             game.setScreen(new MenuScreen(game));
             dispose();
         }
+    }
+
+
+    private int calculateSpeed(){
+        long period = TimeUtils.nanoTime() - startDate;
+        if (period / PERIOD_ACCELERATION > 1) {
+            int result = (int) (speed + (DEFAULT_SPEED * PART_ACCELERATION));
+            if (result > DEFAULT_SPEED * 2){
+                return speed;
+            }
+            return result;
+        }
+        return speed;
     }
 }
