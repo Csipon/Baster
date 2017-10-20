@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.BasterGame;
+import com.team.baster.GameConstants;
 import com.team.baster.screen.menu.MenuScreen;
 
 import java.util.Iterator;
@@ -35,6 +36,7 @@ public class BasterScreen implements Screen{
     Vector3 touchPos;
 
     private long lastDropTime;
+    private long score;
 
     public BasterScreen(BasterGame game) {
         this.game = game;
@@ -52,6 +54,7 @@ public class BasterScreen implements Screen{
 
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
+        game.font.draw(game.batch, "Score: " + score, 0, 780);
 
         game.batch.draw(heroImg, hero.x, hero.y);
         drawAllItems();
@@ -126,6 +129,7 @@ public class BasterScreen implements Screen{
         item.width = ITEM_WIDTH;
         item.height = ITEM_HEIGHT;
         items.add(item);
+        score += 5;
         lastDropTime = TimeUtils.nanoTime();
     }
 
