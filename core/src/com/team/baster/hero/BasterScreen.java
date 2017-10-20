@@ -31,6 +31,7 @@ public class BasterScreen implements Screen {
     Texture bathImg;
 
     Rectangle hero;
+    Rectangle lastDropItem;
     Array<Rectangle> items;
 
     Vector3 touchPos;
@@ -135,6 +136,7 @@ public class BasterScreen implements Screen {
         items.add(item);
         score += 5;
         lastDropTime = TimeUtils.nanoTime();
+        lastDropItem = item;
     }
 
     private void drawAllItems() {
@@ -157,7 +159,7 @@ public class BasterScreen implements Screen {
     }
 
     private void checkLasDropTime() {
-        if (TimeUtils.nanoTime() - lastDropTime > DROP_INTERVAL) {
+        if (lastDropItem.y > WORLD_HEIGHT / 2) {
             dropItem();
         }
     }
@@ -186,11 +188,11 @@ public class BasterScreen implements Screen {
         long period = TimeUtils.nanoTime() - startDate;
 
         if (period / PERIOD_ACCELERATION > 1) {
+            startDate = TimeUtils.nanoTime();
             int result = (int) (speed + (DEFAULT_SPEED * PART_ACCELERATION));
-            if (result > DEFAULT_SPEED * 2) {
-                return speed;
+            if (result < DEFAULT_SPEED * 5) {
+                speed = result;
             }
-            return result;
         }
         return speed;
     }
