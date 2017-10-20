@@ -49,7 +49,7 @@ public class MenuScreen implements Screen {
         viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
         viewport.apply();
 
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
         camera.update();
 
         stage = new Stage(viewport, batch);
@@ -63,10 +63,9 @@ public class MenuScreen implements Screen {
 
         //Create Table
         Table mainTable = new Table();
+        mainTable.center();
         //Set table to fill stage
         mainTable.setFillParent(true);
-
-        mainTable.top();
 
         //Create buttons
         TextButton playButton = new TextButton("Play", skin);
