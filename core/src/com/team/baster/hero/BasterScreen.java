@@ -153,7 +153,7 @@ public class BasterScreen implements Screen {
         Rectangle back = new Rectangle();
         back.x = 0;
         if (lastDropBack != null){
-            back.y = - WORLD_HEIGHT;
+            back.y = -WORLD_HEIGHT;
         }else {
             back.y = 0;
         }
@@ -195,9 +195,12 @@ public class BasterScreen implements Screen {
 
     private void controlHeroInput() {
         if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touchPos);
-            hero.x = (int) (touchPos.x - 64 / 2);
+            int inputX = Gdx.input.getX();
+            if (inputX >= hero.x && inputX <= hero.x + hero.width) {
+                touchPos.set(inputX, Gdx.input.getY(), 0);
+                camera.unproject(touchPos);
+                hero.x = (int) (touchPos.x - 64 / 2);
+            }
         }
     }
 
@@ -213,7 +216,7 @@ public class BasterScreen implements Screen {
     }
 
     private void checkLasDropBackground() {
-        if (lastDropBack.y > 0) {
+        if (lastDropBack.y >= 0) {
             dropBackground();
         }
     }
