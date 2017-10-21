@@ -67,8 +67,7 @@ public class BasterScreen implements Screen {
         initCamera();
         initTexture();
         initObjects();
-        dropBackground();
-        dropBackground();
+        dropStartBackground();
         dropItem();
         generatePeriod();
     }
@@ -137,7 +136,8 @@ public class BasterScreen implements Screen {
         bathImg = new Texture("lego.jpg");
         coinImg = new Texture("coin.png");
         if (WORLD_WIDTH == 720 && WORLD_HEIGHT == 1280) {
-            backgroundImg = new Texture("background_720x1280.jpg");
+//            backgroundImg = new Texture("background_720x1280.jpg");
+            backgroundImg = new Texture("bg.jpg");
         }
     }
 
@@ -166,12 +166,12 @@ public class BasterScreen implements Screen {
         Rectangle back = new Rectangle();
         back.x = 0;
         if (lastDropBack != null) {
-            back.y = -WORLD_HEIGHT;
+            back.y = -backgroundImg.getHeight();
         } else {
             back.y = 0;
         }
-        back.width = WORLD_WIDTH;
-        back.height = WORLD_HEIGHT;
+        back.width = backgroundImg.getWidth();
+        back.height = backgroundImg.getHeight();
 
         background.add(back);
         lastDropBack = back;
@@ -311,5 +311,17 @@ public class BasterScreen implements Screen {
 
     private void generatePeriod() {
         periodCoinDrop = MathUtils.random(MIN_COIN_GENER_TIME, MAX_COIN_GENER_TIME);
+    }
+
+    private void dropStartBackground(){
+        for (int counter = 1; true; counter++){
+            System.out.println("COUNTER -->> " + counter);
+            if (counter * backgroundImg.getHeight() <= WORLD_HEIGHT){
+                dropBackground();
+            }else {
+                dropBackground();
+                break;
+            }
+        }
     }
 }
