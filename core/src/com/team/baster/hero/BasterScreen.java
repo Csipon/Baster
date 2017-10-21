@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.BasterGame;
 import com.team.baster.GameConstants;
+import com.team.baster.screen.menu.GameOverScreen;
 import com.team.baster.screen.menu.MenuScreen;
 
 import java.util.Iterator;
@@ -260,7 +261,7 @@ public class BasterScreen implements Screen {
 
     private void checkHeroCollision(Rectangle item) {
         if (item.overlaps(hero)) {
-            game.setScreen(new MenuScreen(game));
+            game.setScreen(new GameOverScreen(game, score));
             dispose();
         }
     }
