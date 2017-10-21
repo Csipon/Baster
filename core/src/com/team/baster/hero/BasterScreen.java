@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.BasterGame;
 import com.team.baster.GameConstants;
 import com.team.baster.screen.menu.GameOverScreen;
-import com.team.baster.screen.menu.MenuScreen;
 
 import java.util.Iterator;
 
@@ -63,9 +62,6 @@ public class BasterScreen implements Screen {
     public BasterScreen(BasterGame game) {
         this.game = game;
 
-        System.out.println("WIDTH > " + WORLD_WIDTH);
-        System.out.println("HEIGHT > " + WORLD_HEIGHT);
-
         startDate = TimeUtils.nanoTime();
         lastDropCoinTime = startDate;
         initCamera();
@@ -75,9 +71,6 @@ public class BasterScreen implements Screen {
         dropBackground();
         dropItem();
         generatePeriod();
-
-        System.out.println("WIDTH > " + WORLD_WIDTH);
-        System.out.println("HEIGHT > " + WORLD_HEIGHT);
     }
 
     @Override
@@ -223,7 +216,7 @@ public class BasterScreen implements Screen {
             if (inputX >= hero.x && inputX <= hero.x + hero.width) {
                 touchPos.set(inputX, Gdx.input.getY(), 0);
                 camera.unproject(touchPos);
-                hero.x = (int) (touchPos.x - 64 / 2);
+                hero.x = (int) (touchPos.x - hero.width / 2);
             }
         }
     }
@@ -240,7 +233,7 @@ public class BasterScreen implements Screen {
     }
 
     private void checkLasDropBackground() {
-        if (lastDropBack.y >= -1) {
+        if (lastDropBack.y >= -3) {
             dropBackground();
         }
     }

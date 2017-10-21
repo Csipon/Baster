@@ -22,8 +22,8 @@ public final class GameConstants {
     public static final int ITEM_WIDTH = 160;
     public static final int ITEM_HEIGHT = 60;
 
-    public static final int HERO_WIDTH = 120;
-    public static final int HERO_HEIGHT = 143;
+    public static final int HERO_WIDTH = 112;
+    public static final int HERO_HEIGHT = 138;
 
     public static final int COIN_SIDE = 50;
 
