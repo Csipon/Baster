@@ -28,7 +28,7 @@ public class DropItemCalculator {
         } else {
             item.x = MathUtils.random(0, WORLD_WIDTH - ITEM_WIDTH);
         }
-        item.y = 0;
+        item.y = -ITEM_HEIGHT;
         item.width = ITEM_WIDTH;
         item.height = ITEM_HEIGHT;
 
