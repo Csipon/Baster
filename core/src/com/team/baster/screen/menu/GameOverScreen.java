@@ -5,52 +5,46 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.team.baster.BasterGame;
-import com.team.baster.dialog.QuitGame;
 import com.team.baster.hero.BasterScreen;
+
+import sun.font.TextLabel;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 /**
- * Created by Smeet on 20.10.2017.
+ * Created by Smeet on 21.10.2017.
  */
 
-public class MenuScreen implements Screen {
+public class GameOverScreen implements Screen {
 
-
-    final BasterGame game;
-
-    private SpriteBatch batch;
-    protected Stage stage;
-    private Viewport viewport;
-    private OrthographicCamera camera;
-    private TextureAtlas atlas;
-    protected Skin skin;
-
+    private BasterGame game;
+    private Stage stage;
+    private Skin skin;
+    private TextButton btnRetry;
+    private TextButton btnMenu;
     private Table mainTable;
-    private TextButton playButton;
-    private TextButton optionsButton;
-    private TextButton exitButton;
+    private SpriteBatch batch;
+    private OrthographicCamera camera;
+    private ExtendViewport viewport;
 
+    private Long score;
 
-    public MenuScreen(BasterGame game)
-    {
+    public GameOverScreen(BasterGame game, Long score) {
 
         this.game = game;
-        atlas = new TextureAtlas(Gdx.files.internal("skin/freezing-ui.atlas"));
-        skin = new Skin(Gdx.files.internal("skin/freezing-ui.json"), atlas);
-
+        this.score = score;
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
@@ -61,64 +55,54 @@ public class MenuScreen implements Screen {
         camera.update();
 
         stage = new Stage(viewport, batch);
-    }
 
+        skin = new Skin(Gdx.files.internal("skin/freezing-ui.json"));
+
+    }
 
     @Override
     public void show() {
 
         Gdx.input.setInputProcessor(stage);
 
-        //Create Table
+        btnMenu = new TextButton("Menu", skin);
+        btnRetry = new TextButton("Retry", skin);
+
+        Label label = new Label("Your score " + score, skin);
+        label.setPosition(300, 900);
+        label.setWidth(200);
+        label.setHeight(50);
+        label.setWrap(true);
+
         mainTable = new Table();
         mainTable.center();
-        //Set table to fill stage
-//        mainTable.setFillParent(true);
+        mainTable.setFillParent(true);
+        mainTable.addActor(label);
 
-        setButton();
-        setTable();
+        mainTable.add(btnRetry)
+                .width(Value.percentWidth(.75F, mainTable))
+                .height(Value.percentHeight(.20F, mainTable));
+        mainTable.row();
+        mainTable.add(btnMenu)
+                .width(Value.percentWidth(.75F, mainTable))
+                .height(Value.percentHeight(.20F, mainTable));
 
-        //Add listeners to buttons
-        playButton.addListener(new ClickListener(){
+        stage.addActor(mainTable);
+
+        btnRetry.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new BasterScreen(game));
                 dispose();
             }
         });
-        exitButton.addListener(new ClickListener(){
+        btnMenu.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                new QuitGame().quitGameConfirm(stage);
+                game.setScreen(new MenuScreen(game));
+                dispose();
             }
         });
-
-        //Add table to stage
-        stage.addActor(mainTable);
-    }
-
-    private void setButton() {
-        playButton = new TextButton("Play", skin);
-        optionsButton = new TextButton("Options", skin);
-        exitButton = new TextButton("Exit", skin);
-    }
-
-    private void setTable() {
-        mainTable = new Table();
-        mainTable.center();
-        //Set table to fill stage
-        mainTable.setFillParent(true);
-        mainTable.add(playButton)
-                .width(Value.percentWidth(.75F, mainTable))
-                .height(Value.percentHeight(.10F, mainTable));
-        mainTable.row();
-        mainTable.add(optionsButton)
-                .width(Value.percentWidth(.75F, mainTable))
-                .height(Value.percentHeight(.10F, mainTable));
-        mainTable.row();
-        mainTable.add(exitButton)
-                .width(Value.percentWidth(.75F, mainTable))
-                .height(Value.percentHeight(.10F, mainTable));
     }
 
     @Override
@@ -132,9 +116,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-        camera.update();
+
     }
 
     @Override
@@ -155,7 +137,6 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         skin.dispose();
-        atlas.dispose();
+        stage.dispose();
     }
 }
-
