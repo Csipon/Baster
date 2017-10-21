@@ -42,7 +42,7 @@ public class GameOverScreen implements Screen {
     private Long score;
 
     public GameOverScreen(BasterGame game, Long score) {
-
+        //comm
         this.game = game;
         this.score = score;
 
