@@ -24,4 +24,11 @@ public final class GameConstants {
 
     public static final int HERO_WIDTH = 120;
     public static final int HERO_HEIGHT = 143;
+
+    public static final int COIN_SIDE = 50;
+
+
+    public static final long MIN_COIN_GENER_TIME = 5_000_000_000L;
+    public static final long MAX_COIN_GENER_TIME = 7_000_000_000L;
+
 }

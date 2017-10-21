@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -15,10 +15,13 @@ import com.team.baster.screen.menu.MenuScreen;
 
 import java.util.Iterator;
 
+import static com.team.baster.GameConstants.COIN_SIDE;
 import static com.team.baster.GameConstants.DEFAULT_SPEED;
 import static com.team.baster.GameConstants.HERO_HEIGHT;
 import static com.team.baster.GameConstants.HERO_WIDTH;
 import static com.team.baster.GameConstants.ITEM_HEIGHT;
+import static com.team.baster.GameConstants.MAX_COIN_GENER_TIME;
+import static com.team.baster.GameConstants.MIN_COIN_GENER_TIME;
 import static com.team.baster.GameConstants.PART_ACCELERATION;
 import static com.team.baster.GameConstants.PERIOD_ACCELERATION;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
@@ -36,31 +39,38 @@ public class BasterScreen implements Screen {
     Texture heroImg;
     Texture bathImg;
     Texture backgroundImg;
+    Texture coinImg;
 
-    private static Sprite backgroundSprite;
 
     Rectangle hero;
     Rectangle lastDropItem;
     Rectangle lastDropBack;
     Array<Rectangle> items;
     Array<Rectangle> background;
+    Array<Rectangle> coins;
     DropItemCalculator dropItemCalculator;
+    CoinGenerator coinGenerator;
 
     Vector3 touchPos;
 
     private long score;
     private int speed = DEFAULT_SPEED;
     private long startDate;
+    private long lastDropCoinTime;
+    private long periodCoinDrop;
 
     public BasterScreen(BasterGame game) {
         this.game = game;
 
         startDate = TimeUtils.nanoTime();
+        lastDropCoinTime = startDate;
         initCamera();
         initTexture();
         initObjects();
         dropBackground();
+        dropBackground();
         dropItem();
+        generatePeriod();
 
         System.out.println("WIDTH > " + WORLD_WIDTH);
         System.out.println("HEIGHT > " + WORLD_HEIGHT);
@@ -68,23 +78,24 @@ public class BasterScreen implements Screen {
 
     @Override
     public void render(float delta) {
-//        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         drawBackground();
         drawHero();
-        drawAllItems();
+        drawItems();
+        drawCoins();
         drawScore();
         game.batch.end();
 
+        calculateSpeed();
         checkLasDropBackground();
         controlBackgroundPosition();
         controlHeroInput();
+        checkLasDropItemTime();
         controlHeroPosition();
-        checkLasDropTime();
         controlItemPosition();
+        checkCoinGeneration();
+        controlCoins();
     }
 
     @Override
@@ -127,10 +138,10 @@ public class BasterScreen implements Screen {
     private void initTexture() {
         heroImg = new Texture("hero.png");
         bathImg = new Texture("lego.jpg");
+        coinImg = new Texture("coin.png");
         if (WORLD_WIDTH == 720 && WORLD_HEIGHT == 1280) {
             backgroundImg = new Texture("background_720x1280.jpg");
         }
-        backgroundSprite = new Sprite(backgroundImg);
     }
 
 
@@ -143,22 +154,28 @@ public class BasterScreen implements Screen {
     }
 
     private void drawBackground() {
-//        backgroundSprite.draw(game.batch);
-        for (Rectangle rectangle : background){
+        for (Rectangle rectangle : background) {
             game.batch.draw(backgroundImg, rectangle.x, rectangle.y);
+        }
+    }
+
+    private void drawCoins() {
+        for (Rectangle rectangle : coins) {
+            game.batch.draw(coinImg, rectangle.x, rectangle.y);
         }
     }
 
     private void dropBackground() {
         Rectangle back = new Rectangle();
         back.x = 0;
-        if (lastDropBack != null){
+        if (lastDropBack != null) {
             back.y = -WORLD_HEIGHT;
-        }else {
+        } else {
             back.y = 0;
         }
         back.width = WORLD_WIDTH;
         back.height = WORLD_HEIGHT;
+
         background.add(back);
         lastDropBack = back;
     }
@@ -169,7 +186,10 @@ public class BasterScreen implements Screen {
         configHero();
         items = new Array<>();
         background = new Array<>();
+        coins = new Array<>();
+
         dropItemCalculator = new DropItemCalculator();
+        coinGenerator = new CoinGenerator();
     }
 
 
@@ -187,7 +207,7 @@ public class BasterScreen implements Screen {
         lastDropItem = item;
     }
 
-    private void drawAllItems() {
+    private void drawItems() {
         for (Rectangle rectangle : items) {
             game.batch.draw(bathImg, rectangle.x, rectangle.y);
         }
@@ -209,14 +229,14 @@ public class BasterScreen implements Screen {
         if (hero.x > WORLD_WIDTH - HERO_WIDTH) hero.x = WORLD_WIDTH - HERO_WIDTH;
     }
 
-    private void checkLasDropTime() {
+    private void checkLasDropItemTime() {
         if (lastDropItem.y > WORLD_HEIGHT / 2) {
             dropItem();
         }
     }
 
     private void checkLasDropBackground() {
-        if (lastDropBack.y >= 0) {
+        if (lastDropBack.y >= -1) {
             dropBackground();
         }
     }
@@ -226,7 +246,7 @@ public class BasterScreen implements Screen {
         Iterator<Rectangle> iter = items.iterator();
         while (iter.hasNext()) {
             Rectangle item = iter.next();
-            item.y += calculateSpeed() * Gdx.graphics.getDeltaTime();
+            item.y += speed * Gdx.graphics.getDeltaTime();
             if (item.y + ITEM_HEIGHT > WORLD_HEIGHT + ITEM_HEIGHT) {
                 iter.remove();
             }
@@ -263,5 +283,36 @@ public class BasterScreen implements Screen {
                 iter.remove();
             }
         }
+    }
+
+    private void checkCoinGeneration() {
+        if (periodCoinDrop < TimeUtils.nanoTime() - lastDropCoinTime) {
+            coins.add(coinGenerator.generateCoin(lastDropItem));
+            generatePeriod();
+            lastDropCoinTime = TimeUtils.nanoTime();
+        }
+    }
+
+    private void controlCoins() {
+        Iterator<Rectangle> iter = coins.iterator();
+        while (iter.hasNext()) {
+            Rectangle item = iter.next();
+            item.y += speed * Gdx.graphics.getDeltaTime();
+            if (item.y + COIN_SIDE > WORLD_HEIGHT + COIN_SIDE || checkCoinCollisions(item)) {
+                iter.remove();
+            }
+        }
+    }
+
+    private boolean checkCoinCollisions(Rectangle item) {
+        if (item.overlaps(hero)) {
+//            TODO increment coins
+            return true;
+        }
+        return false;
+    }
+
+    private void generatePeriod() {
+        periodCoinDrop = MathUtils.random(MIN_COIN_GENER_TIME, MAX_COIN_GENER_TIME);
     }
 }
