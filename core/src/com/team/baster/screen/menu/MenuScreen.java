@@ -1,6 +1,5 @@
 package com.team.baster.screen.menu;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,9 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.BasterGame;
+import com.team.baster.dialog.QuitGame;
 import com.team.baster.hero.BasterScreen;
 
-import static com.team.baster.GameConstants.*;
+import static com.team.baster.GameConstants.WORLD_HEIGHT;
+import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 /**
  * Created by Smeet on 20.10.2017.
@@ -36,6 +37,11 @@ public class MenuScreen implements Screen {
     private OrthographicCamera camera;
     private TextureAtlas atlas;
     protected Skin skin;
+
+    private Table mainTable;
+    private TextButton playButton;
+    private TextButton optionsButton;
+    private TextButton exitButton;
 
 
     public MenuScreen(BasterGame game)
@@ -64,15 +70,13 @@ public class MenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         //Create Table
-        Table mainTable = new Table();
+        mainTable = new Table();
         mainTable.center();
         //Set table to fill stage
         mainTable.setFillParent(true);
 
-        //Create buttons
-        TextButton playButton = new TextButton("Play", skin);
-        TextButton optionsButton = new TextButton("Options", skin);
-        TextButton exitButton = new TextButton("Exit", skin);
+        setButton();
+        setTable();
 
         //Add listeners to buttons
         playButton.addListener(new ClickListener(){
@@ -85,11 +89,25 @@ public class MenuScreen implements Screen {
         exitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
+                new QuitGame().quitGameConfirm(stage);
             }
         });
 
-        //Add buttons to table
+        //Add table to stage
+        stage.addActor(mainTable);
+    }
+
+    private void setButton() {
+        playButton = new TextButton("Play", skin);
+        optionsButton = new TextButton("Options", skin);
+        exitButton = new TextButton("Exit", skin);
+    }
+
+    private void setTable() {
+        mainTable = new Table();
+        mainTable.center();
+        //Set table to fill stage
+        mainTable.setFillParent(true);
         mainTable.add(playButton)
                 .width(Value.percentWidth(.75F, mainTable))
                 .height(Value.percentHeight(.10F, mainTable));
@@ -101,9 +119,6 @@ public class MenuScreen implements Screen {
         mainTable.add(exitButton)
                 .width(Value.percentWidth(.75F, mainTable))
                 .height(Value.percentHeight(.10F, mainTable));
-
-        //Add table to stage
-        stage.addActor(mainTable);
     }
 
     @Override

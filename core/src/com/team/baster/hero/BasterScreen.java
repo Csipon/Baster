@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.BasterGame;
@@ -61,6 +62,9 @@ public class BasterScreen implements Screen {
 
     public BasterScreen(BasterGame game) {
         this.game = game;
+
+        System.out.println("WIDTH > " + WORLD_WIDTH);
+        System.out.println("HEIGHT > " + WORLD_HEIGHT);
 
         startDate = TimeUtils.nanoTime();
         lastDropCoinTime = startDate;
