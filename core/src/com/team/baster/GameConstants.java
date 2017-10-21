@@ -17,7 +17,7 @@ public final class GameConstants {
 
     public static final int DEFAULT_SPEED = 400;
     public static final long PERIOD_ACCELERATION = 10_00_000_000L;
-    public static final float PART_ACCELERATION = 0.1f;
+    public static final float PART_ACCELERATION = 0.05f;
 
     public static final int ITEM_WIDTH = 160;
     public static final int ITEM_HEIGHT = 60;
