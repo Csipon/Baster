@@ -166,9 +166,9 @@ public class BasterScreen implements Screen {
         Rectangle back = new Rectangle();
         back.x = 0;
         if (lastDropBack != null) {
-            back.y = -backgroundImg.getHeight();
+            back.y = lastDropBack.y - backgroundImg.getHeight();
         } else {
-            back.y = 0;
+            back.y = WORLD_HEIGHT - backgroundImg.getHeight();
         }
         back.width = backgroundImg.getWidth();
         back.height = backgroundImg.getHeight();
@@ -233,7 +233,7 @@ public class BasterScreen implements Screen {
     }
 
     private void checkLasDropBackground() {
-        if (lastDropBack.y >= -3) {
+        if (lastDropBack.y >= -2) {
             dropBackground();
         }
     }
@@ -315,7 +315,6 @@ public class BasterScreen implements Screen {
 
     private void dropStartBackground(){
         for (int counter = 1; true; counter++){
-            System.out.println("COUNTER -->> " + counter);
             if (counter * backgroundImg.getHeight() <= WORLD_HEIGHT){
                 dropBackground();
             }else {
