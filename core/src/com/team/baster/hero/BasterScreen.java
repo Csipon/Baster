@@ -128,6 +128,7 @@ public class BasterScreen implements Screen {
         heroImg.dispose();
         bathImg.dispose();
         backgroundImg.dispose();
+        topNavImg.dispose();
     }
 
     @Override
@@ -157,28 +158,15 @@ public class BasterScreen implements Screen {
 
     private void drawScoreCounter() {
         String strScore = "Score " + score;
-        BitmapFont bitmapFont = generateFont(strScore);
-        bitmapFont.draw(game.batch, strScore, 0, WORLD_HEIGHT - 10);
+        game.customFont.draw(game.batch, strScore, 0, WORLD_HEIGHT - 10);
 
     }
 
     private void drawCoinsCounter() {
         String strCoins = "Coins " + coinsCounter;
-        BitmapFont bitmapFont = generateFont(strCoins);
-        bitmapFont.draw(game.batch, strCoins, 250, WORLD_HEIGHT - 10);
+        game.customFont.draw(game.batch, strCoins, 250, WORLD_HEIGHT - 10);
     }
 
-    private BitmapFont generateFont(String characters) {
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.characters = characters;
-        parameter.size = 45;
-        parameter.color = Color.WHITE;
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Roboto-Bold.ttf"));
-        BitmapFont font = generator.generateFont(parameter);
-
-        generator.dispose();
-        return font;
-    }
 
     private void drawNavBar() {
         game.batch.draw(topNavImg, 0, WORLD_HEIGHT - 55);

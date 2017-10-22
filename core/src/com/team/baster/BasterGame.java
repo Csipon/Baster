@@ -2,21 +2,34 @@ package com.team.baster;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.team.baster.screen.menu.MenuScreen;
 
 public class BasterGame extends Game {
 
 	public SpriteBatch batch;
 	public BitmapFont font;
+	public BitmapFont customFont;
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
+		customFont = generateCustomFont();
 		setScreen(new MenuScreen(this));
 	}
+
+	private BitmapFont generateCustomFont() {
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = 45;
+		parameter.color = Color.WHITE;
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Roboto-Bold.ttf"));
+		BitmapFont font = generator.generateFont(parameter);
+		return font;
+	}
+
 
 	@Override
 	public void render() {
