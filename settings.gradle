@@ -1,1 +1,1 @@
-include 'android', 'core'
+include 'android', 'core', ':sqlite-jdbc-3.7.2'

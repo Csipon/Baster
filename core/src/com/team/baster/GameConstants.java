@@ -15,7 +15,7 @@ public final class GameConstants {
     public static final int WORLD_WIDTH = Gdx.graphics.getWidth();
     public static final int WORLD_HEIGHT = Gdx.graphics.getHeight();
 
-    public static final int DEFAULT_SPEED = 400;
+    public static final int DEFAULT_SPEED = 300;
     public static final long PERIOD_ACCELERATION = 10_00_000_000L;
     public static final float PART_ACCELERATION = 0.05f;
 
