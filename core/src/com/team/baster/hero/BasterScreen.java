@@ -2,11 +2,16 @@ package com.team.baster.hero;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.BasterGame;
@@ -40,6 +45,7 @@ public class BasterScreen implements Screen {
     Texture bathImg;
     Texture backgroundImg;
     Texture coinImg;
+    Texture topNavImg;
 
 
     Rectangle hero;
@@ -54,6 +60,7 @@ public class BasterScreen implements Screen {
     Vector3 touchPos;
 
     private long score;
+    private long coinsCounter;
     private int speed = DEFAULT_SPEED;
     private long startDate;
     private long lastDropCoinTime;
@@ -77,10 +84,12 @@ public class BasterScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         drawBackground();
+        drawNavBar();
         drawHero();
         drawItems();
         drawCoins();
-        drawScore();
+        drawScoreCounter();
+        drawCoinsCounter();
         game.batch.end();
 
         calculateSpeed();
@@ -135,15 +144,44 @@ public class BasterScreen implements Screen {
         heroImg = new Texture("hero.png");
         bathImg = new Texture("lego.jpg");
         coinImg = new Texture("coin.png");
+        topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720 && WORLD_HEIGHT == 1280) {
 //            backgroundImg = new Texture("background_720x1280.jpg");
             backgroundImg = new Texture("bg.jpg");
         }
+
+
+
     }
 
 
-    private void drawScore() {
-        game.font.draw(game.batch, "Score: " + score, 0, GameConstants.WORLD_HEIGHT - 10);
+    private void drawScoreCounter() {
+        String strScore = "Score " + score;
+        BitmapFont bitmapFont = generateFont(strScore);
+        bitmapFont.draw(game.batch, strScore, 0, WORLD_HEIGHT - 10);
+
+    }
+
+    private void drawCoinsCounter() {
+        String strCoins = "Coins " + coinsCounter;
+        BitmapFont bitmapFont = generateFont(strCoins);
+        bitmapFont.draw(game.batch, strCoins, 250, WORLD_HEIGHT - 10);
+    }
+
+    private BitmapFont generateFont(String characters) {
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.characters = characters;
+        parameter.size = 45;
+        parameter.color = Color.WHITE;
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Roboto-Bold.ttf"));
+        BitmapFont font = generator.generateFont(parameter);
+
+        generator.dispose();
+        return font;
+    }
+
+    private void drawNavBar() {
+        game.batch.draw(topNavImg, 0, WORLD_HEIGHT - 55);
     }
 
     private void drawHero() {
@@ -303,7 +341,7 @@ public class BasterScreen implements Screen {
 
     private boolean checkCoinCollisions(Rectangle item) {
         if (item.overlaps(hero)) {
-//            TODO increment coins
+            coinsCounter += 1;
             return true;
         }
         return false;
@@ -323,4 +361,5 @@ public class BasterScreen implements Screen {
             }
         }
     }
+
 }

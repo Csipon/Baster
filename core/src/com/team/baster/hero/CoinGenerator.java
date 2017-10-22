@@ -16,7 +16,6 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 public class CoinGenerator {
 
-
     public Rectangle generateCoin(Rectangle lastDropItem){
         Rectangle coin = new Rectangle();
         if (lastDropItem.y + ITEM_HEIGHT <= ITEM_HEIGHT + COIN_SIDE){

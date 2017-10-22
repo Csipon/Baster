@@ -2,9 +2,12 @@ package com.team.baster.screen.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -68,17 +71,15 @@ public class GameOverScreen implements Screen {
         btnMenu = new TextButton("Menu", skin);
         btnRetry = new TextButton("Retry", skin);
 
-        Label label = new Label("Your score " + score, skin);
-        label.setPosition(300, 900);
-        label.setWidth(200);
-        label.setHeight(50);
-        label.setWrap(true);
+        String labelStr = "Your score: " + score;
+        Label label = new Label("Your score: " + score, new Label.LabelStyle(generateFont(labelStr), Color.WHITE));
 
         mainTable = new Table();
         mainTable.center();
         mainTable.setFillParent(true);
-        mainTable.addActor(label);
 
+        mainTable.add(label);
+        mainTable.row();
         mainTable.add(btnRetry)
                 .width(Value.percentWidth(.75F, mainTable))
                 .height(Value.percentHeight(.20F, mainTable));
@@ -138,5 +139,17 @@ public class GameOverScreen implements Screen {
     public void dispose() {
         skin.dispose();
         stage.dispose();
+    }
+
+    private BitmapFont generateFont(String characters) {
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.characters = characters;
+        parameter.size = 72;
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/GoodDog.otf"));
+        BitmapFont font = generator.generateFont(parameter);
+
+        generator.dispose();
+        return font;
     }
 }
