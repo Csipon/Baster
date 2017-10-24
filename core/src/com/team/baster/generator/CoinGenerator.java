@@ -1,14 +1,9 @@
-package com.team.baster.hero;
+package com.team.baster.generator;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 
-import static com.team.baster.GameConstants.COIN_SIDE;
-import static com.team.baster.GameConstants.HERO_WIDTH;
-import static com.team.baster.GameConstants.ITEM_HEIGHT;
-import static com.team.baster.GameConstants.ITEM_WIDTH;
-import static com.team.baster.GameConstants.WORLD_WIDTH;
+import static com.team.baster.GameConstants.*;
 
 /**
  * Created by Pasha on 10/21/2017.
@@ -18,12 +13,14 @@ public class CoinGenerator {
 
     public Rectangle generateCoin(Rectangle lastDropItem){
         Rectangle coin = new Rectangle();
-        if (lastDropItem.y + ITEM_HEIGHT <= ITEM_HEIGHT + COIN_SIDE){
+        if (lastDropItem.y + ITEM_HEIGHT <= -COIN_SIDE){
             coin.x = getXPosition((int) lastDropItem.x);
+        }else {
+            coin.x = calculateRandPosition(0, WORLD_WIDTH - COIN_SIDE);
         }
-
-        coin.x = calculateRandPosition(0 , WORLD_WIDTH - COIN_SIDE);
-        coin.y = - COIN_SIDE;
+        coin.y = -COIN_SIDE;
+        coin.width = COIN_SIDE;
+        coin.height = COIN_SIDE;
 
         return coin;
     }
@@ -31,14 +28,16 @@ public class CoinGenerator {
 
 
     private int getXPosition(int itemXPosition){
-        int coinFirstDiap = 0;
-        if (itemXPosition > HERO_WIDTH){
-            coinFirstDiap = itemXPosition;
+        int coinFirstDiap = itemXPosition - HERO_WIDTH;
+        if (coinFirstDiap < 0 ){
+            coinFirstDiap = 0;
         }
 
-        int coinLastDiap = 0;
-        if (itemXPosition + ITEM_WIDTH < WORLD_WIDTH - HERO_WIDTH){
-            coinLastDiap = itemXPosition + ITEM_WIDTH;
+        int coinLastDiap = itemXPosition + ITEM_WIDTH + HERO_WIDTH;
+        if (coinLastDiap < WORLD_WIDTH){
+            coinLastDiap -= HERO_WIDTH ;
+        }else {
+            coinLastDiap = 0;
         }
 
         if (coinFirstDiap > 0 && coinLastDiap > 0) {

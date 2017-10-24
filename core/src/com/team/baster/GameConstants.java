@@ -19,11 +19,11 @@ public final class GameConstants {
     public static final long PERIOD_ACCELERATION = 10_00_000_000L;
     public static final float PART_ACCELERATION = 0.05f;
 
-    public static final int ITEM_WIDTH = 160;
-    public static final int ITEM_HEIGHT = 60;
+    public static final int ITEM_WIDTH = 180;
+    public static final int ITEM_HEIGHT = 70;
 
-    public static final int HERO_WIDTH = 112;
-    public static final int HERO_HEIGHT = 138;
+    public static final int HERO_WIDTH = 100;
+    public static final int HERO_HEIGHT = 160;
 
     public static final int COIN_SIDE = 50;
 

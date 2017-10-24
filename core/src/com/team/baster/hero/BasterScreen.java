@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.BasterGame;
-import com.team.baster.generator.BlockGenerator;
+import com.team.baster.generator.*;
 
 import java.util.Iterator;
 
@@ -36,7 +36,7 @@ public class BasterScreen implements Screen {
     Rectangle lastDropBack;
     Array<Rectangle> background;
     Array<Rectangle> coins;
-    CoinGenerator coinGenerator;
+    com.team.baster.generator.CoinGenerator coinGenerator;
 
     Vector3 touchPos;
 
@@ -81,8 +81,8 @@ public class BasterScreen implements Screen {
         blockGenerator.checkLasDropItemTime();
         controlHeroPosition();
         blockGenerator.controlItemPosition(hero, speed, score);
-        checkCoinGeneration();
         controlCoins();
+        checkCoinGeneration();
     }
 
     @Override
@@ -124,8 +124,8 @@ public class BasterScreen implements Screen {
     }
 
     private void initTexture() {
-        heroImg = new Texture("hero.png");
-        legoImg = new Texture("lego.jpg");
+        heroImg = new Texture("human.png");
+        legoImg = new Texture("block.jpg");
         coinImg = new Texture("coin.png");
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720 && WORLD_HEIGHT == 1280) {
@@ -195,7 +195,7 @@ public class BasterScreen implements Screen {
         background = new Array<>();
         coins = new Array<>();
 
-        coinGenerator = new CoinGenerator();
+        coinGenerator = new com.team.baster.generator.CoinGenerator();
     }
 
 
@@ -272,7 +272,10 @@ public class BasterScreen implements Screen {
         while (iter.hasNext()) {
             Rectangle item = iter.next();
             item.y += speed * Gdx.graphics.getDeltaTime();
-            if (item.y + COIN_SIDE > WORLD_HEIGHT + COIN_SIDE || checkCoinCollisions(item)) {
+            if (checkCoinCollisions(item)){
+                iter.remove();
+            }
+            if (item.y + COIN_SIDE > WORLD_HEIGHT + COIN_SIDE) {
                 iter.remove();
             }
         }

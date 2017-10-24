@@ -22,7 +22,7 @@ public class DropItemCalculator {
 
     public Rectangle generateItem(Array<Rectangle> blocks) {
         Rectangle block;
-        if (blocks.size == 5){
+        if (blocks.size == 10){
             block = blocks.removeIndex(0);
         }else {
             block = new Rectangle();
@@ -48,8 +48,6 @@ public class DropItemCalculator {
 
         Integer first = possDaip.get(FIRST_DIAP);
         Integer last = possDaip.get(LAST_DIAP);
-        System.out.println("FIRST> " + first);
-        System.out.println("LAST> " + last);
         if (first != null && last != null) {
             if (MathUtils.random() > 0.5) {
                 return MathUtils.random(0, first);
