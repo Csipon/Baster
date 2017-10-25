@@ -26,15 +26,15 @@ public class BasterScreen implements Screen {
 
     OrthographicCamera camera;
     Texture heroImg;
-    Texture legoImg;
+    Texture blockImg;
+    Texture blockVertImg;
     Texture backgroundImg;
     Texture coinImg;
     Texture topNavImg;
 
     BlockGenerator blockGenerator;
+    BackgroundGenerator backgroundGenerator;
     Rectangle hero;
-    Rectangle lastDropBack;
-    Array<Rectangle> background;
     Array<Rectangle> coins;
     com.team.baster.generator.CoinGenerator coinGenerator;
 
@@ -55,7 +55,7 @@ public class BasterScreen implements Screen {
         initCamera();
         initTexture();
         initObjects();
-        dropStartBackground();
+        backgroundGenerator.dropStartBackground();
         blockGenerator.dropItem();
         generatePeriod();
     }
@@ -75,7 +75,7 @@ public class BasterScreen implements Screen {
 
         calculateSpeed();
         calculateScore();
-        checkLasDropBackground();
+        backgroundGenerator.checkLasDropBackground();
         controlBackgroundPosition();
         controlHeroInput();
         blockGenerator.checkLasDropItemTime();
@@ -108,7 +108,8 @@ public class BasterScreen implements Screen {
     @Override
     public void dispose() {
         heroImg.dispose();
-        legoImg.dispose();
+        blockImg.dispose();
+        blockVertImg.dispose();
         backgroundImg.dispose();
         topNavImg.dispose();
     }
@@ -125,10 +126,11 @@ public class BasterScreen implements Screen {
 
     private void initTexture() {
         heroImg = new Texture("human.png");
-        legoImg = new Texture("block.jpg");
+        blockImg = new Texture("block.jpg");
+        blockVertImg = new Texture("block_vertical.jpg");
         coinImg = new Texture("coin.png");
         topNavImg = new Texture("Test.png");
-        if (WORLD_WIDTH == 720 && WORLD_HEIGHT == 1280) {
+        if (WORLD_WIDTH >= 720) {
             backgroundImg = new Texture("bg.jpg");
         }
     }
@@ -155,7 +157,7 @@ public class BasterScreen implements Screen {
     }
 
     private void drawBackground() {
-        for (Rectangle rectangle : background) {
+        for (Rectangle rectangle : backgroundGenerator.getBackground()) {
             game.batch.draw(backgroundImg, rectangle.x, rectangle.y);
         }
     }
@@ -166,36 +168,17 @@ public class BasterScreen implements Screen {
         }
     }
 
-    private void dropBackground() {
-        Rectangle back;
-        if (background.size == 5) {
-            back = background.removeIndex(0);
-        } else {
-            back = new Rectangle();
-        }
 
-        back.x = 0;
-        if (lastDropBack != null) {
-            back.y = lastDropBack.y - backgroundImg.getHeight();
-        } else {
-            back.y = WORLD_HEIGHT - backgroundImg.getHeight();
-        }
-        back.width = backgroundImg.getWidth();
-        back.height = backgroundImg.getHeight();
-
-        background.add(back);
-        lastDropBack = back;
-    }
 
     private void initObjects() {
         blockGenerator = new BlockGenerator(game);
+        backgroundGenerator = new BackgroundGenerator(backgroundImg);
         touchPos = new Vector3();
         hero = new Rectangle();
         configHero();
-        background = new Array<>();
         coins = new Array<>();
 
-        coinGenerator = new com.team.baster.generator.CoinGenerator();
+        coinGenerator = new CoinGenerator();
     }
 
 
@@ -209,7 +192,11 @@ public class BasterScreen implements Screen {
 
     private void drawItems() {
         for (Rectangle rectangle : blockGenerator.getBlocks()) {
-            game.batch.draw(legoImg, rectangle.x, rectangle.y);
+            if (rectangle.width > rectangle.height) {
+                game.batch.draw(blockImg, rectangle.x, rectangle.y);
+            }else {
+                game.batch.draw(blockVertImg, rectangle.x, rectangle.y);
+            }
         }
     }
 
@@ -229,11 +216,7 @@ public class BasterScreen implements Screen {
         if (hero.x > WORLD_WIDTH - HERO_WIDTH) hero.x = WORLD_WIDTH - HERO_WIDTH;
     }
 
-    private void checkLasDropBackground() {
-        if (lastDropBack.y >= -2) {
-            dropBackground();
-        }
-    }
+
 
     private int calculateSpeed() {
         long period = TimeUtils.nanoTime() - startDate;
@@ -249,7 +232,7 @@ public class BasterScreen implements Screen {
     }
 
     private void controlBackgroundPosition() {
-        Iterator<Rectangle> iter = background.iterator();
+        Iterator<Rectangle> iter = backgroundGenerator.getBackground().iterator();
         while (iter.hasNext()) {
             Rectangle item = iter.next();
             item.y += calculateSpeed() * Gdx.graphics.getDeltaTime();
@@ -291,17 +274,6 @@ public class BasterScreen implements Screen {
 
     private void generatePeriod() {
         periodCoinDrop = MathUtils.random(MIN_COIN_GENER_TIME, MAX_COIN_GENER_TIME);
-    }
-
-    private void dropStartBackground() {
-        for (int counter = 1; true; counter++) {
-            if (counter * backgroundImg.getHeight() <= WORLD_HEIGHT) {
-                dropBackground();
-            } else {
-                dropBackground();
-                break;
-            }
-        }
     }
 
     private void calculateScore() {
