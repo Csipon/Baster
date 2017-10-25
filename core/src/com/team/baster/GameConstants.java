@@ -21,6 +21,8 @@ public final class GameConstants {
 
     public static final int ITEM_WIDTH = 180;
     public static final int ITEM_HEIGHT = 70;
+    public static final int ITEM_VERT_WIDTH = 70;
+    public static final int ITEM_VERT_HEIGHT = 180;
 
     public static final int HERO_WIDTH = 100;
     public static final int HERO_HEIGHT = 160;

@@ -11,6 +11,7 @@ import com.team.baster.screen.menu.GameOverScreen;
 import java.util.Iterator;
 
 import static com.team.baster.GameConstants.ITEM_HEIGHT;
+import static com.team.baster.GameConstants.ITEM_VERT_WIDTH;
 import static com.team.baster.GameConstants.ITEM_WIDTH;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
@@ -36,12 +37,15 @@ public class BlockGenerator {
     }
 
     public void dropItem() {
-        if (MathUtils.random() < 0.25){
+        double rand = MathUtils.random();
+        if (rand < 0.25){
             Rectangle left = generateLeftOrRight(true);
             Rectangle right = generateLeftOrRight(false);
             blocks.add(left);
             blocks.add(right);
-        }else {
+        } else if (rand > 0.9){
+            generateVerticalBlocks();
+        } else {
             Rectangle item = calculator.generateItem(blocks);
             blocks.add(item);
             lastDropItem = item;
@@ -88,5 +92,24 @@ public class BlockGenerator {
         }
         lastDropItem = item;
         return item;
+    }
+
+    private void generateVerticalBlocks(){
+        Rectangle rectangle;
+        for (int i = 0; i < 4; i++) {
+            rectangle = calculator.generateVertItem(blocks, 0);
+            blocks.add(rectangle);
+            lastDropItem = rectangle;
+        }
+        rectangle = calculator.generateItem(blocks);
+        if (MathUtils.random() > 0.5){
+            rectangle.x = lastDropItem.x - ITEM_WIDTH;
+            rectangle.y = lastDropItem.y;
+        }else {
+            rectangle.x = lastDropItem.x + ITEM_VERT_WIDTH;
+            rectangle.y = lastDropItem.y;
+        }
+        blocks.add(rectangle);
+        lastDropItem = rectangle;
     }
 }

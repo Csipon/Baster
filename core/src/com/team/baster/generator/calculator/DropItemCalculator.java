@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.team.baster.GameConstants.ITEM_HEIGHT;
+import static com.team.baster.GameConstants.ITEM_VERT_HEIGHT;
+import static com.team.baster.GameConstants.ITEM_VERT_WIDTH;
 import static com.team.baster.GameConstants.ITEM_WIDTH;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
 
@@ -22,7 +24,7 @@ public class DropItemCalculator {
 
     public Rectangle generateItem(Array<Rectangle> blocks) {
         Rectangle block;
-        if (blocks.size == 10){
+        if (blocks.size == 15){
             block = blocks.removeIndex(0);
         }else {
             block = new Rectangle();
@@ -42,6 +44,29 @@ public class DropItemCalculator {
         return block;
     }
 
+    public Rectangle generateVertItem(Array<Rectangle> blocks, int distance){
+        Rectangle block;
+        if (blocks.size == 15){
+            block = blocks.removeIndex(0);
+        }else {
+            block = new Rectangle();
+        }
+        if (blocks.size > 0) {
+            Rectangle prevBlock = blocks.peek();
+            if (prevBlock.y < 0){
+                block.y = prevBlock.y -ITEM_VERT_HEIGHT - distance;
+            }else {
+                block.y = -ITEM_VERT_HEIGHT;
+            }
+        } else {
+            block.y = -ITEM_VERT_HEIGHT;
+        }
+        block.x = WORLD_WIDTH / 2 - ITEM_VERT_WIDTH / 2;
+        block.width = ITEM_VERT_WIDTH;
+        block.height = ITEM_VERT_HEIGHT;
+
+        return block;
+    }
 
     private int chooseCoordinate(int start, int end) {
         Map<String, Integer> possDaip = calculatePossiblePositions(start, end);

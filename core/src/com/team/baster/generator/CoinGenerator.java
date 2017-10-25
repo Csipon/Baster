@@ -40,7 +40,7 @@ public class CoinGenerator {
             coinLastDiap = 0;
         }
 
-        if (coinFirstDiap > 0 && coinLastDiap > 0) {
+        if (coinFirstDiap > 1 && coinLastDiap > 1) {
             return Math.random() > 0.5 ? calculateRandPosition(0, coinFirstDiap - COIN_SIDE) : calculateRandPosition(coinLastDiap, WORLD_WIDTH - COIN_SIDE);
         }else if (coinFirstDiap > 0){
             return calculateRandPosition(0, coinFirstDiap - COIN_SIDE);
@@ -52,6 +52,9 @@ public class CoinGenerator {
 
 
     private int calculateRandPosition(int start, int end){
+        if (start == end){
+            return 0;
+        }
         return MathUtils.random(start, end);
     }
 }
