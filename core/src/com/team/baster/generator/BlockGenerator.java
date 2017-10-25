@@ -23,6 +23,7 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 public class BlockGenerator {
     private Array<Rectangle> blocks;
     private DropItemCalculator calculator;
+    private Rectangle beforeLastDropItem;
     private Rectangle lastDropItem;
     private BasterGame game;
 
@@ -48,6 +49,7 @@ public class BlockGenerator {
         } else {
             Rectangle item = calculator.generateItem(blocks);
             blocks.add(item);
+            beforeLastDropItem = lastDropItem;
             lastDropItem = item;
         }
     }
@@ -78,6 +80,9 @@ public class BlockGenerator {
         }
     }
 
+    public Rectangle getBeforeLastDropItem() {
+        return beforeLastDropItem;
+    }
 
     public Rectangle getLastDropItem() {
         return lastDropItem;
@@ -90,6 +95,7 @@ public class BlockGenerator {
         }else {
             item.x = WORLD_WIDTH - ITEM_WIDTH;
         }
+        beforeLastDropItem = lastDropItem;
         lastDropItem = item;
         return item;
     }
@@ -99,6 +105,7 @@ public class BlockGenerator {
         for (int i = 0; i < 4; i++) {
             rectangle = calculator.generateVertItem(blocks, 0);
             blocks.add(rectangle);
+            beforeLastDropItem = lastDropItem;
             lastDropItem = rectangle;
         }
         rectangle = calculator.generateItem(blocks);
@@ -110,6 +117,7 @@ public class BlockGenerator {
             rectangle.y = lastDropItem.y;
         }
         blocks.add(rectangle);
+        beforeLastDropItem = lastDropItem;
         lastDropItem = rectangle;
     }
 }
