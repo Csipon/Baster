@@ -7,14 +7,24 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.BasterGame;
-import com.team.baster.generator.*;
+import com.team.baster.generator.BackgroundGenerator;
+import com.team.baster.generator.BlockGenerator;
+import com.team.baster.generator.CoinGenerator;
 
 import java.util.Iterator;
 
-import static com.team.baster.GameConstants.*;
+import static com.team.baster.GameConstants.COIN_SIDE;
+import static com.team.baster.GameConstants.DEFAULT_SPEED;
+import static com.team.baster.GameConstants.HERO_HEIGHT;
+import static com.team.baster.GameConstants.HERO_WIDTH;
+import static com.team.baster.GameConstants.MAX_COIN_GENER_TIME;
+import static com.team.baster.GameConstants.MIN_COIN_GENER_TIME;
+import static com.team.baster.GameConstants.PART_ACCELERATION;
+import static com.team.baster.GameConstants.PERIOD_ACCELERATION;
+import static com.team.baster.GameConstants.WORLD_HEIGHT;
+import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 /**
  * Created by Pasha on 10/20/2017.
@@ -35,8 +45,7 @@ public class BasterScreen implements Screen {
     BlockGenerator blockGenerator;
     BackgroundGenerator backgroundGenerator;
     Rectangle hero;
-    Array<Rectangle> coins;
-    com.team.baster.generator.CoinGenerator coinGenerator;
+    CoinGenerator coinGenerator;
 
     Vector3 touchPos;
 
@@ -163,11 +172,10 @@ public class BasterScreen implements Screen {
     }
 
     private void drawCoins() {
-        for (Rectangle rectangle : coins) {
+        for (Rectangle rectangle : coinGenerator.getCoins()) {
             game.batch.draw(coinImg, rectangle.x, rectangle.y);
         }
     }
-
 
 
     private void initObjects() {
@@ -176,8 +184,6 @@ public class BasterScreen implements Screen {
         touchPos = new Vector3();
         hero = new Rectangle();
         configHero();
-        coins = new Array<>();
-
         coinGenerator = new CoinGenerator();
     }
 
@@ -194,7 +200,7 @@ public class BasterScreen implements Screen {
         for (Rectangle rectangle : blockGenerator.getBlocks()) {
             if (rectangle.width > rectangle.height) {
                 game.batch.draw(blockImg, rectangle.x, rectangle.y);
-            }else {
+            } else {
                 game.batch.draw(blockVertImg, rectangle.x, rectangle.y);
             }
         }
@@ -215,7 +221,6 @@ public class BasterScreen implements Screen {
         if (hero.x < 0) hero.x = 0;
         if (hero.x > WORLD_WIDTH - HERO_WIDTH) hero.x = WORLD_WIDTH - HERO_WIDTH;
     }
-
 
 
     private int calculateSpeed() {
@@ -244,18 +249,20 @@ public class BasterScreen implements Screen {
 
     private void checkCoinGeneration() {
         if (periodCoinDrop < TimeUtils.nanoTime() - lastDropCoinTime) {
-            coins.add(coinGenerator.generateCoin(blockGenerator.getLastDropItem()));
+            coinGenerator.generateCoin(blockGenerator.getLastDropItem(), blockGenerator.getBeforeLastDropItem());
             generatePeriod();
             lastDropCoinTime = TimeUtils.nanoTime();
         }
+        coinGenerator.checkLastCoinBlockCollision(blockGenerator.getLastDropItem(), blockGenerator.getBeforeLastDropItem());
     }
 
+
     private void controlCoins() {
-        Iterator<Rectangle> iter = coins.iterator();
+        Iterator<Rectangle> iter = coinGenerator.getCoins().iterator();
         while (iter.hasNext()) {
             Rectangle item = iter.next();
             item.y += speed * Gdx.graphics.getDeltaTime();
-            if (checkCoinCollisions(item)){
+            if (checkCoinCollisions(item)) {
                 iter.remove();
             }
             if (item.y + COIN_SIDE > WORLD_HEIGHT + COIN_SIDE) {

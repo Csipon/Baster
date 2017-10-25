@@ -24,9 +24,9 @@ public class DropItemCalculator {
 
     public Rectangle generateItem(Array<Rectangle> blocks) {
         Rectangle block;
-        if (blocks.size == 15){
+        if (blocks.size == 15) {
             block = blocks.removeIndex(0);
-        }else {
+        } else {
             block = new Rectangle();
         }
         if (blocks.size > 0) {
@@ -44,18 +44,18 @@ public class DropItemCalculator {
         return block;
     }
 
-    public Rectangle generateVertItem(Array<Rectangle> blocks, int distance){
+    public Rectangle generateVertItem(Array<Rectangle> blocks, int distance) {
         Rectangle block;
-        if (blocks.size == 15){
+        if (blocks.size == 15) {
             block = blocks.removeIndex(0);
-        }else {
+        } else {
             block = new Rectangle();
         }
         if (blocks.size > 0) {
             Rectangle prevBlock = blocks.peek();
-            if (prevBlock.y < 0){
-                block.y = prevBlock.y -ITEM_VERT_HEIGHT - distance;
-            }else {
+            if (prevBlock.y < 0) {
+                block.y = prevBlock.y - ITEM_VERT_HEIGHT - distance;
+            } else {
                 block.y = -ITEM_VERT_HEIGHT;
             }
         } else {
