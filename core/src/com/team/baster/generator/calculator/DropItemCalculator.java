@@ -3,11 +3,13 @@ package com.team.baster.generator.calculator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.team.baster.model.Square;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.team.baster.GameConstants.ITEM_HEIGHT;
+import static com.team.baster.GameConstants.ITEM_SQUARE_SIDE;
 import static com.team.baster.GameConstants.ITEM_VERT_HEIGHT;
 import static com.team.baster.GameConstants.ITEM_VERT_WIDTH;
 import static com.team.baster.GameConstants.ITEM_WIDTH;
@@ -33,7 +35,7 @@ public class DropItemCalculator {
             Rectangle prevItem = blocks.peek();
             int xStart = (int) prevItem.x;
             int xEnd = (int) (xStart + prevItem.width);
-            block.x = chooseCoordinate(xStart, xEnd);
+            block.x = chooseCoordinate(xStart, xEnd, ITEM_WIDTH);
         } else {
             block.x = MathUtils.random(0, WORLD_WIDTH - ITEM_WIDTH);
         }
@@ -42,6 +44,26 @@ public class DropItemCalculator {
         block.height = ITEM_HEIGHT;
 
         return block;
+    }
+
+    public Rectangle generateSquareItem(Array<Rectangle> squares) {
+        Square square;
+        if (squares.size == 5) {
+            square = (Square) squares.removeIndex(0);
+        } else {
+            square = new Square();
+        }
+        if (squares.size > 0) {
+            Rectangle prevItem = squares.peek();
+            int xStart = (int) prevItem.x;
+            int xEnd = (int) (xStart + prevItem.width);
+            square.x = chooseCoordinate(xStart, xEnd, ITEM_SQUARE_SIDE);
+        } else {
+            square.x = MathUtils.random(0, WORLD_WIDTH - ITEM_SQUARE_SIDE);
+        }
+        square.y = -ITEM_SQUARE_SIDE;
+        square.moveLeft();
+        return square;
     }
 
     public Rectangle generateVertItem(Array<Rectangle> blocks, int distance) {
@@ -68,8 +90,8 @@ public class DropItemCalculator {
         return block;
     }
 
-    private int chooseCoordinate(int start, int end) {
-        Map<String, Integer> possDaip = calculatePossiblePositions(start, end);
+    private int chooseCoordinate(int start, int end, int itemWidth) {
+        Map<String, Integer> possDaip = calculatePossiblePositions(start, end, itemWidth);
 
         Integer first = possDaip.get(FIRST_DIAP);
         Integer last = possDaip.get(LAST_DIAP);
@@ -77,23 +99,23 @@ public class DropItemCalculator {
             if (MathUtils.random() > 0.5) {
                 return MathUtils.random(0, first);
             } else {
-                return MathUtils.random(last, WORLD_WIDTH - ITEM_WIDTH - 1);
+                return MathUtils.random(last, WORLD_WIDTH - itemWidth - 1);
             }
         } else if (first != null) {
             return MathUtils.random(0, first);
         } else {
-            return MathUtils.random(last, WORLD_WIDTH - ITEM_WIDTH - 1);
+            return MathUtils.random(last, WORLD_WIDTH - itemWidth - 1);
         }
 
     }
 
-    private Map<String, Integer> calculatePossiblePositions(int start, int end) {
+    private Map<String, Integer> calculatePossiblePositions(int start, int end, int itemWidth) {
         Map<String, Integer> result = new HashMap<>();
-        int firstDiap = start - ITEM_WIDTH;
+        int firstDiap = start - itemWidth;
         if (firstDiap > 0) {
             result.put(FIRST_DIAP, firstDiap);
         }
-        int lastDiap = end + ITEM_WIDTH;
+        int lastDiap = end + itemWidth;
         if (lastDiap < WORLD_WIDTH) {
             result.put(LAST_DIAP, end);
         }

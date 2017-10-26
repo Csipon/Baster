@@ -38,6 +38,7 @@ public class BasterScreen implements Screen {
     Texture heroImg;
     Texture blockImg;
     Texture blockVertImg;
+    Texture squareImg;
     Texture backgroundImg;
     Texture coinImg;
     Texture topNavImg;
@@ -118,6 +119,7 @@ public class BasterScreen implements Screen {
     public void dispose() {
         heroImg.dispose();
         blockImg.dispose();
+        squareImg.dispose();
         blockVertImg.dispose();
         backgroundImg.dispose();
         topNavImg.dispose();
@@ -137,6 +139,7 @@ public class BasterScreen implements Screen {
         heroImg = new Texture("human.png");
         blockImg = new Texture("block.jpg");
         blockVertImg = new Texture("block_vertical.jpg");
+        squareImg = new Texture("block_square.jpg");
         coinImg = new Texture("coin.png");
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH >= 720) {
@@ -203,6 +206,9 @@ public class BasterScreen implements Screen {
             } else {
                 game.batch.draw(blockVertImg, rectangle.x, rectangle.y);
             }
+        }
+        for (Rectangle rectangle : blockGenerator.getSquare()){
+            game.batch.draw(squareImg, rectangle.x, rectangle.y);
         }
     }
 
