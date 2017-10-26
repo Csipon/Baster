@@ -6,11 +6,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.team.baster.BasterGame;
 import com.team.baster.generator.calculator.DropItemCalculator;
+import com.team.baster.model.Square;
 import com.team.baster.screen.menu.GameOverScreen;
 
-import java.util.Iterator;
-
-import static com.team.baster.GameConstants.ITEM_HEIGHT;
+import static com.team.baster.GameConstants.HORIZONTAL_SPEED;
 import static com.team.baster.GameConstants.ITEM_VERT_WIDTH;
 import static com.team.baster.GameConstants.ITEM_WIDTH;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
@@ -22,6 +21,7 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 public class BlockGenerator {
     private Array<Rectangle> blocks;
+    private Array<Rectangle> square;
     private DropItemCalculator calculator;
     private Rectangle beforeLastDropItem;
     private Rectangle lastDropItem;
@@ -30,22 +30,29 @@ public class BlockGenerator {
     public BlockGenerator(BasterGame game) {
         this.game = game;
         blocks = new Array<>();
+        square = new Array<>();
         calculator = new DropItemCalculator();
     }
 
-    public Array<Rectangle> getBlocks(){
+    public Array<Rectangle> getBlocks() {
         return blocks;
+    }
+
+    public Array<Rectangle> getSquare() {
+        return square;
     }
 
     public void dropItem() {
         double rand = MathUtils.random();
-        if (rand < 0.25){
+        if (rand < 0.25) {
             Rectangle left = generateLeftOrRight(true);
             Rectangle right = generateLeftOrRight(false);
             blocks.add(left);
             blocks.add(right);
-        } else if (rand > 0.9){
+        } else if (rand > 0.9) {
             generateVerticalBlocks();
+        } else if (rand > 0.75 && rand < 0.9) {
+            generateDynamicBlock();
         } else {
             Rectangle item = calculator.generateItem(blocks);
             blocks.add(item);
@@ -63,12 +70,28 @@ public class BlockGenerator {
 
 
     public void controlItemPosition(Rectangle hero, int speed, long score) {
-        Iterator<Rectangle> iter = blocks.iterator();
-        while (iter.hasNext()) {
-            Rectangle item = iter.next();
+        controlBlockPosition(hero, speed, score);
+        controlSquarePosition(hero, speed, score);
+    }
+
+    private void controlBlockPosition(Rectangle hero, int speed, long score) {
+
+        for (Rectangle item : blocks) {
             item.y += speed * Gdx.graphics.getDeltaTime();
-            if (item.y + ITEM_HEIGHT > WORLD_HEIGHT + ITEM_HEIGHT) {
-                iter.remove();
+            checkHeroCollision(item, hero, score);
+        }
+    }
+
+    private void controlSquarePosition(Rectangle hero, int speed, long score) {
+        for (Rectangle aSquare : square) {
+            Square item = (Square) aSquare;
+            item.y += speed * Gdx.graphics.getDeltaTime();
+            item.checkCoordinate(WORLD_WIDTH);
+            int horMove = (int) (HORIZONTAL_SPEED * Gdx.graphics.getDeltaTime());
+            if (item.isRight()) {
+                item.x += horMove;
+            } else if (item.isLeft()) {
+                item.x -= horMove;
             }
             checkHeroCollision(item, hero, score);
         }
@@ -88,11 +111,11 @@ public class BlockGenerator {
         return lastDropItem;
     }
 
-    private Rectangle generateLeftOrRight(boolean isLeft){
+    private Rectangle generateLeftOrRight(boolean isLeft) {
         Rectangle item = calculator.generateItem(blocks);
-        if (isLeft){
+        if (isLeft) {
             item.x = 0;
-        }else {
+        } else {
             item.x = WORLD_WIDTH - ITEM_WIDTH;
         }
         beforeLastDropItem = lastDropItem;
@@ -100,7 +123,7 @@ public class BlockGenerator {
         return item;
     }
 
-    private void generateVerticalBlocks(){
+    private void generateVerticalBlocks() {
         Rectangle rectangle;
         for (int i = 0; i < 4; i++) {
             rectangle = calculator.generateVertItem(blocks, 0);
@@ -109,14 +132,21 @@ public class BlockGenerator {
             lastDropItem = rectangle;
         }
         rectangle = calculator.generateItem(blocks);
-        if (MathUtils.random() > 0.5){
+        if (MathUtils.random() > 0.5) {
             rectangle.x = lastDropItem.x - ITEM_WIDTH;
             rectangle.y = lastDropItem.y;
-        }else {
+        } else {
             rectangle.x = lastDropItem.x + ITEM_VERT_WIDTH;
             rectangle.y = lastDropItem.y;
         }
         blocks.add(rectangle);
+        beforeLastDropItem = lastDropItem;
+        lastDropItem = rectangle;
+    }
+
+    private void generateDynamicBlock() {
+        Rectangle rectangle = calculator.generateSquareItem(blocks);
+        square.add(rectangle);
         beforeLastDropItem = lastDropItem;
         lastDropItem = rectangle;
     }

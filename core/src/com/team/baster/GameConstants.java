@@ -16,13 +16,15 @@ public final class GameConstants {
     public static final int WORLD_HEIGHT = Gdx.graphics.getHeight();
 
     public static final int DEFAULT_SPEED = 300;
+    public static final int HORIZONTAL_SPEED = 200;
     public static final long PERIOD_ACCELERATION = 10_00_000_000L;
-    public static final float PART_ACCELERATION = 0.05f;
+    public static final float PART_ACCELERATION = 0.035f;
 
     public static final int ITEM_WIDTH = 180;
     public static final int ITEM_HEIGHT = 70;
     public static final int ITEM_VERT_WIDTH = 70;
     public static final int ITEM_VERT_HEIGHT = 180;
+    public static final int ITEM_SQUARE_SIDE = 100;
 
     public static final int HERO_WIDTH = 100;
     public static final int HERO_HEIGHT = 160;
