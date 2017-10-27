@@ -50,5 +50,6 @@ public class BasterGame extends Game {
 		super.dispose();
 		batch.dispose();
 		font.dispose();
+        customFont.dispose();
 	}
 }
