@@ -145,7 +145,7 @@ public class BlockGenerator {
     }
 
     private void generateDynamicBlock() {
-        Rectangle rectangle = calculator.generateSquareItem(blocks);
+        Rectangle rectangle = calculator.generateSquareItem(square);
         square.add(rectangle);
         beforeLastDropItem = lastDropItem;
         lastDropItem = rectangle;
