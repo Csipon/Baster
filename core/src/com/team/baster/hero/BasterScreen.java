@@ -136,14 +136,22 @@ public class BasterScreen implements Screen {
     }
 
     private void initTexture() {
-        heroImg = new Texture("human.png");
-        blockImg = new Texture("block.jpg");
-        blockVertImg = new Texture("block_vertical.jpg");
-        squareImg = new Texture("block_square.jpg");
-        coinImg = new Texture("coin.png");
+
         topNavImg = new Texture("Test.png");
-        if (WORLD_WIDTH >= 720) {
+        if (WORLD_WIDTH == 720) {
             backgroundImg = new Texture("bg.jpg");
+            heroImg = new Texture("human.png");
+            blockImg = new Texture("block.jpg");
+            blockVertImg = new Texture("block_vertical.jpg");
+            squareImg = new Texture("block_square.jpg");
+            coinImg = new Texture("coin.png");
+        }else if (WORLD_WIDTH == 1440){
+            backgroundImg = new Texture("1440/bg_1440.jpg");
+            heroImg = new Texture("1440/human_1440.png");
+            blockImg = new Texture("1440/block_1440.jpg");
+            blockVertImg = new Texture("1440/block_vertical_1440.jpg");
+            squareImg = new Texture("1440/block_square_1440.jpg");
+            coinImg = new Texture("1440/coin_1440.png");
         }
     }
 
