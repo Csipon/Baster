@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
  */
 
 public class GameConstants {
-
+    private GameConstants constants = new GameConstants();
     public GameConstants() {
         int differenceWidth = WORLD_WIDTH / DEFAULT_WORLD_WIDTH;
         if (WORLD_WIDTH != DEFAULT_WORLD_WIDTH) {
