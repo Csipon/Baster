@@ -57,6 +57,8 @@ public class BasterScreen implements Screen {
     private long lastDropCoinTime;
     private long periodCoinDrop;
 
+    private static final double SPEED_FACTOR = 1;
+
     public BasterScreen(BasterGame game) {
         this.game = game;
 
@@ -207,19 +209,14 @@ public class BasterScreen implements Screen {
                 game.batch.draw(blockVertImg, rectangle.x, rectangle.y);
             }
         }
-        for (Rectangle rectangle : blockGenerator.getSquare()){
+        for (Rectangle rectangle : blockGenerator.getSquare()) {
             game.batch.draw(squareImg, rectangle.x, rectangle.y);
         }
     }
 
     private void controlHeroInput() {
         if (Gdx.input.isTouched()) {
-            int inputX = Gdx.input.getX();
-            if (inputX >= hero.x && inputX <= hero.x + hero.width) {
-                touchPos.set(inputX, Gdx.input.getY(), 0);
-                camera.unproject(touchPos);
-                hero.x = (int) (touchPos.x - hero.width / 2);
-            }
+            hero.x += Gdx.input.getDeltaX() * SPEED_FACTOR;
         }
     }
 
