@@ -17,8 +17,8 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 public class CoinGenerator {
     private Array<Rectangle> coins;
 
-    public CoinGenerator() {
-        coins = new Array<>();
+    public CoinGenerator(Array<Rectangle> coins) {
+        this.coins = coins;
     }
 
     public void generateCoin(Rectangle lastDropItem, Rectangle beforeLastDropItem) {
@@ -95,9 +95,5 @@ public class CoinGenerator {
                 coins.pop();
             }
         }
-    }
-
-    public Array<Rectangle> getCoins() {
-        return coins;
     }
 }

@@ -13,4 +13,9 @@ eclipse.project {
 
 dependencies {
     compile 'com.badlogicgames.gdx:gdx-freetype:1.9.6'
+    compile 'org.xerial:sqlite-jdbc:3.20.1'
+
+
+//    provided project(':android')
+//    compile project(path: ':database')
 }

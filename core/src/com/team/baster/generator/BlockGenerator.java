@@ -1,34 +1,24 @@
 package com.team.baster.generator;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.team.baster.BasterGame;
 import com.team.baster.generator.calculator.DropItemCalculator;
-import com.team.baster.model.Square;
-import com.team.baster.screen.menu.GameOverScreen;
 
-import static com.team.baster.GameConstants.HORIZONTAL_SPEED;
-import static com.team.baster.GameConstants.ITEM_VERT_WIDTH;
-import static com.team.baster.GameConstants.ITEM_WIDTH;
-import static com.team.baster.GameConstants.WORLD_HEIGHT;
-import static com.team.baster.GameConstants.WORLD_WIDTH;
+import static com.team.baster.GameConstants.*;
 
 /**
  * Created by Pasha on 10/23/2017.
  */
 
 public class BlockGenerator {
-    private Array<Rectangle> blocks;
-    private Array<Rectangle> square;
-    private DropItemCalculator calculator;
-    private Rectangle beforeLastDropItem;
-    private Rectangle lastDropItem;
-    private BasterGame game;
+    public Array<Rectangle> blocks;
+    public Array<Rectangle> square;
+    public DropItemCalculator calculator;
+    public Rectangle beforeLastDropItem;
+    public Rectangle lastDropItem;
 
-    public BlockGenerator(BasterGame game) {
-        this.game = game;
+    public BlockGenerator() {
         blocks = new Array<>();
         square = new Array<>();
         calculator = new DropItemCalculator();
@@ -59,56 +49,6 @@ public class BlockGenerator {
             beforeLastDropItem = lastDropItem;
             lastDropItem = item;
         }
-    }
-
-
-    public void checkLasDropItemTime() {
-        if (lastDropItem.y > WORLD_HEIGHT / 3) {
-            dropItem();
-        }
-    }
-
-
-    public void controlItemPosition(Rectangle hero, int speed, long score) {
-        controlBlockPosition(hero, speed, score);
-        controlSquarePosition(hero, speed, score);
-    }
-
-    private void controlBlockPosition(Rectangle hero, int speed, long score) {
-
-        for (Rectangle item : blocks) {
-            item.y += speed * Gdx.graphics.getDeltaTime();
-            checkHeroCollision(item, hero, score);
-        }
-    }
-
-    private void controlSquarePosition(Rectangle hero, int speed, long score) {
-        for (Rectangle aSquare : square) {
-            Square item = (Square) aSquare;
-            item.y += speed * Gdx.graphics.getDeltaTime();
-            item.checkCoordinate(WORLD_WIDTH);
-            int horMove = (int) (HORIZONTAL_SPEED * Gdx.graphics.getDeltaTime());
-            if (item.isRight()) {
-                item.x += horMove;
-            } else if (item.isLeft()) {
-                item.x -= horMove;
-            }
-            checkHeroCollision(item, hero, score);
-        }
-    }
-
-    private void checkHeroCollision(Rectangle item, Rectangle hero, long score) {
-        if (item.overlaps(hero)) {
-            game.setScreen(new GameOverScreen(game, score));
-        }
-    }
-
-    public Rectangle getBeforeLastDropItem() {
-        return beforeLastDropItem;
-    }
-
-    public Rectangle getLastDropItem() {
-        return lastDropItem;
     }
 
     private Rectangle generateLeftOrRight(boolean isLeft) {

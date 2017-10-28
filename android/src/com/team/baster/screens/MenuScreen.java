@@ -1,4 +1,4 @@
-package com.team.baster.screen.menu;
+package com.team.baster.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,11 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.team.baster.BasterGame;
+import com.team.baster.domain.BasterGame;
 import com.team.baster.dialog.QuitGame;
-import com.team.baster.hero.BasterScreen;
+import com.team.baster.storage.ScoreStorage;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
@@ -32,6 +33,7 @@ public class MenuScreen implements Screen {
     final BasterGame game;
 
     private SpriteBatch batch;
+    private ScoreStorage scoreStorage;
     protected Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
@@ -44,14 +46,11 @@ public class MenuScreen implements Screen {
     private TextButton exitButton;
 
 
-    public MenuScreen(BasterGame game)
-    {
+    public MenuScreen(BasterGame game) {
 
         this.game = game;
         atlas = new TextureAtlas(Gdx.files.internal("skin/freezing-ui.atlas"));
         skin = new Skin(Gdx.files.internal("skin/freezing-ui.json"), atlas);
-
-
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
@@ -61,12 +60,16 @@ public class MenuScreen implements Screen {
         camera.update();
 
         stage = new Stage(viewport, batch);
+        scoreStorage = new ScoreStorage();
     }
 
 
     @Override
     public void show() {
-
+        Array<Long> scores = scoreStorage.readLastBestScore();
+        for (int i = 0; i < scores.size; i++) {
+            System.out.println(i + 1 + " --- " + scores.get(i) + " ---- SCORES");
+        }
         Gdx.input.setInputProcessor(stage);
 
         //Create Table
