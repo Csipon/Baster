@@ -41,7 +41,7 @@ public class GameOverScreen implements Screen {
     private Long score;
 
     public GameOverScreen(BasterGame game, Long score) {
-        //comm
+
         this.game = game;
         this.score = score;
 
@@ -67,14 +67,19 @@ public class GameOverScreen implements Screen {
         btnMenu = new TextButton("Menu", skin);
         btnRetry = new TextButton("Retry", skin);
 
-        String labelStr = "Your score: " + score;
-        Label label = new Label("Your score: " + score, new Label.LabelStyle(generateFont(labelStr), Color.WHITE));
+        String strScore = "Your score: " + score;
+        Label labelScore = new Label(strScore, new Label.LabelStyle(generateFont("fonts/GoodDog.otf"), Color.WHITE));
+
+        String strGameOver = "Game over";
+        Label labelGameOver = new Label(strGameOver, new Label.LabelStyle(generateFont("fonts/Capture_it.ttf"), Color.WHITE));
 
         mainTable = new Table();
         mainTable.center();
         mainTable.setFillParent(true);
 
-        mainTable.add(label);
+        mainTable.add(labelGameOver).padBottom(80);
+        mainTable.row();
+        mainTable.add(labelScore).padBottom(50);
         mainTable.row();
         mainTable.add(btnRetry)
                 .width(Value.percentWidth(.75F, mainTable))
@@ -137,15 +142,14 @@ public class GameOverScreen implements Screen {
         stage.dispose();
     }
 
-    private BitmapFont generateFont(String characters) {
+    private BitmapFont generateFont(String font) {
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.characters = characters;
         parameter.size = 72;
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/GoodDog.otf"));
-        BitmapFont font = generator.generateFont(parameter);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(font));
+        BitmapFont createdFont = generator.generateFont(parameter);
 
         generator.dispose();
-        return font;
+        return createdFont;
     }
 }

@@ -45,10 +45,11 @@ public class QuitGame {
             @Override
             public boolean touchDown(InputEvent event, float x, float y,
                                      int pointer, int button) {
-                Gdx.app.exit();
                 dialog.hide();
                 dialog.cancel();
                 dialog.remove();
+                System.exit(0);
+                Gdx.app.exit();
                 return true;
             }
         });
@@ -57,9 +58,6 @@ public class QuitGame {
             @Override
             public boolean touchDown(InputEvent event, float x, float y,
                                      int pointer, int button) {
-
-                //Do whatever here for cancel
-
                 dialog.cancel();
                 dialog.hide();
 
@@ -70,7 +68,6 @@ public class QuitGame {
 
         Texture texture = new Texture(Gdx.files.internal("Test.png"));
         TextureRegion myTex = new TextureRegion(texture);
-//        myTex.flip(false, true);
         myTex.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Drawable drawable = new TextureRegionDrawable(myTex);
         dialog.setBackground(drawable);
@@ -78,9 +75,6 @@ public class QuitGame {
         float btnHeight = 150f;
         float btnWidth = 200f;
         Table t = new Table();
-
-
-//        dialog.getContentTable().add(label1).padTop(40f);
 
         t.add(btnYes).width(btnWidth).height(btnHeight);
         t.add(btnNo).width(btnWidth).height(btnHeight);
