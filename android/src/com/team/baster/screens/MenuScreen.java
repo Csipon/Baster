@@ -3,29 +3,22 @@ package com.team.baster.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.team.baster.GameConstants;
 import com.team.baster.domain.BasterGame;
-import com.team.baster.dialog.QuitGame;
 import com.team.baster.font.FontGenerator;
+import com.team.baster.storage.PlayerStatusStorage;
 import com.team.baster.storage.ScoreStorage;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
@@ -74,6 +67,11 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
         scores = scoreStorage.readLastBestScore();
+        int coins = PlayerStatusStorage.actualCoins;
+        int scores = PlayerStatusStorage.overallScore;
+
+        System.out.println("COINS = " + coins);
+        System.out.println("SCORES = " + scores);
         Gdx.input.setInputProcessor(stage);
 
         setNavigation();

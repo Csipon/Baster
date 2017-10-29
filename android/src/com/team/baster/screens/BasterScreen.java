@@ -74,7 +74,7 @@ public class BasterScreen implements Screen {
         heroController.controlHeroInput();
         blockController.checkLasDropItemTime();
         heroController.controlHeroPosition();
-        blockController.controlItemPosition(heroController.hero, speed, scoreController.getScore());
+        blockController.controlItemPosition(heroController.hero, speed, scoreController.getScore(), coinController.getCoinsCounter());
         coinController.controlCoins(speed, heroController.hero);
         coinController.checkCoinGeneration(blockController.blockGenerator.lastDropItem, blockController.blockGenerator.beforeLastDropItem);
     }
