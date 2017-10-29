@@ -8,7 +8,7 @@ import com.team.baster.storage.ScoreStorage;
  */
 
 public class ScoreController {
-    private long score;
+    private int score;
     private ScoreStorage storage;
 
     public ScoreController() {
@@ -19,7 +19,7 @@ public class ScoreController {
         score += speed / 200;
     }
 
-    public long getScore() {
+    public int getScore() {
         return score;
     }
 

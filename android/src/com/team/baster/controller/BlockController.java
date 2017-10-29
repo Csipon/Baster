@@ -6,6 +6,7 @@ import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.BlockGenerator;
 import com.team.baster.model.Square;
 import com.team.baster.screens.GameOverScreen;
+import com.team.baster.storage.PlayerStatusStorage;
 import com.team.baster.storage.ScoreStorage;
 
 import static com.team.baster.GameConstants.HORIZONTAL_SPEED;
@@ -18,6 +19,7 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 public class BlockController {
     private ScoreStorage scoreStorage;
+    private PlayerStatusStorage playerStatusStorage;
     public BlockGenerator blockGenerator;
     BasterGame game;
 
@@ -25,22 +27,23 @@ public class BlockController {
         this.game = game;
         blockGenerator = new BlockGenerator();
         scoreStorage = new ScoreStorage();
+        playerStatusStorage = PlayerStatusStorage.getInstance();
     }
 
-    public void controlItemPosition(Rectangle hero, int speed, long score) {
-        controlBlockPosition(hero, speed, score);
-        controlSquarePosition(hero, speed, score);
+    public void controlItemPosition(Rectangle hero, int speed, int score, int coins) {
+        controlBlockPosition(hero, speed, score, coins);
+        controlSquarePosition(hero, speed, score, coins);
     }
 
-    private void controlBlockPosition(Rectangle hero, int speed, long score) {
+    private void controlBlockPosition(Rectangle hero, int speed, int score, int coins) {
 
         for (Rectangle item : blockGenerator.blocks) {
             item.y += speed * Gdx.graphics.getDeltaTime();
-            checkHeroCollision(item, hero, score);
+            checkHeroCollision(item, hero, score, coins);
         }
     }
 
-    private void controlSquarePosition(Rectangle hero, int speed, long score) {
+    private void controlSquarePosition(Rectangle hero, int speed, int score, int coins) {
         for (Rectangle aSquare : blockGenerator.square) {
             Square item = (Square) aSquare;
             item.y += speed * Gdx.graphics.getDeltaTime();
@@ -51,13 +54,14 @@ public class BlockController {
             } else if (item.isLeft()) {
                 item.x -= horMove;
             }
-            checkHeroCollision(item, hero, score);
+            checkHeroCollision(item, hero, score, coins);
         }
     }
 
-    private void checkHeroCollision(Rectangle item, Rectangle hero, long score) {
+    private void checkHeroCollision(Rectangle item, Rectangle hero, int score, int coins) {
         if (item.overlaps(hero)) {
             scoreStorage.save(score);
+            playerStatusStorage.update(coins, score);
             game.setScreen(new GameOverScreen(game, score));
         }
     }

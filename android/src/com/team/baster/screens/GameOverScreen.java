@@ -38,9 +38,9 @@ public class GameOverScreen implements Screen {
     private OrthographicCamera camera;
     private ExtendViewport viewport;
 
-    private Long score;
+    private int score;
 
-    public GameOverScreen(BasterGame game, Long score) {
+    public GameOverScreen(BasterGame game, int score) {
 
         this.game = game;
         this.score = score;
