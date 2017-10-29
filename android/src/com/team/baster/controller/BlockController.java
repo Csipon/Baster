@@ -2,6 +2,8 @@ package com.team.baster.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.TimeUtils;
+import com.team.baster.asynch.MyAsyncTask;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.BlockGenerator;
 import com.team.baster.model.Square;
@@ -60,8 +62,7 @@ public class BlockController {
 
     private void checkHeroCollision(Rectangle item, Rectangle hero, int score, int coins) {
         if (item.overlaps(hero)) {
-            scoreStorage.save(score);
-            playerStatusStorage.update(coins, score);
+            save(score, coins);
             game.setScreen(new GameOverScreen(game, score));
         }
     }
@@ -72,6 +73,12 @@ public class BlockController {
         }
     }
 
+
+    private void save(int score, int coins){
+        System.out.println("------- 0 "  + TimeUtils.millis());
+
+        new MyAsyncTask(scoreStorage, playerStatusStorage, score, coins).execute();
+    }
 
     public void dropItem(){
         blockGenerator.dropItem();

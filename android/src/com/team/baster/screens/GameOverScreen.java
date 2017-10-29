@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.team.baster.domain.BasterGame;
 
@@ -34,7 +34,6 @@ public class GameOverScreen implements Screen {
     private TextButton btnRetry;
     private TextButton btnMenu;
     private Table mainTable;
-    private SpriteBatch batch;
     private OrthographicCamera camera;
     private ExtendViewport viewport;
 
@@ -44,8 +43,7 @@ public class GameOverScreen implements Screen {
 
         this.game = game;
         this.score = score;
-
-        batch = new SpriteBatch();
+        System.out.println("------- 2 "  + TimeUtils.millis());
         camera = new OrthographicCamera();
         viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
         viewport.apply();
@@ -53,15 +51,16 @@ public class GameOverScreen implements Screen {
         camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
         camera.update();
 
-        stage = new Stage(viewport, batch);
+        stage = new Stage(viewport, game.batch);
 
         skin = new Skin(Gdx.files.internal("skin/freezing-ui.json"));
+        System.out.println("------- 3 "  + TimeUtils.millis());
 
     }
 
     @Override
     public void show() {
-
+        System.out.println("------- 4 "  + TimeUtils.millis());
         Gdx.input.setInputProcessor(stage);
 
         btnMenu = new TextButton("Menu", skin);
@@ -72,7 +71,7 @@ public class GameOverScreen implements Screen {
 
         String strGameOver = "Game over";
         Label labelGameOver = new Label(strGameOver, new Label.LabelStyle(generateFont("fonts/Capture_it.ttf"), Color.WHITE));
-
+        System.out.println("------- 5 "  + TimeUtils.millis());
         mainTable = new Table();
         mainTable.center();
         mainTable.setFillParent(true);
@@ -105,6 +104,8 @@ public class GameOverScreen implements Screen {
                 dispose();
             }
         });
+        System.out.println("------- 6 "  + TimeUtils.millis());
+
     }
 
     @Override
