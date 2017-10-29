@@ -34,6 +34,7 @@ public class MenuScreen implements Screen {
     final BasterGame game;
     private SpriteBatch batch;
     private ScoreStorage scoreStorage;
+    private PlayerStatusStorage playerStatusStorage;
     private FontGenerator fontGenerator;
     protected Stage stage;
     private Viewport viewport;
@@ -60,13 +61,16 @@ public class MenuScreen implements Screen {
 
         stage = new Stage(viewport, batch);
         scoreStorage = new ScoreStorage();
+        playerStatusStorage = PlayerStatusStorage.getInstance();
         fontGenerator = new FontGenerator();
+        playerStatusStorage.readPlayerStatus();
     }
 
 
     @Override
     public void show() {
         scores = scoreStorage.readLastBestScore();
+
         int scores = PlayerStatusStorage.overallScore;
         int coins = PlayerStatusStorage.actualCoins;
 

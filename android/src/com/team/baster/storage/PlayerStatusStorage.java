@@ -38,10 +38,7 @@ public class PlayerStatusStorage  {
         jdbc = SQLiteJDBC.jdbc;
         writableDB = jdbc.getWritableDatabase();
         readableDB = jdbc.getReadableDatabase();
-        PlayerStatus playerStatus = readPlayerStatus();
-        actualCoins = playerStatus.coins;
-        overallExperience = playerStatus.overallExperience;
-        overallScore = playerStatus.overallScore;
+        readPlayerStatus();
     }
 
     public void update(Integer coins, Integer score){
@@ -91,7 +88,9 @@ public class PlayerStatusStorage  {
         playerStatus.coins = curs.getInt(curs.getColumnIndex(COLUMN_ACTUAL_COINS));
         playerStatus.overallExperience = curs.getInt(curs.getColumnIndex(COLUMN_OVERALL_EXPERIENCE));
         playerStatus.overallScore = curs.getInt(curs.getColumnIndex(COLUMN_OVERALL_SCORE));
-
+        actualCoins = playerStatus.coins;
+        overallExperience = playerStatus.overallExperience;
+        overallScore = playerStatus.overallScore;
         return playerStatus;
     }
 
