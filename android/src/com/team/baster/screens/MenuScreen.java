@@ -1,5 +1,7 @@
 package com.team.baster.screens;
 
+import android.widget.Toast;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -22,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.team.baster.AndroidLauncher;
 import com.team.baster.GameConstants;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.dialog.QuitGame;
@@ -63,7 +67,6 @@ public class MenuScreen implements Screen {
         camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
         camera.update();
         viewport.apply();
-
 
         stage = new Stage(viewport, batch);
         scoreStorage = new ScoreStorage();
@@ -121,6 +124,9 @@ public class MenuScreen implements Screen {
 
         Label.LabelStyle labelStyle = new Label.LabelStyle(fontGenerator.generateFont("fonts/GoodDog.otf"), Color.WHITE);
         Label labelScore = new Label("0", labelStyle);
+        labelScore.setX(130);
+        labelScore.setY(WORLD_HEIGHT - 100);
+
         if(scores.size != 0) {
             String strScore = scores.get(0).toString();
             labelScore = new Label(strScore, labelStyle);
@@ -128,7 +134,6 @@ public class MenuScreen implements Screen {
             labelScore.setY(WORLD_HEIGHT - 100);
             stage.addActor(labelScore);
         }
-
 
         scoreStatsImg = new Image(new Texture(Gdx.files.internal("icons/score.png")));
         scoreStatsImg.setY(WORLD_HEIGHT - 130);
@@ -177,8 +182,6 @@ public class MenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-
-
     }
 
     private void setTable() {
@@ -198,6 +201,6 @@ public class MenuScreen implements Screen {
 
         stage.addActor(mainTable);
     }
-
 }
+
 

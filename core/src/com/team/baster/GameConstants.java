@@ -38,8 +38,8 @@ public class GameConstants {
     public static int ITEM_SQUARE_SIDE = 100;
 
 
-    public static int HERO_WIDTH = 100;
-    public static int HERO_HEIGHT = 160;
+    public static int HERO_WIDTH = 120;
+    public static int HERO_HEIGHT = 120;
 
     public static int COIN_SIDE = 50;
 
