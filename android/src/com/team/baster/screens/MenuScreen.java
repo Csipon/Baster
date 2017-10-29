@@ -123,6 +123,7 @@ public class MenuScreen implements Screen {
 
         Label.LabelStyle labelStyle = new Label.LabelStyle(fontGenerator.generateFont("fonts/GoodDog.otf"), Color.WHITE);
         Label labelScore = new Label("0", labelStyle);
+
         if(scores.size != 0) {
             String strScore = scores.get(0).toString();
             labelScore = new Label(strScore, labelStyle);

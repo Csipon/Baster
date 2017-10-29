@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.team.baster.domain.BasterGame;
+import com.team.baster.font.FontGenerator;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
@@ -37,6 +38,9 @@ public class GameOverScreen implements Screen {
     private OrthographicCamera camera;
     private ExtendViewport viewport;
 
+    private FontGenerator fontGenerator;
+    private Label labelScore;
+
     private int score;
 
     public GameOverScreen(BasterGame game, int score) {
@@ -47,12 +51,11 @@ public class GameOverScreen implements Screen {
         camera = new OrthographicCamera();
         viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
         viewport.apply();
-
         camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
         camera.update();
 
+        fontGenerator = new FontGenerator();
         stage = new Stage(viewport, game.batch);
-
         skin = new Skin(Gdx.files.internal("skin/freezing-ui.json"));
         System.out.println("------- 3 "  + TimeUtils.millis());
 
@@ -63,21 +66,23 @@ public class GameOverScreen implements Screen {
         System.out.println("------- 4 "  + TimeUtils.millis());
         Gdx.input.setInputProcessor(stage);
 
-        btnMenu = new TextButton("Menu", skin);
-        btnRetry = new TextButton("Retry", skin);
+        loadButton();
 
         String strScore = "Your score: " + score;
-        Label labelScore = new Label(strScore, new Label.LabelStyle(generateFont("fonts/GoodDog.otf"), Color.WHITE));
+        labelScore = new Label(strScore, fontGenerator.getLabelStyle());
 
-        String strGameOver = "Game over";
-        Label labelGameOver = new Label(strGameOver, new Label.LabelStyle(generateFont("fonts/Capture_it.ttf"), Color.WHITE));
         System.out.println("------- 5 "  + TimeUtils.millis());
+        loadTable();
+        System.out.println("------- 6 "  + TimeUtils.millis());
+
+    }
+
+    private void loadTable() {
+
         mainTable = new Table();
         mainTable.center();
         mainTable.setFillParent(true);
 
-        mainTable.add(labelGameOver).padBottom(80);
-        mainTable.row();
         mainTable.add(labelScore).padBottom(50);
         mainTable.row();
         mainTable.add(btnRetry)
@@ -89,6 +94,12 @@ public class GameOverScreen implements Screen {
                 .height(Value.percentHeight(.20F, mainTable));
 
         stage.addActor(mainTable);
+    }
+
+    private void loadButton() {
+
+        btnMenu = new TextButton("Menu", skin);
+        btnRetry = new TextButton("Retry", skin);
 
         btnRetry.addListener(new ClickListener(){
             @Override
@@ -104,8 +115,6 @@ public class GameOverScreen implements Screen {
                 dispose();
             }
         });
-        System.out.println("------- 6 "  + TimeUtils.millis());
-
     }
 
     @Override
@@ -141,16 +150,5 @@ public class GameOverScreen implements Screen {
     public void dispose() {
         skin.dispose();
         stage.dispose();
-    }
-
-    private BitmapFont generateFont(String font) {
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 72;
-
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(font));
-        BitmapFont createdFont = generator.generateFont(parameter);
-
-        generator.dispose();
-        return createdFont;
     }
 }
