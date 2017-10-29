@@ -127,11 +127,22 @@ public class ScoreScreen implements Screen {
 
         int counter = 1;
 
-        for (int i = 0; i < 10; i++) {
-            scoreTable.add(new Label(counter++ + ". " + scores.get(i).toString(), labelStyle));
-            scoreTable.row();
-        }
+        if(scores.size != 0) {
+            if(scores.size < 10) {
+                for (int i = 0; i < scores.size; i++) {
+                    scoreTable.add(new Label(counter++ + ". " + scores.get(i).toString(), labelStyle));
+                    scoreTable.row();
+                }
+            } else {
+                for (int i = 0; i < 10; i++) {
+                    scoreTable.add(new Label(counter++ + ". " + scores.get(i).toString(), labelStyle));
+                    scoreTable.row();
+                }
+            }
 
+        } else {
+            scoreTable.add(new Label("No records yet", labelStyle));
+        }
 
         stage.addActor(scoreTable);
     }

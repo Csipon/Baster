@@ -53,7 +53,7 @@ public class QuitGame {
                 return true;
             }
         });
-//
+
         btnNo.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y,

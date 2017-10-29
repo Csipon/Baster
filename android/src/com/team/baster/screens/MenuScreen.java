@@ -59,9 +59,9 @@ public class MenuScreen implements Screen {
         this.game = game;
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
+        viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
         camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
         camera.update();
-        viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
         viewport.apply();
 
 
@@ -76,14 +76,14 @@ public class MenuScreen implements Screen {
         scores = scoreStorage.readLastBestScore();
         Gdx.input.setInputProcessor(stage);
 
+        setNavigation();
+        setImage();
+        setTable();
+
     }
 
     @Override
     public void render(float delta) {
-
-        setNavigation();
-        setImage();
-        setTable();
 
         stage.act();
         stage.draw();
@@ -118,14 +118,29 @@ public class MenuScreen implements Screen {
     }
 
     public void setNavigation() {
-        String strScore = scores.get(0).toString();
-        Label labelScore = new Label(strScore, new Label.LabelStyle(fontGenerator.generateFont("fonts/GoodDog.otf"), Color.WHITE));
-        labelScore.setX(130);
-        labelScore.setY(WORLD_HEIGHT - 100);
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle(fontGenerator.generateFont("fonts/GoodDog.otf"), Color.WHITE);
+        Label labelScore = new Label("0", labelStyle);
+        if(scores.size != 0) {
+            String strScore = scores.get(0).toString();
+            labelScore = new Label(strScore, labelStyle);
+            labelScore.setX(130);
+            labelScore.setY(WORLD_HEIGHT - 100);
+            stage.addActor(labelScore);
+        }
+
 
         scoreStatsImg = new Image(new Texture(Gdx.files.internal("icons/score.png")));
         scoreStatsImg.setY(WORLD_HEIGHT - 130);
         scoreStatsImg.setX(5);
+
+        scoreStatsImg.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new ScoreScreen(game));
+                dispose();
+            }
+        });
 
         Image coinsImage = new Image(new Texture(Gdx.files.internal("icons/coins.png")));
         coinsImage.setY(WORLD_HEIGHT - 230);
@@ -145,13 +160,6 @@ public class MenuScreen implements Screen {
         playImg = new Image(new Texture(Gdx.files.internal("icons/start.png")));
         exitImg = new Image(new Texture(Gdx.files.internal("icons/exit.png")));
 
-        scoreStatsImg.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new ScoreScreen(game));
-                dispose();
-            }
-        });
 
         playImg.addListener(new ClickListener(){
             @Override
