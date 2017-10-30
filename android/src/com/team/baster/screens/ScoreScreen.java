@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
-import com.team.baster.font.FontGenerator;
+import com.team.baster.style.font.FontGenerator;
 import com.team.baster.storage.ScoreStorage;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
@@ -123,7 +123,7 @@ public class ScoreScreen implements Screen {
         scoreTable.center();
         scoreTable.setFillParent(true);
 
-        Label.LabelStyle labelStyle = new Label.LabelStyle(fontGenerator.generateFont("fonts/GoodDog.otf"), Color.WHITE);
+        Label.LabelStyle labelStyle = fontGenerator.getLabelStyle72();
 
         int counter = 1;
 

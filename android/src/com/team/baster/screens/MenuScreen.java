@@ -1,23 +1,30 @@
 package com.team.baster.screens;
 
+import android.widget.Button;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
-import com.team.baster.font.FontGenerator;
+import com.team.baster.style.button.ButtonStyleGenerator;
+import com.team.baster.style.font.FontGenerator;
 import com.team.baster.storage.PlayerStatusStorage;
 import com.team.baster.storage.ScoreStorage;
 
@@ -36,15 +43,17 @@ public class MenuScreen implements Screen {
     private ScoreStorage scoreStorage;
     private PlayerStatusStorage playerStatusStorage;
     private FontGenerator fontGenerator;
+    private ButtonStyleGenerator buttonStyleGenerator;
     protected Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
 
     private Table mainTable;
-    private Image playImg;
+    private ImageButton playImg;
     private Image exitImg;
     private Image scoreStatsImg;
 
+    private Integer coins;
     private Array<Long> scores;
 
 
@@ -61,6 +70,7 @@ public class MenuScreen implements Screen {
 
         stage = new Stage(viewport, batch);
         scoreStorage = new ScoreStorage();
+        buttonStyleGenerator = new ButtonStyleGenerator();
         playerStatusStorage = PlayerStatusStorage.getInstance();
         fontGenerator = new FontGenerator();
         playerStatusStorage.readPlayerStatus();
@@ -72,7 +82,7 @@ public class MenuScreen implements Screen {
         scores = scoreStorage.readLastBestScore();
 
         int scores = PlayerStatusStorage.overallScore;
-        int coins = PlayerStatusStorage.actualCoins;
+        coins = PlayerStatusStorage.actualCoins;
 
         System.out.println("COINS = " + coins);
         System.out.println("SCORES = " + scores);
@@ -86,6 +96,8 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(135/255f, 206/255f, 235/255f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act();
         stage.draw();
@@ -121,23 +133,58 @@ public class MenuScreen implements Screen {
 
     public void setNavigation() {
 
-        Label.LabelStyle labelStyle = new Label.LabelStyle(fontGenerator.generateFont("fonts/GoodDog.otf"), Color.WHITE);
-        Label labelScore = new Label("0", labelStyle);
+        TextureRegionDrawable bg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/bg.png"))));
 
+        Label.LabelStyle labelStyle = fontGenerator.getLabelStyle72();
+        Label.LabelStyle labelStyleYellow = fontGenerator.getLabelStyle72Yellow();
+
+        Label labelScore = new Label("0", labelStyle);
+        Label labelCoins = new Label("0", labelStyleYellow);
         if(scores.size != 0) {
             String strScore = scores.get(0).toString();
             labelScore = new Label(strScore, labelStyle);
-            labelScore.setX(130);
-            labelScore.setY(WORLD_HEIGHT - 100);
-            stage.addActor(labelScore);
+        }
+        if(coins != null) {
+            labelCoins = new Label(coins.toString(), labelStyleYellow);
         }
 
+        ImageButton scoreImgButton = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/score.png", 7,7));
+        Table scoreTable = new Table();
+        scoreTable.setPosition(-10, WORLD_HEIGHT - 150);
+        scoreTable.setSize(scoreImgButton.getWidth() + labelScore.getWidth() + 60, 180);
+        scoreTable.setBackground(bg);
+        scoreTable.add(scoreImgButton).center();
+        scoreTable.add(labelScore).center();
 
-        scoreStatsImg = new Image(new Texture(Gdx.files.internal("icons/score.png")));
-        scoreStatsImg.setY(WORLD_HEIGHT - 130);
-        scoreStatsImg.setX(5);
+        ImageButton coinsImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/coins.png", 7, 7));
+        Table coinsTable = new Table();
+        coinsTable.setPosition(0, WORLD_HEIGHT - 270);
+        coinsTable.setSize(coinsImgBtn.getWidth() + labelCoins.getWidth() + 50, 150);
+        coinsTable.setBackground(bg);
+        coinsTable.add(coinsImgBtn).center();
+        coinsTable.add(labelCoins).padLeft(10).center();
 
-        scoreStatsImg.addListener(new ClickListener(){
+
+        ImageButton marketImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/shop.png", 7, 7));
+        Table marketTable = new Table();
+        marketTable.setPosition(WORLD_WIDTH - 180, WORLD_HEIGHT - 150);
+        marketTable.setSize(marketImgBtn.getWidth() + 60, 180);
+        marketTable.setBackground(bg);
+        marketTable.add(marketImgBtn).center();
+
+        ImageButton achieveImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/quality.png", 7, 7));
+        ImageButton rankImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/ranking.png", 7, 7));
+
+        Table bottomBar = new Table();
+        bottomBar.setPosition(-50, -15);
+        bottomBar.setSize(WORLD_WIDTH + 130, 170);
+        bottomBar.setBackground(bg);
+
+        bottomBar.add(achieveImgBtn).size(90, 90);
+        bottomBar.add(rankImgBtn).size(90, 90);
+
+
+        scoreImgButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new ScoreScreen(game));
@@ -145,22 +192,15 @@ public class MenuScreen implements Screen {
             }
         });
 
-        Image coinsImage = new Image(new Texture(Gdx.files.internal("icons/coins.png")));
-        coinsImage.setY(WORLD_HEIGHT - 230);
-        coinsImage.setX(20);
 
-        Image market = new Image(new Texture(Gdx.files.internal("icons/shop.png")));
-        market.setY(WORLD_HEIGHT - 130);
-        market.setX(WORLD_WIDTH - 150);
-
-        stage.addActor(coinsImage);
-        stage.addActor(scoreStatsImg);
-        stage.addActor(market);
-        stage.addActor(labelScore);
+        stage.addActor(coinsTable);
+        stage.addActor(scoreTable);
+        stage.addActor(marketTable);
+        stage.addActor(bottomBar);
     }
 
     private void setImage() {
-        playImg = new Image(new Texture(Gdx.files.internal("icons/start.png")));
+        playImg = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/start.png", 15, 15));
         exitImg = new Image(new Texture(Gdx.files.internal("icons/exit.png")));
 
 
@@ -190,14 +230,12 @@ public class MenuScreen implements Screen {
         mainTable.center();
         mainTable.setFillParent(true);
         mainTable.add(playImg)
-                .padBottom(30)
-                .width(Value.percentWidth(.40F, mainTable))
-                .height(Value.percentHeight(.23F, mainTable));
+                .padBottom(10)
+                .size(300, 300);
         mainTable.row();
         mainTable.add(exitImg)
                 .padTop(50)
-                .width(Value.percentWidth(.20F, mainTable))
-                .height(Value.percentHeight(.10F, mainTable));
+                .size(150, 150);
 
         stage.addActor(mainTable);
     }

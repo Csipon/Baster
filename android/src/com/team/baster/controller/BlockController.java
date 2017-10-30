@@ -63,7 +63,7 @@ public class BlockController {
     private void checkHeroCollision(Rectangle item, Rectangle hero, int score, int coins) {
         if (item.overlaps(hero)) {
             save(score, coins);
-            game.setScreen(new GameOverScreen(game, score));
+            game.setScreen(new GameOverScreen(game, score, coins));
         }
     }
 
