@@ -29,6 +29,8 @@ public class GameConstants {
     public static final int DEFAULT_SPEED = 300;
     public static final int HORIZONTAL_SPEED = 200;
     public static final long PERIOD_ACCELERATION = 10_00_000_000L;
+    public static final long PERIOD_RESIZE = 4_000_000_000L;
+    public static final int HERO_SIZES = 11;
     public static final float PART_ACCELERATION = 0.035f;
 
     public static int ITEM_WIDTH = 180;
@@ -39,12 +41,12 @@ public class GameConstants {
 
 
     public static int HERO_WIDTH = 100;
-    public static int HERO_HEIGHT = 160;
+    public static int HERO_HEIGHT = 170;
 
     public static int COIN_SIDE = 50;
 
 
-    public static final long MIN_COIN_GENER_TIME = 5_000_000_000L;
-    public static final long MAX_COIN_GENER_TIME = 7_000_000_000L;
+    public static final long MIN_COIN_GENER_TIME = 2_000_000_000L;
+    public static final long MAX_COIN_GENER_TIME = 4_000_000_000L;
 
 }

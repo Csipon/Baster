@@ -24,19 +24,22 @@ public class CoinController {
     public CoinGenerator coinGenerator;
     public long lastDropCoinTime;
     public long periodCoinDrop;
+    private HeroController heroController;
 
-    public CoinController() {
+    public CoinController(HeroController heroController) {
+        this.heroController = heroController;
         coins = new Array<>();
         coinGenerator = new CoinGenerator(coins);
     }
 
-    public void controlCoins(int speed, Rectangle hero) {
+    public void controlCoins(int speed) {
         Iterator<Rectangle> iter = coins.iterator();
         while (iter.hasNext()) {
             Rectangle item = iter.next();
             item.y += speed * Gdx.graphics.getDeltaTime();
-            if (checkCoinCollisions(item, hero)) {
+            if (checkCoinCollisions(item, heroController.hero)) {
                 iter.remove();
+                heroController.diet();
             }
             if (item.y + COIN_SIDE > WORLD_HEIGHT + COIN_SIDE) {
                 iter.remove();

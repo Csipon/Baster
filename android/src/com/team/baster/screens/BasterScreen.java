@@ -12,7 +12,11 @@ import com.team.baster.controller.HeroController;
 import com.team.baster.controller.ScoreController;
 import com.team.baster.domain.BasterGame;
 
-import static com.team.baster.GameConstants.*;
+import static com.team.baster.GameConstants.DEFAULT_SPEED;
+import static com.team.baster.GameConstants.PART_ACCELERATION;
+import static com.team.baster.GameConstants.PERIOD_ACCELERATION;
+import static com.team.baster.GameConstants.WORLD_HEIGHT;
+import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 /**
  * Created by Pasha on 10/20/2017.
@@ -23,13 +27,14 @@ public class BasterScreen implements Screen {
     final BasterGame game;
 
     OrthographicCamera camera;
-    Texture heroImg;
     Texture blockImg;
     Texture blockVertImg;
     Texture squareImg;
     Texture backgroundImg;
     Texture coinImg;
     Texture topNavImg;
+
+
 
     HeroController heroController;
     CoinController coinController;
@@ -43,7 +48,6 @@ public class BasterScreen implements Screen {
 
     public BasterScreen(BasterGame game) {
         this.game = game;
-
         startDate = TimeUtils.nanoTime();
         initCamera();
         initTexture();
@@ -75,7 +79,7 @@ public class BasterScreen implements Screen {
         blockController.checkLasDropItemTime();
         heroController.controlHeroPosition();
         blockController.controlItemPosition(heroController.hero, speed, scoreController.getScore(), coinController.getCoinsCounter());
-        coinController.controlCoins(speed, heroController.hero);
+        coinController.controlCoins(speed);
         coinController.checkCoinGeneration(blockController.blockGenerator.lastDropItem, blockController.blockGenerator.beforeLastDropItem);
     }
 
@@ -101,7 +105,7 @@ public class BasterScreen implements Screen {
 
     @Override
     public void dispose() {
-        heroImg.dispose();
+        heroController.dispose();
         blockImg.dispose();
         squareImg.dispose();
         blockVertImg.dispose();
@@ -111,6 +115,7 @@ public class BasterScreen implements Screen {
 
     @Override
     public void show() {
+
     }
 
 
@@ -123,22 +128,13 @@ public class BasterScreen implements Screen {
 
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720) {
-            backgroundImg = new Texture("bg.jpg");
-            heroImg = new Texture("human.png");
+            backgroundImg = new Texture("bg_sky.jpg");
             blockImg = new Texture("block.jpg");
             blockVertImg = new Texture("block_vertical.jpg");
             squareImg = new Texture("block_square.jpg");
             coinImg = new Texture("coin.png");
-        }else if (WORLD_WIDTH == 1440){
-            backgroundImg = new Texture("1440/bg_1440.jpg");
-            heroImg = new Texture("1440/human_1440.png");
-            blockImg = new Texture("1440/block_1440.jpg");
-            blockVertImg = new Texture("1440/block_vertical_1440.jpg");
-            squareImg = new Texture("1440/block_square_1440.jpg");
-            coinImg = new Texture("1440/coin_1440.png");
         }
     }
-
 
     private void drawScoreCounter() {
         String strScore = "Score " + scoreController.getScore();
@@ -157,7 +153,7 @@ public class BasterScreen implements Screen {
     }
 
     private void drawHero() {
-        game.batch.draw(heroImg, heroController.hero.x, heroController.hero.y);
+        game.batch.draw(heroController.resizeHero(), heroController.hero.x, heroController.hero.y);
     }
 
     private void drawBackground() {
@@ -174,7 +170,7 @@ public class BasterScreen implements Screen {
 
     private void initObjects() {
         heroController = new HeroController();
-        coinController = new CoinController();
+        coinController = new CoinController(heroController);
         scoreController = new ScoreController();
         blockController = new BlockController(game);
         backgroundController = new BackgroundController(backgroundImg);

@@ -30,6 +30,15 @@ public class MyAsyncTask extends AsyncTask {
 
     @Override
     protected void onPostExecute(Object o) {
+//        Example for send simple request
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
+//        MyRequest request = new MyRequest();
+//        try {
+//            request.sendRequest();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         scoreStorage.save(score);
         playerStatusStorage.update(coins, score);
         System.out.println("------- 1 "  + TimeUtils.millis());
