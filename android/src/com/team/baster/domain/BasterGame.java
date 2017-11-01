@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.team.baster.dialog.ActionResolver;
 import com.team.baster.screens.MenuScreen;
 
 
@@ -14,8 +15,11 @@ public class BasterGame extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
     public BitmapFont customFont;
+    public ActionResolver actionResolver;
 
-
+    public BasterGame(ActionResolver actionResolver) {
+        this.actionResolver = actionResolver;
+    }
 
     @Override
     public void create() {

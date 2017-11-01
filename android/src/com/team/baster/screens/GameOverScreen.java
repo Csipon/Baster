@@ -80,7 +80,7 @@ public class GameOverScreen implements Screen {
         System.out.println("------- 4 "  + TimeUtils.millis());
         Gdx.input.setInputProcessor(stage);
 
-        bg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/bg.png"))));
+        bg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/bg.9.png"))));
         loadLabel();
         loadImgButton();
 
@@ -113,11 +113,9 @@ public class GameOverScreen implements Screen {
         coinsTable.add(imgCoins).size(75, 75);
 
         mainTable = new Table();
-        mainTable.setPosition(WORLD_WIDTH/2 - 300, WORLD_HEIGHT/2 - 350);
-        mainTable.setSize(600, WORLD_HEIGHT/2 + 300);
+        mainTable.setPosition(WORLD_WIDTH/2 - 300, WORLD_HEIGHT/2 - 250);
+        mainTable.setSize(600, WORLD_HEIGHT/2 + 100);
         mainTable.setBackground(bg);
-        mainTable.add(imgLose).size(130, 130);
-        mainTable.row();
         mainTable.add(labelLose).padBottom(40);
         mainTable.row();
         mainTable.add(scoreTable);
@@ -142,13 +140,12 @@ public class GameOverScreen implements Screen {
 
         imgButtonPlay = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/start.png", 15, 15));
         imgButtonMenu = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/back-arrow.png", 10, 10));
-        imgButtonMenu.setSize(100,100);
-        imgButtonMenu.setPosition(5, WORLD_HEIGHT - 100);
+        imgButtonMenu.setY(WORLD_HEIGHT - 130);
+        imgButtonMenu.setX(0);
         imgButtonAchieve = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/quality.png", 7, 7));
 
         imgCoins = new Image(new Texture(Gdx.files.internal("icons/piggy.png")));
         imgScore = new Image(new Texture(Gdx.files.internal("icons/score.png")));
-        imgLose = new Image(new Texture(Gdx.files.internal("icons/lose.png")));
 
 
         imgButtonPlay.addListener(new ClickListener(){

@@ -21,6 +21,7 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
  */
 
 public class HeroController {
+
     private static final double SPEED_FACTOR = 1;
     public Rectangle hero;
     public Texture heroTexture;
