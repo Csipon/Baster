@@ -33,7 +33,7 @@ public class GameConstants {
     public static final int HERO_SIZES = 16;
     public static final double MARGIN_LEFT_PERCENT = 0.18;
     public static final int HEAD_WIDTH = 73;
-    public static final int HEAD_HEIGHT = 40;
+    public static final int HEAD_HEIGHT = 35;
     public static final float PART_ACCELERATION = 0.025f;
 
     public static int ITEM_WIDTH = 180;

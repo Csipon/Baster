@@ -72,7 +72,7 @@ public class HeroController {
         hero.height = HERO_HEIGHT;
         heroHead.x = hero.x + (float) (HERO_WIDTH * MARGIN_LEFT_PERCENT);
         System.out.println("Hero Head = " + heroHead.x);
-        heroHead.y = hero.y;
+        heroHead.y = hero.y + 5;
         heroHead.width = HEAD_WIDTH;
         heroHead.height = HEAD_HEIGHT;
         heroBody.x = hero.x;
@@ -92,7 +92,7 @@ public class HeroController {
             hero.x += 2;
             heroBody.x = hero.x;
             heroHead.x = hero.x + (float) (HERO_WIDTH * MARGIN_LEFT_PERCENT);
-            heroHead.y = hero.y;
+            heroHead.y = hero.y + 5;
             heroHead.width += 2;
             heroHead.height += 2;
             heroBody.height = hero.height - heroHead.height;
