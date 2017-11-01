@@ -1,6 +1,7 @@
 package com.team.baster.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
 
 import static com.team.baster.GameConstants.HERO_HEIGHT;
@@ -13,6 +14,7 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
  */
 
 public class HeroController {
+
     private static final double SPEED_FACTOR = 1;
     public Rectangle hero;
 

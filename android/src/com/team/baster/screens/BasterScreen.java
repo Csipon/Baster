@@ -1,8 +1,10 @@
 package com.team.baster.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.controller.BackgroundController;
@@ -21,6 +23,8 @@ import static com.team.baster.GameConstants.*;
 public class BasterScreen implements Screen {
 
     final BasterGame game;
+
+    private ParticleEffect particleEffect = new ParticleEffect();
 
     OrthographicCamera camera;
     Texture heroImg;
@@ -65,6 +69,9 @@ public class BasterScreen implements Screen {
         drawCoins();
         drawScoreCounter();
         drawCoinsCounter();
+
+        particleEffect.draw(game.batch, delta);
+
         game.batch.end();
 
         calculateSpeed();
@@ -121,6 +128,8 @@ public class BasterScreen implements Screen {
 
     private void initTexture() {
 
+        particleEffect.load(Gdx.files.internal("particles/flame.p"), Gdx.files.internal("particles"));
+
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720) {
             backgroundImg = new Texture("bg.jpg");
@@ -157,6 +166,8 @@ public class BasterScreen implements Screen {
     }
 
     private void drawHero() {
+        particleEffect.setPosition(heroController.hero.x + HERO_WIDTH/2, heroController.hero.y + HERO_HEIGHT);
+        particleEffect.start();
         game.batch.draw(heroImg, heroController.hero.x, heroController.hero.y);
     }
 

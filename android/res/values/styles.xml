@@ -9,4 +9,9 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="DialogTheme">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_bottom</item>
+    </style>
+
 </resources>
