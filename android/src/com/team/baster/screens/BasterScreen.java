@@ -1,10 +1,8 @@
 package com.team.baster.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.controller.BackgroundController;
@@ -28,10 +26,9 @@ public class BasterScreen implements Screen {
 
     final BasterGame game;
 
-    private ParticleEffect particleEffect = new ParticleEffect();
+//    private ParticleEffect particleEffect = new ParticleEffect();
 
     OrthographicCamera camera;
-    Texture heroImg;
     Texture blockImg;
     Texture blockVertImg;
     Texture squareImg;
@@ -75,7 +72,7 @@ public class BasterScreen implements Screen {
         drawScoreCounter();
         drawCoinsCounter();
 
-        particleEffect.draw(game.batch, delta);
+//        particleEffect.draw(game.batch, delta);
 
         game.batch.end();
 
@@ -135,7 +132,7 @@ public class BasterScreen implements Screen {
 
     private void initTexture() {
 
-        particleEffect.load(Gdx.files.internal("particles/flame.p"), Gdx.files.internal("particles"));
+//        particleEffect.load(Gdx.files.internal("particles/particle.p"), Gdx.files.internal("particles"));
 
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720) {
@@ -164,9 +161,9 @@ public class BasterScreen implements Screen {
     }
 
     private void drawHero() {
-        particleEffect.setPosition(heroController.hero.x + HERO_WIDTH/2, heroController.hero.y + HERO_HEIGHT);
-        particleEffect.start();
-        game.batch.draw(heroImg, heroController.hero.x, heroController.hero.y);
+//        particleEffect.setPosition(heroController.hero.x + heroController.hero.width/2, heroController.hero.y + heroController.hero.height);
+//        particleEffect.start();
+        game.batch.draw(heroController.heroTexture, heroController.hero.x, heroController.hero.y);
     }
 
     private void drawBackground() {
