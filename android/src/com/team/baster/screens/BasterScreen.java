@@ -72,13 +72,14 @@ public class BasterScreen implements Screen {
         game.batch.end();
 
         calculateSpeed();
+        heroController.resizeHero();
         scoreController.calculateScore(speed);
         backgroundController.checkLasDropBackground();
         backgroundController.controlBackgroundPosition(speed);
         heroController.controlHeroInput();
         blockController.checkLasDropItemTime();
         heroController.controlHeroPosition();
-        blockController.controlItemPosition(heroController.hero, speed, scoreController.getScore(), coinController.getCoinsCounter());
+        blockController.controlItemPosition(heroController.heroHead, heroController.heroBody, speed, scoreController.getScore(), coinController.getCoinsCounter());
         coinController.controlCoins(speed);
         coinController.checkCoinGeneration(blockController.blockGenerator.lastDropItem, blockController.blockGenerator.beforeLastDropItem);
     }
@@ -153,7 +154,7 @@ public class BasterScreen implements Screen {
     }
 
     private void drawHero() {
-        game.batch.draw(heroController.resizeHero(), heroController.hero.x, heroController.hero.y);
+        game.batch.draw(heroController.heroTexture, heroController.hero.x, heroController.hero.y);
     }
 
     private void drawBackground() {

@@ -37,7 +37,7 @@ public class CoinController {
         while (iter.hasNext()) {
             Rectangle item = iter.next();
             item.y += speed * Gdx.graphics.getDeltaTime();
-            if (checkCoinCollisions(item, heroController.hero)) {
+            if (checkCoinCollisions(item, heroController.heroHead) || checkCoinCollisions(item, heroController.heroBody)) {
                 iter.remove();
                 heroController.diet();
             }

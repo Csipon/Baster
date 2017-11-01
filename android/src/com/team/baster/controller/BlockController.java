@@ -32,20 +32,20 @@ public class BlockController {
         playerStatusStorage = PlayerStatusStorage.getInstance();
     }
 
-    public void controlItemPosition(Rectangle hero, int speed, int score, int coins) {
-        controlBlockPosition(hero, speed, score, coins);
-        controlSquarePosition(hero, speed, score, coins);
+    public void controlItemPosition(Rectangle head, Rectangle body, int speed, int score, int coins) {
+        controlBlockPosition(head, body, speed, score, coins);
+        controlSquarePosition(head, body, speed, score, coins);
     }
 
-    private void controlBlockPosition(Rectangle hero, int speed, int score, int coins) {
+    private void controlBlockPosition(Rectangle head, Rectangle body, int speed, int score, int coins) {
 
         for (Rectangle item : blockGenerator.blocks) {
             item.y += speed * Gdx.graphics.getDeltaTime();
-            checkHeroCollision(item, hero, score, coins);
+            checkHeroCollision(item, head, body, score, coins);
         }
     }
 
-    private void controlSquarePosition(Rectangle hero, int speed, int score, int coins) {
+    private void controlSquarePosition(Rectangle head, Rectangle body, int speed, int score, int coins) {
         for (Rectangle aSquare : blockGenerator.square) {
             Square item = (Square) aSquare;
             item.y += speed * Gdx.graphics.getDeltaTime();
@@ -56,12 +56,12 @@ public class BlockController {
             } else if (item.isLeft()) {
                 item.x -= horMove;
             }
-            checkHeroCollision(item, hero, score, coins);
+            checkHeroCollision(item, head, body, score, coins);
         }
     }
 
-    private void checkHeroCollision(Rectangle item, Rectangle hero, int score, int coins) {
-        if (item.overlaps(hero)) {
+    private void checkHeroCollision(Rectangle item, Rectangle head, Rectangle body, int score, int coins) {
+        if (item.overlaps(head) || item.overlaps(body)) {
             save(score, coins);
             game.setScreen(new GameOverScreen(game, score, coins));
         }
