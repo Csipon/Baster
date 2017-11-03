@@ -13,6 +13,7 @@ import static com.team.baster.GameConstants.COIN_SIDE;
 import static com.team.baster.GameConstants.MAX_COIN_GENER_TIME;
 import static com.team.baster.GameConstants.MIN_COIN_GENER_TIME;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
+import static com.team.baster.controller.HeroController.intersect;
 
 /**
  * Created by Pasha on 10/28/2017.
@@ -37,7 +38,8 @@ public class CoinController {
         while (iter.hasNext()) {
             Rectangle item = iter.next();
             item.y += speed * Gdx.graphics.getDeltaTime();
-            if (checkCoinCollisions(item, heroController.heroHead) || checkCoinCollisions(item, heroController.heroBody)) {
+            if (intersect(item, heroController.circleHead) || intersect(item, heroController.circleBody)) {
+                coinsCounter += 1;
                 iter.remove();
                 heroController.diet();
             }
@@ -46,14 +48,14 @@ public class CoinController {
             }
         }
     }
-
-    public boolean checkCoinCollisions(Rectangle item, Rectangle hero) {
-        if (item.overlaps(hero)) {
-            coinsCounter += 1;
-            return true;
-        }
-        return false;
-    }
+//
+//    public boolean checkCoinCollisions(Rectangle item, Rectangle hero) {
+//        if (item.overlaps(hero)) {
+//            coinsCounter += 1;
+//            return true;
+//        }
+//        return false;
+//    }
 
     public void checkCoinGeneration(Rectangle lastDropItem, Rectangle beforeLastDropItem) {
         if (periodCoinDrop < TimeUtils.nanoTime() - lastDropCoinTime) {

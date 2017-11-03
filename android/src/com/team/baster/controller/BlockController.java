@@ -1,6 +1,7 @@
 package com.team.baster.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.asynch.MyAsyncTask;
@@ -14,6 +15,7 @@ import com.team.baster.storage.ScoreStorage;
 import static com.team.baster.GameConstants.HORIZONTAL_SPEED;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
+import static com.team.baster.controller.HeroController.intersect;
 
 /**
  * Created by Pasha on 10/28/2017.
@@ -32,12 +34,12 @@ public class BlockController {
         playerStatusStorage = PlayerStatusStorage.getInstance();
     }
 
-    public void controlItemPosition(Rectangle head, Rectangle body, int speed, int score, int coins) {
+    public void controlItemPosition(Circle head, Circle body, int speed, int score, int coins) {
         controlBlockPosition(head, body, speed, score, coins);
         controlSquarePosition(head, body, speed, score, coins);
     }
 
-    private void controlBlockPosition(Rectangle head, Rectangle body, int speed, int score, int coins) {
+    private void controlBlockPosition(Circle head, Circle body, int speed, int score, int coins) {
 
         for (Rectangle item : blockGenerator.blocks) {
             item.y += speed * Gdx.graphics.getDeltaTime();
@@ -45,7 +47,7 @@ public class BlockController {
         }
     }
 
-    private void controlSquarePosition(Rectangle head, Rectangle body, int speed, int score, int coins) {
+    private void controlSquarePosition(Circle head, Circle body, int speed, int score, int coins) {
         for (Rectangle aSquare : blockGenerator.square) {
             Square item = (Square) aSquare;
             item.y += speed * Gdx.graphics.getDeltaTime();
@@ -60,8 +62,8 @@ public class BlockController {
         }
     }
 
-    private void checkHeroCollision(Rectangle item, Rectangle head, Rectangle body, int score, int coins) {
-        if (item.overlaps(head) || item.overlaps(body)) {
+    private void checkHeroCollision(Rectangle item, Circle head, Circle body, int score, int coins) {
+        if (intersect(item, head) || intersect(item, body)) {
             save(score, coins);
             game.setScreen(new GameOverScreen(game, score, coins));
         }
