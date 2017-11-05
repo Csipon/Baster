@@ -7,15 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
-import static com.team.baster.GameConstants.HEAD_HEIGHT;
-import static com.team.baster.GameConstants.HEAD_WIDTH;
-import static com.team.baster.GameConstants.HERO_HEIGHT;
-import static com.team.baster.GameConstants.HERO_SIZES;
-import static com.team.baster.GameConstants.HERO_WIDTH;
-import static com.team.baster.GameConstants.MARGIN_LEFT_PERCENT;
-import static com.team.baster.GameConstants.PERIOD_RESIZE;
-import static com.team.baster.GameConstants.WORLD_HEIGHT;
-import static com.team.baster.GameConstants.WORLD_WIDTH;
+import static com.team.baster.GameConstants.*;
 
 /**
  * Created by Pasha on 10/28/2017.
@@ -32,15 +24,10 @@ public class HeroController {
     private int heroSize = 0;
     private long timeLeft;
 
-//    public Rectangle heroHead;
-
-
-
     public HeroController() {
         hero = new Rectangle();
         circleBody = new Circle();
         circleHead = new Circle();
-//        heroHead = new Rectangle();
         heroSizes = new Array<>();
         timeLeft = TimeUtils.nanoTime();
         initArray();
@@ -51,16 +38,23 @@ public class HeroController {
         if (Gdx.input.isTouched()) {
             double x = Gdx.input.getDeltaX() * SPEED_FACTOR;
             hero.x += x;
-//            heroHead.x += x;
             circleBody.x += x;
             circleHead.x += x;
         }
     }
 
     public void controlHeroPosition() {
-        if (hero.x < 0) hero.x = 0;
-        if (hero.x > WORLD_WIDTH - heroTexture.getWidth())
+        if (hero.x < 0){
+            hero.x = 0;
+            circleBody.x = hero.width / 2;
+            circleHead.x = hero.width / 2;
+        }
+
+        if (hero.x > WORLD_WIDTH - heroTexture.getWidth()){
             hero.x = WORLD_WIDTH - heroTexture.getWidth();
+            circleBody.x = hero.x + hero.width / 2;
+            circleHead.x = hero.x + hero.width / 2;
+        }
     }
 
     private void initArray() {
@@ -75,44 +69,39 @@ public class HeroController {
         hero.y = WORLD_HEIGHT - (WORLD_HEIGHT / 5) - HERO_HEIGHT;
         hero.width = HERO_WIDTH;
         hero.height = HERO_HEIGHT;
-//        heroHead.x = hero.x + (float) (HERO_WIDTH * MARGIN_LEFT_PERCENT);
-//        System.out.println("Hero Head = " + heroHead.x);
-//        heroHead.y = hero.y + 5;
-//        heroHead.width = HEAD_WIDTH;
-//        heroHead.height = HEAD_HEIGHT;
-        circleHead.set(hero.x + (float) (HERO_WIDTH * MARGIN_LEFT_PERCENT) + HEAD_WIDTH / 2, hero.y + HEAD_WIDTH / 2 + 5,HEAD_WIDTH / 2);
-        circleBody.set(hero.x + HERO_WIDTH / 2, circleHead.y + circleHead.radius + HERO_WIDTH / 2,HERO_WIDTH / 2);
+        circleHead.set(hero.x + HERO_WIDTH / 2, hero.y + HEAD_HEIGHT / 2 + 5,HEAD_HEIGHT / 2);
+        circleBody.set(hero.x + HERO_WIDTH / 2, circleHead.y + circleHead.radius + HERO_WIDTH / 4 - 5,HERO_WIDTH / 2 - 5);
     }
 
     public Texture resizeHero() {
         long time = TimeUtils.nanoTime() - timeLeft;
         if (time / PERIOD_RESIZE >= 1 && heroSize < heroSizes.size - 1) {
-            heroTexture = heroSizes.get(++heroSize);
-            hero.width = heroTexture.getWidth();
-            hero.height = heroTexture.getHeight();
-            hero.x -= 2;
-//            heroHead.x = hero.x + (float) (HERO_WIDTH * MARGIN_LEFT_PERCENT);
-//            heroHead.y = hero.y + 5;
-//            heroHead.width += 2;
-//            heroHead.height += 2;
-            circleHead.set(hero.x + (float) (HERO_WIDTH * MARGIN_LEFT_PERCENT) + circleHead.radius, hero.y + circleHead.radius + 5,circleHead.radius + 2);
-            circleBody.set(hero.x + hero.width / 2, circleHead.y + circleHead.radius + hero.width / 2, hero.width / 2);
-            timeLeft = TimeUtils.nanoTime();
+            return eatFood();
         }
         return heroTexture;
     }
 
+
+    public Texture eatFood(){
+        if (heroSize < heroSizes.size - 1) {
+            heroTexture = heroSizes.get(++heroSize);
+            hero.width = heroTexture.getWidth();
+            hero.height = heroTexture.getHeight();
+            hero.x -= 2;
+            circleHead.set(hero.x + hero.width / 2, hero.y + circleHead.radius + 5, circleHead.radius + 2);
+            circleBody.set(hero.x + hero.width / 2, circleHead.y + circleHead.radius + hero.width / 4 - 5, hero.width / 2 - 5);
+            timeLeft = TimeUtils.nanoTime();
+        }
+        return heroTexture;
+    }
     public Texture diet() {
         if (heroSize > 0) {
             heroTexture = heroSizes.get(--heroSize);
             hero.width = heroTexture.getWidth();
             hero.height = heroTexture.getHeight();
             hero.x += 2;
-//            heroHead.x = hero.x + (float) (HERO_WIDTH * MARGIN_LEFT_PERCENT);
-//            heroHead.width -= 2;
-//            heroHead.height -= 2;
-            circleHead.set(hero.x + (float) (HERO_WIDTH * MARGIN_LEFT_PERCENT) + circleHead.radius, hero.y + circleHead.radius + 5,circleHead.radius - 2);
-            circleBody.set(hero.x + hero.width / 2, circleHead.y + circleHead.radius + hero.width / 2, hero.width / 2);
+            circleHead.set(hero.x + hero.width / 2, hero.y + circleHead.radius + 5,circleHead.radius - 2);
+            circleBody.set(hero.x + hero.width / 2, circleHead.y + circleHead.radius + hero.width / 4 - 5, hero.width / 2 - 5);
             timeLeft = TimeUtils.nanoTime();
         }
         return heroTexture;

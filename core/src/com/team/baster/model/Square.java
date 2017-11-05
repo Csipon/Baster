@@ -12,6 +12,13 @@ public class Square extends Rectangle {
     private boolean left;
     private boolean right;
 
+
+    public Square(Rectangle rect) {
+        super(rect);
+        left = ((Square) rect).isLeft();
+        right = ((Square) rect).isRight();
+    }
+
     public Square() {
         this.height = ITEM_SQUARE_SIDE;
         this.width = ITEM_SQUARE_SIDE;

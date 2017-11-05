@@ -3,6 +3,7 @@ package com.team.baster.screens;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.controller.BackgroundController;
@@ -11,6 +12,10 @@ import com.team.baster.controller.CoinController;
 import com.team.baster.controller.HeroController;
 import com.team.baster.controller.ScoreController;
 import com.team.baster.domain.BasterGame;
+import com.team.baster.generator.UnitGeneration;
+import com.team.baster.model.Burger;
+import com.team.baster.model.Pill;
+import com.team.baster.model.Square;
 
 import static com.team.baster.GameConstants.DEFAULT_SPEED;
 import static com.team.baster.GameConstants.PART_ACCELERATION;
@@ -36,7 +41,7 @@ public class BasterScreen implements Screen {
     Texture coinImg;
     Texture topNavImg;
 
-
+    ShapeRenderer shapeRenderer;
 
     HeroController heroController;
     CoinController coinController;
@@ -46,10 +51,13 @@ public class BasterScreen implements Screen {
 
     private int speed = DEFAULT_SPEED;
     private long startDate;
+    private Texture burgerImg;
+    private Texture pillImg;
 
 
     public BasterScreen(BasterGame game) {
         this.game = game;
+        shapeRenderer = new ShapeRenderer();
         startDate = TimeUtils.nanoTime();
         initCamera();
         initTexture();
@@ -63,6 +71,7 @@ public class BasterScreen implements Screen {
     @Override
     public void render(float delta) {
         game.batch.setProjectionMatrix(camera.combined);
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         game.batch.begin();
         drawBackground();
         drawNavBar();
@@ -73,10 +82,18 @@ public class BasterScreen implements Screen {
         drawCoinsCounter();
 
 //        particleEffect.draw(game.batch, delta);
-
+//        shapeRenderer.setColor(0, 1, 0, 1);
+//        shapeRenderer.circle(heroController.circleHead.x, heroController.circleHead.y, heroController.circleHead.radius);
+//        shapeRenderer.circle(heroController.circleBody.x, heroController.circleBody.y, heroController.circleBody.radius);
+//        for (Rectangle rectangle : blockController.blockGenerator.square) {
+//
+//            shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+//        }
         game.batch.end();
+//        shapeRenderer.end();
 
         calculateSpeed();
+        blockController.controlItemsPosition(heroController.circleHead, heroController.circleBody, speed, scoreController.getScore(), coinController.getCoinsCounter());
         heroController.resizeHero();
         scoreController.calculateScore(speed);
         backgroundController.checkLasDropBackground();
@@ -84,9 +101,8 @@ public class BasterScreen implements Screen {
         heroController.controlHeroInput();
         blockController.checkLasDropItemTime();
         heroController.controlHeroPosition();
-        blockController.controlItemPosition(heroController.circleHead, heroController.circleBody, speed, scoreController.getScore(), coinController.getCoinsCounter());
-        coinController.controlCoins(speed);
-        coinController.checkCoinGeneration(blockController.blockGenerator.lastDropItem, blockController.blockGenerator.beforeLastDropItem);
+//        coinController.controlCoins(speed);
+//        coinController.checkCoinGeneration(blockController.blockGenerator.lastDropItem, blockController.blockGenerator.beforeLastDropItem);
     }
 
     @Override
@@ -136,6 +152,8 @@ public class BasterScreen implements Screen {
 
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720) {
+            burgerImg = new Texture("burger.png");
+            pillImg = new Texture("pills.png");
             backgroundImg = new Texture("bg_sky.jpg");
             blockImg = new Texture("block.jpg");
             blockVertImg = new Texture("block_vertical.jpg");
@@ -182,20 +200,27 @@ public class BasterScreen implements Screen {
         heroController = new HeroController();
         coinController = new CoinController(heroController);
         scoreController = new ScoreController();
-        blockController = new BlockController(game);
+        blockController = new BlockController(game, heroController);
         backgroundController = new BackgroundController(backgroundImg);
     }
 
     private void drawItems() {
-        for (Rectangle rectangle : blockController.blockGenerator.getBlocks()) {
-            if (rectangle.width > rectangle.height) {
-                game.batch.draw(blockImg, rectangle.x, rectangle.y);
-            } else {
-                game.batch.draw(blockVertImg, rectangle.x, rectangle.y);
+        for (UnitGeneration unit : blockController.units){
+            for (Rectangle rectangle : unit.blocks) {
+                if (rectangle instanceof Square) {
+                    game.batch.draw(squareImg, rectangle.x, rectangle.y);
+                } else {
+                    game.batch.draw(blockVertImg, rectangle.x, rectangle.y);
+                }
             }
-        }
-        for (Rectangle rectangle : blockController.blockGenerator.getSquare()) {
-            game.batch.draw(squareImg, rectangle.x, rectangle.y);
+            for (Rectangle rectangle : unit.actionItems){
+                if (rectangle instanceof Pill){
+                    game.batch.draw(pillImg, rectangle.x, rectangle.y);
+                }else if (rectangle instanceof Burger){
+                    game.batch.draw(burgerImg, rectangle.x, rectangle.y);
+                }
+            }
+
         }
     }
 

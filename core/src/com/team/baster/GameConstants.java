@@ -47,7 +47,10 @@ public class GameConstants {
     public static int HERO_HEIGHT = 160;
 
     public static int COIN_SIDE = 50;
+    public static int ACTION_ITEM_SIDE = 50;
 
+
+    public static int BUFFER_Y = -100;
 
     public static final long MIN_COIN_GENER_TIME = 2_000_000_000L;
     public static final long MAX_COIN_GENER_TIME = 4_000_000_000L;
