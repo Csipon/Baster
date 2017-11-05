@@ -14,7 +14,8 @@ public class GameConstants {
             ITEM_WIDTH = ITEM_WIDTH * differenceWidth;
             ITEM_VERT_WIDTH = ITEM_VERT_WIDTH * differenceWidth;
             HERO_WIDTH = HERO_WIDTH * differenceWidth;
-            ITEM_SQUARE_SIDE = ITEM_SQUARE_SIDE * differenceWidth;
+            ITEM_AIRPLANE_HEIGHT = ITEM_AIRPLANE_HEIGHT * differenceWidth;
+            ITEM_AIRPLANE_WIDTH = ITEM_AIRPLANE_WIDTH * differenceWidth;
             ITEM_VERT_HEIGHT = ITEM_VERT_HEIGHT * differenceWidth;
             ITEM_HEIGHT = ITEM_HEIGHT * differenceWidth;
             HERO_HEIGHT = HERO_HEIGHT * differenceWidth;
@@ -29,22 +30,36 @@ public class GameConstants {
     public static final int DEFAULT_SPEED = 300;
     public static final int HORIZONTAL_SPEED = 200;
     public static final long PERIOD_ACCELERATION = 10_00_000_000L;
-    public static final float PART_ACCELERATION = 0.035f;
+    public static final long PERIOD_RESIZE = 2_000_000_000L;
+    public static final int HERO_SIZES = 16;
+    public static final int HEAD_HEIGHT = 35;
+    public static final float PART_ACCELERATION = 0.025f;
 
     public static int ITEM_WIDTH = 180;
     public static int ITEM_HEIGHT = 70;
+    public static int ITEM_TOP_VERT_WIDTH = 100;
     public static int ITEM_VERT_WIDTH = 70;
-    public static int ITEM_VERT_HEIGHT = 180;
-    public static int ITEM_SQUARE_SIDE = 100;
+    public static int ITEM_TOP_VERT_HEIGHT = 40;
+    public static int ITEM_VERT_HEIGHT = 120;
+
+//    public static int ITEM_AIRPLANE_WIDTH = 130;
+//    public static int ITEM_AIRPLANE_HEIGHT = 100;
+    public static int ITEM_AIRPLANE_WIDTH = 200;
+    public static int ITEM_AIRPLANE_HEIGHT = 80;
 
 
     public static int HERO_WIDTH = 100;
     public static int HERO_HEIGHT = 160;
 
     public static int COIN_SIDE = 50;
+    public static int ACTION_ITEM_SIDE = 50;
+
+    public static int DISTANCE_FIVE_BLOCK = 300;
 
 
-    public static final long MIN_COIN_GENER_TIME = 5_000_000_000L;
-    public static final long MAX_COIN_GENER_TIME = 7_000_000_000L;
+    public static int BUFFER_Y = -100;
+
+    public static final long MIN_COIN_GENER_TIME = 2_000_000_000L;
+    public static final long MAX_COIN_GENER_TIME = 4_000_000_000L;
 
 }

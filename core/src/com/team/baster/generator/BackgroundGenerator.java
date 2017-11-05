@@ -12,20 +12,20 @@ import static com.team.baster.GameConstants.WORLD_HEIGHT;
 
 public class BackgroundGenerator {
 
-    private Array<Rectangle> background;
-    private Rectangle lastDropBack;
+    private Array<Rectangle> backgrounds;
+    public Rectangle lastDropBack;
     private Texture backgroundImg;
 
-    public BackgroundGenerator(Texture backgroundImg) {
+    public BackgroundGenerator(Texture backgroundImg, Array<Rectangle> backgrounds) {
         this.backgroundImg = backgroundImg;
-        background = new Array<>();
+        this.backgrounds = backgrounds;
     }
 
 
-    private void dropBackground() {
+    public void dropBackground() {
         Rectangle back;
-        if (background.size == 5) {
-            back = background.removeIndex(0);
+        if (backgrounds.size == 5) {
+            back = backgrounds.removeIndex(0);
         } else {
             back = new Rectangle();
         }
@@ -39,14 +39,8 @@ public class BackgroundGenerator {
         back.width = backgroundImg.getWidth();
         back.height = backgroundImg.getHeight();
 
-        background.add(back);
+        backgrounds.add(back);
         lastDropBack = back;
-    }
-
-    public void checkLasDropBackground() {
-        if (lastDropBack.y >= -2) {
-            dropBackground();
-        }
     }
 
     public void dropStartBackground() {
@@ -58,10 +52,5 @@ public class BackgroundGenerator {
                 break;
             }
         }
-    }
-
-
-    public Array<Rectangle> getBackground() {
-        return background;
     }
 }
