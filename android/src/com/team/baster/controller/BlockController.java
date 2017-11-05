@@ -11,12 +11,13 @@ import com.team.baster.generator.Generator;
 import com.team.baster.generator.UnitGeneration;
 import com.team.baster.model.Burger;
 import com.team.baster.model.Pill;
-import com.team.baster.model.Square;
+import com.team.baster.model.DynamicBlock;
 import com.team.baster.screens.GameOverScreen;
 import com.team.baster.storage.PlayerStatusStorage;
 import com.team.baster.storage.ScoreStorage;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import static com.team.baster.GameConstants.HORIZONTAL_SPEED;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
@@ -30,18 +31,18 @@ import static com.team.baster.controller.HeroController.intersect;
 public class BlockController {
     private ScoreStorage scoreStorage;
     private PlayerStatusStorage playerStatusStorage;
-    //    public BlockGenerator blockGenerator;
     private Generator generator;
     public Array<UnitGeneration> units;
     BasterGame game;
     public HeroController heroController;
+    private Random random;
 
     public BlockController(BasterGame game, HeroController heroController) {
         this.game = game;
+        random = new Random();
         this.heroController = heroController;
         generator = new Generator();
         units = new Array<>();
-//        blockGenerator = new BlockGenerator();
         scoreStorage = new ScoreStorage();
         playerStatusStorage = PlayerStatusStorage.getInstance();
     }
@@ -50,8 +51,8 @@ public class BlockController {
         for (UnitGeneration unit : units) {
             for (Rectangle rect : unit.blocks) {
                 rect.y += speed * Gdx.graphics.getDeltaTime();
-                if (rect instanceof Square) {
-                    controlSquarePosition((Square) rect);
+                if (rect instanceof DynamicBlock) {
+                    controlDynamicPosition((DynamicBlock) rect);
                 }
                 checkHeroCollision(rect, head, body, score, coins);
             }
@@ -74,7 +75,7 @@ public class BlockController {
         }
     }
 
-    private void controlSquarePosition(Square item) {
+    private void controlDynamicPosition(DynamicBlock item) {
         item.checkCoordinate(WORLD_WIDTH);
         int horMove = (int) (HORIZONTAL_SPEED * Gdx.graphics.getDeltaTime());
         if (item.isRight()) {
@@ -117,17 +118,7 @@ public class BlockController {
     }
 
     public void dropItem() {
-        if (Math.random() > 0.5){
-            UnitGeneration copy = generator.units.first().getCopy();
-            if (Math.random() > 0.5) {
-                ((Square)copy.blocks.first()).moveLeft();
-            }else{
-                ((Square)copy.blocks.first()).moveRight();
-            }
-            units.add(copy);
-        }else {
-            units.add(generator.units.peek().getCopy());
-        }
+        units.add(generator.units.get(random.nextInt(generator.units.size)).getCopy());
     }
 
 }

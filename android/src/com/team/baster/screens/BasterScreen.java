@@ -14,8 +14,10 @@ import com.team.baster.controller.ScoreController;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.UnitGeneration;
 import com.team.baster.model.Burger;
+import com.team.baster.model.HorizBlock;
 import com.team.baster.model.Pill;
-import com.team.baster.model.Square;
+import com.team.baster.model.DynamicBlock;
+import com.team.baster.model.VertBlock;
 
 import static com.team.baster.GameConstants.DEFAULT_SPEED;
 import static com.team.baster.GameConstants.PART_ACCELERATION;
@@ -36,7 +38,11 @@ public class BasterScreen implements Screen {
     OrthographicCamera camera;
     Texture blockImg;
     Texture blockVertImg;
-    Texture squareImg;
+    Texture tubeTopImg;
+    Texture tubeBodyImg;
+    Texture tubeBotImg;
+    Texture airplaneLeftImg;
+    Texture airplaneRightImg;
     Texture backgroundImg;
     Texture coinImg;
     Texture topNavImg;
@@ -74,10 +80,10 @@ public class BasterScreen implements Screen {
 //        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         game.batch.begin();
         drawBackground();
-        drawNavBar();
         drawHero();
-        drawItems();
+        drawBlocks();
         drawCoins();
+        drawNavBar();
         drawScoreCounter();
         drawCoinsCounter();
 
@@ -129,7 +135,8 @@ public class BasterScreen implements Screen {
     public void dispose() {
         heroController.dispose();
         blockImg.dispose();
-        squareImg.dispose();
+        airplaneLeftImg.dispose();
+        airplaneRightImg.dispose();
         blockVertImg.dispose();
         backgroundImg.dispose();
         topNavImg.dispose();
@@ -152,12 +159,17 @@ public class BasterScreen implements Screen {
 
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720) {
+            airplaneLeftImg = new Texture("air_left.png");
+            airplaneRightImg = new Texture("air_right.png");
             burgerImg = new Texture("burger.png");
             pillImg = new Texture("pills.png");
             backgroundImg = new Texture("bg_sky.jpg");
             blockImg = new Texture("block.jpg");
-            blockVertImg = new Texture("block_vertical.jpg");
-            squareImg = new Texture("block_square.jpg");
+//            blockVertImg = new Texture("block_vertical.jpg");
+//            blockVertImg = new Texture("barrel_1.png");
+            tubeTopImg = new Texture("mario_tube_top.png");
+            tubeBodyImg = new Texture("mario_tube_body.png");
+            tubeBotImg = new Texture("mario_tube_bot.png");
             coinImg = new Texture("coin.png");
         }
     }
@@ -204,13 +216,25 @@ public class BasterScreen implements Screen {
         backgroundController = new BackgroundController(backgroundImg);
     }
 
-    private void drawItems() {
+    private void drawBlocks() {
         for (UnitGeneration unit : blockController.units){
             for (Rectangle rectangle : unit.blocks) {
-                if (rectangle instanceof Square) {
-                    game.batch.draw(squareImg, rectangle.x, rectangle.y);
-                } else {
-                    game.batch.draw(blockVertImg, rectangle.x, rectangle.y);
+                if (rectangle instanceof DynamicBlock) {
+                    if (((DynamicBlock) rectangle).isLeft()){
+                        game.batch.draw(airplaneLeftImg, rectangle.x, rectangle.y);
+                    }else {
+                        game.batch.draw(airplaneRightImg, rectangle.x, rectangle.y);
+                    }
+                } else if (rectangle instanceof HorizBlock){
+                    game.batch.draw(blockImg, rectangle.x, rectangle.y);
+                }else if (rectangle instanceof VertBlock){
+                    if (((VertBlock) rectangle).isTop){
+                        game.batch.draw(tubeTopImg, rectangle.x, rectangle.y);
+                    }else if (((VertBlock) rectangle).isBody){
+                        game.batch.draw(tubeBodyImg, rectangle.x, rectangle.y);
+                    }else if (((VertBlock) rectangle).isBot){
+                        game.batch.draw(tubeBotImg, rectangle.x, rectangle.y);
+                    }
                 }
             }
             for (Rectangle rectangle : unit.actionItems){

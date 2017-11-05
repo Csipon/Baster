@@ -2,26 +2,27 @@ package com.team.baster.model;
 
 import com.badlogic.gdx.math.Rectangle;
 
-import static com.team.baster.GameConstants.ITEM_SQUARE_SIDE;
+import static com.team.baster.GameConstants.ITEM_AIRPLANE_HEIGHT;
+import static com.team.baster.GameConstants.ITEM_AIRPLANE_WIDTH;
 
 /**
  * Created by Pasha on 10/26/2017.
  */
 
-public class Square extends Rectangle {
+public class DynamicBlock extends Block {
     private boolean left;
     private boolean right;
 
 
-    public Square(Rectangle rect) {
+    public DynamicBlock(Rectangle rect) {
         super(rect);
-        left = ((Square) rect).isLeft();
-        right = ((Square) rect).isRight();
+        left = ((DynamicBlock) rect).isLeft();
+        right = ((DynamicBlock) rect).isRight();
     }
 
-    public Square() {
-        this.height = ITEM_SQUARE_SIDE;
-        this.width = ITEM_SQUARE_SIDE;
+    public DynamicBlock() {
+        this.height = ITEM_AIRPLANE_HEIGHT;
+        this.width = ITEM_AIRPLANE_WIDTH;
     }
 
 
@@ -46,7 +47,7 @@ public class Square extends Rectangle {
     public void checkCoordinate(int worldWidth){
         if (this.x <= 1){
             moveRight();
-        }else if (this.x >= worldWidth - this.height){
+        }else if (this.x >= worldWidth - this.width){
             moveLeft();
         }
     }
