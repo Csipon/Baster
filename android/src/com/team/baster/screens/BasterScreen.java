@@ -1,8 +1,10 @@
 package com.team.baster.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -14,9 +16,9 @@ import com.team.baster.controller.ScoreController;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.UnitGeneration;
 import com.team.baster.model.Burger;
+import com.team.baster.model.DynamicBlock;
 import com.team.baster.model.HorizBlock;
 import com.team.baster.model.Pill;
-import com.team.baster.model.DynamicBlock;
 import com.team.baster.model.VertBlock;
 
 import static com.team.baster.GameConstants.DEFAULT_SPEED;
@@ -33,7 +35,7 @@ public class BasterScreen implements Screen {
 
     final BasterGame game;
 
-//    private ParticleEffect particleEffect = new ParticleEffect();
+    private ParticleEffect particleEffect = new ParticleEffect();
 
     OrthographicCamera camera;
     Texture blockImg;
@@ -87,6 +89,7 @@ public class BasterScreen implements Screen {
         drawScoreCounter();
         drawCoinsCounter();
 
+//        particleEffect.update(delta);
 //        particleEffect.draw(game.batch, delta);
 //        shapeRenderer.setColor(0, 1, 0, 1);
 //        shapeRenderer.circle(heroController.circleHead.x, heroController.circleHead.y, heroController.circleHead.radius);
@@ -155,7 +158,7 @@ public class BasterScreen implements Screen {
 
     private void initTexture() {
 
-//        particleEffect.load(Gdx.files.internal("particles/particle.p"), Gdx.files.internal("particles"));
+        particleEffect.load(Gdx.files.internal("particles/hero.p"), Gdx.files.internal("part-icles"));
 
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720) {
