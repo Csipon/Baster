@@ -1,10 +1,8 @@
 package com.team.baster.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -34,8 +32,6 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 public class BasterScreen implements Screen {
 
     final BasterGame game;
-
-    private ParticleEffect particleEffect = new ParticleEffect();
 
     OrthographicCamera camera;
     Texture blockImg;
@@ -157,9 +153,6 @@ public class BasterScreen implements Screen {
     }
 
     private void initTexture() {
-
-        particleEffect.load(Gdx.files.internal("particles/hero.p"), Gdx.files.internal("part-icles"));
-
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720) {
             airplaneLeftImg = new Texture("air_left.png");
