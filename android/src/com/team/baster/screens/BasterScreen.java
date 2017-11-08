@@ -10,6 +10,7 @@ import com.team.baster.controller.BackgroundController;
 import com.team.baster.controller.BlockController;
 import com.team.baster.controller.CoinController;
 import com.team.baster.controller.HeroController;
+import com.team.baster.controller.ParatrooperController;
 import com.team.baster.controller.ScoreController;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.UnitGeneration;
@@ -44,9 +45,11 @@ public class BasterScreen implements Screen {
     Texture backgroundImg;
     Texture coinImg;
     Texture topNavImg;
+    Texture paratrooperImg;
 
     ShapeRenderer shapeRenderer;
 
+    ParatrooperController paratrooperController;
     HeroController heroController;
     CoinController coinController;
     ScoreController scoreController;
@@ -81,6 +84,7 @@ public class BasterScreen implements Screen {
         drawHero();
         drawBlocks();
         drawCoins();
+        drawParatrooper();
         drawNavBar();
         drawScoreCounter();
         drawCoinsCounter();
@@ -106,8 +110,7 @@ public class BasterScreen implements Screen {
         heroController.controlHeroInput();
         blockController.checkLasDropItemTime();
         heroController.controlHeroPosition();
-//        coinController.controlCoins(speed);
-//        coinController.checkCoinGeneration(blockController.blockGenerator.lastDropItem, blockController.blockGenerator.beforeLastDropItem);
+        paratrooperController.controlGenerated();
     }
 
     @Override
@@ -134,11 +137,16 @@ public class BasterScreen implements Screen {
     public void dispose() {
         heroController.dispose();
         blockImg.dispose();
+        blockVertImg.dispose();
+        tubeTopImg.dispose();
+        tubeBodyImg.dispose();
+        tubeBotImg.dispose();
         airplaneLeftImg.dispose();
         airplaneRightImg.dispose();
-        blockVertImg.dispose();
         backgroundImg.dispose();
+        coinImg.dispose();
         topNavImg.dispose();
+        paratrooperImg.dispose();
     }
 
     @Override
@@ -160,6 +168,7 @@ public class BasterScreen implements Screen {
             burgerImg = new Texture("burger.png");
             pillImg = new Texture("pills.png");
             backgroundImg = new Texture("bg_sky.jpg");
+//            backgroundImg = new Texture("space_720.jpg");
             blockImg = new Texture("block.jpg");
 //            blockVertImg = new Texture("block_vertical.jpg");
 //            blockVertImg = new Texture("barrel_1.png");
@@ -167,6 +176,7 @@ public class BasterScreen implements Screen {
             tubeBodyImg = new Texture("mario_tube_body.png");
             tubeBotImg = new Texture("mario_tube_bot.png");
             coinImg = new Texture("coin.png");
+            paratrooperImg = new Texture("paratrooper_720.png");
         }
     }
 
@@ -181,6 +191,11 @@ public class BasterScreen implements Screen {
         game.customFont.draw(game.batch, strCoins, 250, WORLD_HEIGHT - 10);
     }
 
+    private void drawParatrooper(){
+        if (paratrooperController.isFly){
+            game.batch.draw(paratrooperImg, paratrooperController.paratrooper.body.x, paratrooperController.paratrooper.body.y);
+        }
+    }
 
     private void drawNavBar() {
         game.batch.draw(topNavImg, 0, WORLD_HEIGHT - 55);
@@ -199,16 +214,17 @@ public class BasterScreen implements Screen {
     }
 
     private void drawCoins() {
-        for (Rectangle rectangle : coinController.coins) {
-            game.batch.draw(coinImg, rectangle.x, rectangle.y);
-        }
+//        for (Rectangle rectangle : coinController.coins) {
+//            game.batch.draw(coinImg, rectangle.x, rectangle.y);
+//        }
     }
 
     private void initObjects() {
         heroController = new HeroController();
+        paratrooperController = new ParatrooperController();
         coinController = new CoinController(heroController);
         scoreController = new ScoreController();
-        blockController = new BlockController(game, heroController);
+        blockController = new BlockController(game, heroController, paratrooperController);
         backgroundController = new BackgroundController(backgroundImg);
     }
 

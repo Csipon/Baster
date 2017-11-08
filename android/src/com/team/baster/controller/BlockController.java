@@ -10,8 +10,8 @@ import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.Generator;
 import com.team.baster.generator.UnitGeneration;
 import com.team.baster.model.Burger;
-import com.team.baster.model.Pill;
 import com.team.baster.model.DynamicBlock;
+import com.team.baster.model.Pill;
 import com.team.baster.screens.GameOverScreen;
 import com.team.baster.storage.PlayerStatusStorage;
 import com.team.baster.storage.ScoreStorage;
@@ -19,10 +19,10 @@ import com.team.baster.storage.ScoreStorage;
 import java.util.Iterator;
 import java.util.Random;
 
+import static com.team.baster.CollisionChecker.intersect;
 import static com.team.baster.GameConstants.HORIZONTAL_SPEED;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
-import static com.team.baster.controller.HeroController.intersect;
 
 /**
  * Created by Pasha on 10/28/2017.
@@ -35,12 +35,14 @@ public class BlockController {
     public Array<UnitGeneration> units;
     BasterGame game;
     public HeroController heroController;
+    public ParatrooperController paratrooperController;
     private Random random;
 
-    public BlockController(BasterGame game, HeroController heroController) {
+    public BlockController(BasterGame game, HeroController heroController, ParatrooperController paratrooperController) {
         this.game = game;
         random = new Random();
         this.heroController = heroController;
+        this.paratrooperController = paratrooperController;
         generator = new Generator();
         units = new Array<>();
         scoreStorage = new ScoreStorage();
@@ -73,6 +75,10 @@ public class BlockController {
                 iter.remove();
             }
         }
+        if (paratrooperController.isFly) {
+            paratrooperController.controlPosition((int) (paratrooperController.paratrooper.body.y + (int) (speed * Gdx.graphics.getDeltaTime()) * 1.8));
+            checkParatrooperCollision(score, coins);
+        }
     }
 
     private void controlDynamicPosition(DynamicBlock item) {
@@ -87,6 +93,12 @@ public class BlockController {
 
     private void checkHeroCollision(Rectangle item, Circle head, Circle body, int score, int coins) {
         if (intersect(item, head) || intersect(item, body)) {
+            save(score, coins);
+            game.setScreen(new GameOverScreen(game, score, coins));
+        }
+    }
+    private void checkParatrooperCollision(int score, int coins){
+        if (paratrooperController.checkCollision(heroController)){
             save(score, coins);
             game.setScreen(new GameOverScreen(game, score, coins));
         }

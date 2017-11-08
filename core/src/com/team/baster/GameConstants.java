@@ -42,6 +42,14 @@ public class GameConstants {
     public static int ITEM_TOP_VERT_HEIGHT = 40;
     public static int ITEM_VERT_HEIGHT = 120;
 
+
+    public static int PARATROOPER_BODE_WIDTH = 130;
+    public static int PARATROOPER_WIDTH = 50;
+    public static int PARATROOPER_BODY_HEIGHT = 230;
+    public static int PARATROOPER_HEIGHT = 82;
+    public static int PARATROOP_RADIUS = PARATROOPER_WIDTH / 2;
+
+
 //    public static int ITEM_AIRPLANE_WIDTH = 130;
 //    public static int ITEM_AIRPLANE_HEIGHT = 100;
     public static int ITEM_AIRPLANE_WIDTH = 200;
@@ -59,7 +67,8 @@ public class GameConstants {
 
     public static int BUFFER_Y = -100;
 
-    public static final long MIN_COIN_GENER_TIME = 2_000_000_000L;
-    public static final long MAX_COIN_GENER_TIME = 4_000_000_000L;
+    public static final long MIN_COIN_GENER_TIME = 10_000_000_000L;
+    public static final long MAX_COIN_GENER_TIME = 15_000_000_000L;
+
 
 }

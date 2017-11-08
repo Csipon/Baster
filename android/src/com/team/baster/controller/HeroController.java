@@ -112,26 +112,4 @@ public class HeroController {
             t.dispose();
         }
     }
-
-
-    public static boolean intersect(Rectangle rect, Circle circle) {
-        float halfHeight = rect.height / 2;
-        float halfWidth = rect.width / 2;
-        float cx = Math.abs(circle.x - rect.x - halfWidth);
-        float xDist = halfWidth + circle.radius;
-        if (cx > xDist)
-            return false;
-        float cy = Math.abs(circle.y - rect.y - halfHeight);
-        float yDist = halfHeight + circle.radius;
-        if (cy > yDist)
-            return false;
-        if (cx <= halfWidth || cy <= halfHeight)
-            return true;
-        float xCornerDist = cx - halfWidth;
-        float yCornerDist = cy - halfHeight;
-        float xCornerDistSq = xCornerDist * xCornerDist;
-        float yCornerDistSq = yCornerDist * yCornerDist;
-        float maxCornerDistSq = circle.radius * circle.radius;
-        return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
-    }
 }
