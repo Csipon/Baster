@@ -20,4 +20,6 @@ public interface ScoreService{
     List<Score> readFromBackupQueue();
 
     Array<Long> readLastBestScore();
+
+    void saveScoresToBack(List<Score> scores);
 }

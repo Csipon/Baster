@@ -41,7 +41,6 @@ public final class ScoreServiceImpl implements ScoreService{
 
     @Override
     public void saveScoreToBack(final Score score){
-        System.out.println("SAVE SCORE");
         try {
             RequestUtil.instance.postObj(new URL(SERVER_URL + "/score/saveScore"),
                     new Response.Listener<JSONObject>() {
@@ -51,6 +50,7 @@ public final class ScoreServiceImpl implements ScoreService{
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            score.setForBack(true);
                             scoreStorage.saveForQueue(score);
                             System.out.println("Cannot send score on the back " + error);
                         }
@@ -87,6 +87,35 @@ public final class ScoreServiceImpl implements ScoreService{
     @Override
     public Array<Long> readLastBestScore() {
         return scoreStorage.readLastBestScore();
+    }
+
+    @Override
+    public void saveScoresToBack(final List<Score> scores) {
+        try {
+            RequestUtil.instance.postArray(new URL(SERVER_URL + "/score/saveScores"),
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            scoreStorage.saveForQueue(scores);
+                            System.out.println("Cannot send score on the back " + error);
+                        }
+                    }, parseListToJSONArray(scores));
+        } catch (MalformedURLException e) {
+            System.out.println(e);
+        }
+    }
+
+    private static JSONArray parseListToJSONArray(List<Score> scores) {
+        JSONArray jsonArray = new JSONArray();
+        for (Score score : scores) {
+            jsonArray.put(score.toJson());
+        }
+        return jsonArray;
     }
 
     private static List<Score> parseJSONArrayToList(JSONArray array) throws JSONException {

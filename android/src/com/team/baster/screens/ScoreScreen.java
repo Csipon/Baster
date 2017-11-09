@@ -19,8 +19,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.service.ScoreService;
 import com.team.baster.service.ServiceFactory;
+import com.team.baster.storage.model.Score;
 import com.team.baster.style.font.FontGenerator;
 import com.team.baster.storage.ScoreStorage;
+
+import java.util.List;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
@@ -119,7 +122,10 @@ public class ScoreScreen implements Screen {
 
         fontGenerator = new FontGenerator();
         scores = scoreService.readLastBestScore();
-
+        List<Score> backupQueue = scoreService.readFromBackupQueue();
+        if (!backupQueue.isEmpty()) {
+            scoreService.saveScoresToBack(backupQueue);
+        }
         scoreTable = new Table();
         scoreTable.center();
         scoreTable.setFillParent(true);

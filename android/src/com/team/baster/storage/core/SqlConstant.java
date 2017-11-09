@@ -63,7 +63,7 @@ public class SqlConstant {
                     " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
                     " \"score\" integer NOT NULL,\n" +
                     " \"login\" text NOT NULL,\n" +
-                    " \"isForBack\" boolean,\n" +
+                    " \"isForBack\" boolean NOT NULL,\n" +
                     " \"date\" text NOT NULL\n" +
                     ");\n";
 }

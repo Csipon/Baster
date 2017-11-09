@@ -11,6 +11,7 @@ import com.team.baster.storage.model.Score;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -60,8 +61,22 @@ public class ScoreStorage {
         String nowDate = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
         values.put(COLUMN_DATE, nowDate);
         values.put(COLUMN_LOGIN, score.getLogin());
-        values.put(COLUMN_QUEUE_FOR_SEND, true);
+        values.put(COLUMN_QUEUE_FOR_SEND, score.isForBack());
+        System.out.println(values);
         return writableDB.insert(TABLE_NAME, null, values);
+    }
+
+    // TODO: 09.11.17 save scores for backup, maybe use batch insert if we can do it in SQLLite
+    public long saveForQueue(List<Score> score) {
+
+//        ContentValues values = new ContentValues();
+//        values.put(COLUMN_SCORE, score.getScore());
+//        String nowDate = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+//        values.put(COLUMN_DATE, nowDate);
+//        values.put(COLUMN_LOGIN, score.getLogin());
+//        values.put(COLUMN_QUEUE_FOR_SEND, true);
+//        return writableDB.insert(TABLE_NAME, null, values);
+        return 1;
     }
 
     public List<Score> readFromBackupQueue() {
@@ -71,7 +86,7 @@ public class ScoreStorage {
             Cursor curs = readableDB.query(
                     TABLE_NAME,                                 // The table to query
                     TABLE_COLUMNS,                              // The columns to return
-                    COLUMN_QUEUE_FOR_SEND + " = true",                                       // The columns for the WHERE clause
+                    COLUMN_QUEUE_FOR_SEND + " = 1",                                       // The columns for the WHERE clause
                     null,                                       // The values for the WHERE clause
                     null,                                       // don't group the rows
                     null,                                       // don't filter by row groups
@@ -83,7 +98,8 @@ public class ScoreStorage {
                 Score score = new Score();
                 score.setLogin(curs.getString(curs.getColumnIndex(COLUMN_LOGIN)));
                 /// TODO: 08.11.17 dmch need to set Date
-//            score.setDate(curs.get);
+                score.setDate(new Date(System.currentTimeMillis()));
+                score.setForBack(curs.getInt(curs.getColumnIndex(COLUMN_QUEUE_FOR_SEND)) == 1);
                 score.setScore(curs.getInt(curs.getColumnIndex(COLUMN_SCORE)));
                 result.add(score);
             }
@@ -94,11 +110,10 @@ public class ScoreStorage {
 
             // TODO: 08.11.17 Exception
         } catch (Exception e){
-
+            System.out.println("From backup exception" + e);
         }finally {
             readableDB.endTransaction();
         }
-
         return result;
     }
 

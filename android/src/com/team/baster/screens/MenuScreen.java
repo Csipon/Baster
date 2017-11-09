@@ -32,11 +32,14 @@ import com.team.baster.service.ScoreService;
 import com.team.baster.service.ServiceFactory;
 import com.team.baster.storage.PlayerStatusStorage;
 import com.team.baster.storage.ScoreStorage;
+import com.team.baster.storage.model.Score;
 import com.team.baster.style.button.ButtonStyleGenerator;
 import com.team.baster.style.font.FontGenerator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import util.RequestUtil;
 
@@ -101,7 +104,10 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
         scores = scoreService.readLastBestScore();
-
+        List<Score> backupQueue = scoreService.readFromBackupQueue();
+        if (!backupQueue.isEmpty()) {
+            scoreService.saveScoresToBack(backupQueue);
+        }
         int scores = PlayerStatusStorage.overallScore;
         coins = PlayerStatusStorage.actualCoins;
 

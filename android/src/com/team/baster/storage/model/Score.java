@@ -3,8 +3,6 @@ package com.team.baster.storage.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -15,6 +13,15 @@ public class Score {
     private String login;
     private Date date;
     private int score;
+    private boolean isForBack;
+
+    public boolean isForBack() {
+        return isForBack;
+    }
+
+    public void setForBack(boolean forBack) {
+        isForBack = forBack;
+    }
 
     public String getLogin() {
         return login;
@@ -40,7 +47,7 @@ public class Score {
         this.score = score;
     }
 
-    public JSONObject toJson(){
+    public JSONObject toJson() {
         JSONObject object = new JSONObject();
         try {
             object.put("login", login);
@@ -50,5 +57,17 @@ public class Score {
             e.printStackTrace();
         }
         return object;
+    }
+
+    @Override
+    public String toString() {
+
+        return "Score{" +
+                "login='" + login + '\'' +
+                ", date=" + date +
+                ", score=" + score +
+                ", isForBack=" + isForBack +
+                '}';
+
     }
 }
