@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
+import com.team.baster.service.ScoreService;
+import com.team.baster.service.ServiceFactory;
 import com.team.baster.style.font.FontGenerator;
 import com.team.baster.storage.ScoreStorage;
 
@@ -31,7 +33,7 @@ public class ScoreScreen implements Screen {
 
     final BasterGame game;
     private SpriteBatch batch;
-    private ScoreStorage scoreStorage;
+    private static ScoreService scoreService = ServiceFactory.getScoreService();
     private FontGenerator fontGenerator;
     protected Stage stage;
     private Skin skin;
@@ -115,9 +117,8 @@ public class ScoreScreen implements Screen {
 
     private void showScoreStats() {
 
-        scoreStorage = new ScoreStorage();
         fontGenerator = new FontGenerator();
-        scores = scoreStorage.readLastBestScore();
+        scores = scoreService.readLastBestScore();
 
         scoreTable = new Table();
         scoreTable.center();

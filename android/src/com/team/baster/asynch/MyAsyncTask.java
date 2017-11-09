@@ -3,21 +3,21 @@ package com.team.baster.asynch;
 import android.os.AsyncTask;
 
 import com.badlogic.gdx.utils.TimeUtils;
+import com.team.baster.service.ScoreService;
 import com.team.baster.storage.PlayerStatusStorage;
-import com.team.baster.storage.ScoreStorage;
 
 /**
  * Created by Pasha on 10/29/2017.
  */
 
 public class MyAsyncTask extends AsyncTask {
-    private ScoreStorage scoreStorage;
+    private ScoreService scoreService;
     private PlayerStatusStorage playerStatusStorage;
     private int score;
     private int coins;
 
-    public MyAsyncTask(ScoreStorage scoreStorage, PlayerStatusStorage playerStatusStorage, int score, int coins) {
-        this.scoreStorage = scoreStorage;
+    public MyAsyncTask(ScoreService scoreService, PlayerStatusStorage playerStatusStorage, int score, int coins) {
+        this.scoreService = scoreService;
         this.playerStatusStorage = playerStatusStorage;
         this.score = score;
         this.coins = coins;
@@ -39,7 +39,7 @@ public class MyAsyncTask extends AsyncTask {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-        scoreStorage.save(score);
+        scoreService.save(score);
         playerStatusStorage.update(coins, score);
         System.out.println("------- 1 "  + TimeUtils.millis());
         System.out.println("EXECUTE");

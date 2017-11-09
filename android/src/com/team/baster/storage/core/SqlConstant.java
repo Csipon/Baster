@@ -6,12 +6,12 @@ package com.team.baster.storage.core;
 
 public class SqlConstant {
 
-    public static final  String DROP_TABLE_ACTUAL_PLAYER_STATUS = "DROP IF EXIST TABLE actual_player_status;";
-    public static final  String DROP_TABLE_PRODUCT = "DROP IF EXIST TABLE product;";
-    public static final  String DROP_TABLE_PRODUCT_TYPE = "DROP IF EXIST TABLE product_type;";
-    public static final  String DROP_TABLE_SCORE = "DROP IF EXIST TABLE score;";
-    public static final  String DROP_TABLE_ORDERS = "DROP IF EXIST TABLE orders;";
-    public static final  String DROP_TABLE_ACHIEVEMENTS = "DROP IF EXIST TABLE achievements;";
+    public static final  String DROP_TABLE_ACTUAL_PLAYER_STATUS = "DROP TABLE actual_player_status;";
+    public static final  String DROP_TABLE_PRODUCT = "DROP TABLE product;";
+    public static final  String DROP_TABLE_PRODUCT_TYPE = "DROP TABLE product_type;";
+    public static final  String DROP_TABLE_SCORE = "DROP TABLE score;";
+    public static final  String DROP_TABLE_ORDERS = "DROP TABLE orders;";
+    public static final  String DROP_TABLE_ACHIEVEMENTS = "DROP TABLE achievements;";
 
 
     public static final  String CREATE_PLAYER_STATUS = "CREATE TABLE \"actual_player_status\" (\n" +
@@ -62,6 +62,8 @@ public class SqlConstant {
             "CREATE TABLE \"score\" (\n" +
                     " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
                     " \"score\" integer NOT NULL,\n" +
+                    " \"login\" text NOT NULL,\n" +
+                    " \"isForBack\" boolean,\n" +
                     " \"date\" text NOT NULL\n" +
                     ");\n";
 }

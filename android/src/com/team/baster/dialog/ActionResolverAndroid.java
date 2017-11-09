@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.team.baster.R;
+import com.team.baster.service.ScoreService;
+import com.team.baster.service.ServiceFactory;
 import com.team.baster.storage.ScoreStorage;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.List;
 public class ActionResolverAndroid implements ActionResolver {
 
     private Handler handler;
+    private static ScoreService scoreStorage = ServiceFactory.getScoreService();
     private Context context;
 
     public ActionResolverAndroid(Context context) {
@@ -47,7 +50,7 @@ public class ActionResolverAndroid implements ActionResolver {
                 dialog.setContentView(R.layout.dialog_layout);
 
 
-                Array<Long> lastBest = new ScoreStorage().readLastBestScore();
+                Array<Long> lastBest = scoreStorage.readLastBestScore();
                 ArrayList<Long> scores = new ArrayList<>();
                 if(lastBest.size != 0) {
                     if(lastBest.size < 10) {

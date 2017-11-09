@@ -1,7 +1,8 @@
 package com.team.baster.controller;
 
 import com.badlogic.gdx.utils.Array;
-import com.team.baster.storage.ScoreStorage;
+import com.team.baster.service.ScoreService;
+import com.team.baster.service.ServiceFactory;
 
 /**
  * Created by Pasha on 10/28/2017.
@@ -9,10 +10,10 @@ import com.team.baster.storage.ScoreStorage;
 
 public class ScoreController {
     private int score;
-    private ScoreStorage storage;
+    private ScoreService scoreService;
 
     public ScoreController() {
-        storage = new ScoreStorage();
+        scoreService = ServiceFactory.getScoreService();
     }
 
     public void calculateScore(int speed) {
@@ -24,10 +25,10 @@ public class ScoreController {
     }
 
     public void saveCurrentScore(){
-        storage.save(score);
+        scoreService.save(score);
     }
 
     public Array<Long> fetchLastBestScores(){
-        return storage.readLastBestScore();
+        return scoreService.readLastBestScore();
     }
 }

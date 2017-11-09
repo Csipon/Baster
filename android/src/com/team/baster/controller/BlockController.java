@@ -10,12 +10,16 @@ import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.Generator;
 import com.team.baster.generator.UnitGeneration;
 import com.team.baster.model.Burger;
-import com.team.baster.model.Pill;
 import com.team.baster.model.DynamicBlock;
+import com.team.baster.model.Pill;
 import com.team.baster.screens.GameOverScreen;
+import com.team.baster.service.ScoreService;
+import com.team.baster.service.ServiceFactory;
+import com.team.baster.service.UserService;
 import com.team.baster.storage.PlayerStatusStorage;
-import com.team.baster.storage.ScoreStorage;
+import com.team.baster.storage.model.Score;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -29,8 +33,10 @@ import static com.team.baster.controller.HeroController.intersect;
  */
 
 public class BlockController {
-    private ScoreStorage scoreStorage;
     private PlayerStatusStorage playerStatusStorage;
+
+    private static ScoreService scoreService = ServiceFactory.getScoreService();
+    private static UserService userService = ServiceFactory.getUserService();
     private Generator generator;
     public Array<UnitGeneration> units;
     BasterGame game;
@@ -43,7 +49,6 @@ public class BlockController {
         this.heroController = heroController;
         generator = new Generator();
         units = new Array<>();
-        scoreStorage = new ScoreStorage();
         playerStatusStorage = PlayerStatusStorage.getInstance();
     }
 
@@ -67,9 +72,9 @@ public class BlockController {
             unit.minPointY += speed * Gdx.graphics.getDeltaTime();
         }
         Iterator<UnitGeneration> iter = units.iterator();
-        while (iter.hasNext()){
+        while (iter.hasNext()) {
             UnitGeneration unit = iter.next();
-            if (unit.minPointY > WORLD_HEIGHT){
+            if (unit.minPointY > WORLD_HEIGHT) {
                 iter.remove();
             }
         }
@@ -113,8 +118,12 @@ public class BlockController {
 
     private void save(int score, int coins) {
         System.out.println("------- 0 " + TimeUtils.millis());
-
-        new MyAsyncTask(scoreStorage, playerStatusStorage, score, coins).execute();
+        Score scoreObj = new Score();
+        scoreObj.setLogin(userService.getCurrentUser().getLogin());
+        scoreObj.setScore(score);
+        scoreObj.setDate(new Date(System.currentTimeMillis()));
+        scoreService.saveScoreToBack(scoreObj);
+        new MyAsyncTask(scoreService, playerStatusStorage, score, coins).execute();
     }
 
     public void dropItem() {

@@ -16,10 +16,11 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
+        exclude 'META-INF/DEPENDENCIES'
     }
     defaultConfig {
         applicationId "com.team.baster"
-        minSdkVersion 9
+        minSdkVersion 26
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
