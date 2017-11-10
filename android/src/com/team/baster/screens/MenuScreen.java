@@ -1,5 +1,9 @@
 package com.team.baster.screens;
 
+import android.content.Context;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -24,10 +28,20 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
+import com.team.baster.service.ScoreService;
+import com.team.baster.service.ServiceFactory;
 import com.team.baster.storage.PlayerStatusStorage;
 import com.team.baster.storage.ScoreStorage;
+import com.team.baster.storage.model.Score;
 import com.team.baster.style.button.ButtonStyleGenerator;
 import com.team.baster.style.font.FontGenerator;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.List;
+
+import util.RequestUtil;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
@@ -41,7 +55,7 @@ public class MenuScreen implements Screen {
 
     final BasterGame game;
     private SpriteBatch batch;
-    private ScoreStorage scoreStorage;
+    private static ScoreService scoreService = ServiceFactory.getScoreService();
     private PlayerStatusStorage playerStatusStorage;
     private FontGenerator fontGenerator;
     private ButtonStyleGenerator buttonStyleGenerator;
@@ -72,13 +86,11 @@ public class MenuScreen implements Screen {
         this.game = game;
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
-        viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
+        viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
         camera.update();
         viewport.apply();
-
         stage = new Stage(viewport, batch);
-        scoreStorage = new ScoreStorage();
         buttonStyleGenerator = new ButtonStyleGenerator();
         playerStatusStorage = PlayerStatusStorage.getInstance();
         fontGenerator = new FontGenerator();
@@ -91,8 +103,11 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-        scores = scoreStorage.readLastBestScore();
-
+        scores = scoreService.readLastBestScore();
+        List<Score> backupQueue = scoreService.readFromBackupQueue();
+        if (!backupQueue.isEmpty()) {
+            scoreService.saveScoresToBack(backupQueue);
+        }
         int scores = PlayerStatusStorage.overallScore;
         coins = PlayerStatusStorage.actualCoins;
 
@@ -109,7 +124,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(135/255f, 206/255f, 235/255f, 1);
+        Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act();
@@ -155,11 +170,11 @@ public class MenuScreen implements Screen {
 
     public void setNavigation() {
 
-        if(scores.size != 0) {
+        if (scores.size != 0) {
             String strScore = scores.get(0).toString();
             labelScore = new Label(strScore, labelStyle);
         }
-        if(coins != null) {
+        if (coins != null) {
             labelCoins = new Label(coins.toString(), labelStyleYellow);
         }
 
@@ -216,13 +231,13 @@ public class MenuScreen implements Screen {
         rankImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/ranking.png", 7, 7));
         marketImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/shop.png", 7, 7));
         coinsImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/coins.png", 7, 7));
-        scoreImgButton = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/score.png", 7,7));
+        scoreImgButton = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/score.png", 7, 7));
     }
 
 
     public void loadListeners() {
 
-        playImg.addListener(new ClickListener(){
+        playImg.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new BasterScreen(game));
@@ -230,35 +245,35 @@ public class MenuScreen implements Screen {
             }
         });
 
-        achieveImgBtn.addListener(new ClickListener(){
+        achieveImgBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.actionResolver.showDialog();
             }
         });
 
-        coinsImgBtn.addListener(new ClickListener(){
+        coinsImgBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.actionResolver.showDialog();
             }
         });
 
-        marketImgBtn.addListener(new ClickListener(){
+        marketImgBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.actionResolver.showDialog();
             }
         });
 
-        rankImgBtn.addListener(new ClickListener(){
+        rankImgBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.actionResolver.showDialog();
             }
         });
 
-        exitImg.addListener(new ClickListener(){
+        exitImg.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 dispose();
@@ -267,7 +282,7 @@ public class MenuScreen implements Screen {
             }
         });
 
-        scoreImgButton.addListener(new ClickListener(){
+        scoreImgButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.actionResolver.showDialogWithBestScore();

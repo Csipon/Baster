@@ -2,21 +2,18 @@ package com.team.baster.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.team.baster.R;
-import com.team.baster.storage.ScoreStorage;
+import com.team.baster.service.ScoreService;
+import com.team.baster.service.ServiceFactory;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Smeet on 31.10.2017.
@@ -25,6 +22,7 @@ import java.util.List;
 public class ActionResolverAndroid implements ActionResolver {
 
     private Handler handler;
+    private static ScoreService scoreService = ServiceFactory.getScoreService();
     private Context context;
 
     public ActionResolverAndroid(Context context) {
@@ -46,8 +44,7 @@ public class ActionResolverAndroid implements ActionResolver {
                 dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
                 dialog.setContentView(R.layout.dialog_layout);
 
-
-                Array<Long> lastBest = new ScoreStorage().readLastBestScore();
+                Array<Long> lastBest = scoreService.readLastBestScore();
                 ArrayList<Long> scores = new ArrayList<>();
                 if(lastBest.size != 0) {
                     if(lastBest.size < 10) {

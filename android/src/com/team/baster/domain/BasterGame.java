@@ -1,5 +1,7 @@
 package com.team.baster.domain;
 
+import android.content.Context;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -16,9 +18,11 @@ public class BasterGame extends Game {
     public BitmapFont font;
     public BitmapFont customFont;
     public ActionResolver actionResolver;
+    public Context context;
 
-    public BasterGame(ActionResolver actionResolver) {
+    public BasterGame(ActionResolver actionResolver, Context context) {
         this.actionResolver = actionResolver;
+        this.context = context;
     }
 
     @Override
