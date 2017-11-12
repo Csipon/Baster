@@ -2,7 +2,6 @@ package com.team.baster.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -12,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -23,13 +21,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
-import com.team.baster.storage.PlayerStatusStorage;
+import com.team.baster.service.PlayerService;
+import com.team.baster.service.ServiceFactory;
 import com.team.baster.storage.ScoreStorage;
 import com.team.baster.style.button.ButtonStyleGenerator;
 import com.team.baster.style.font.FontGenerator;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
 
@@ -41,7 +38,7 @@ public class MenuScreen implements Screen {
 
     final BasterGame game;
     private ScoreStorage scoreStorage;
-    private PlayerStatusStorage playerStatusStorage;
+    private PlayerService playerService;
     protected Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
@@ -81,10 +78,25 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
+
+//        EXAMPLE for set new player login
+//        in the start need check player
+        if (playerService.isDefaultPlayer()){
+            while (true) {
+//          if this is default player user must to write new nickname
+//          TODO make dialog window when we ask player him name this need to make into loop and interrupt when player will write correct name
+                String nickname = "SOME_NAME";
+                if (playerService.createNewPlayer(nickname)) {
+//                if player is created it's OK break loop and allow play game
+                    break;
+                }
+            }
+        }
+//        TODO next make all logic that will take player possibility play game
         scores = scoreStorage.readLastBestScore();
 
-        int scores = PlayerStatusStorage.overallScore;
-        coins = PlayerStatusStorage.actualCoins;
+        int scores = playerService.getOverallScore();
+        coins = playerService.getActualCoins();
 
         Gdx.input.setInputProcessor(stage);
 
@@ -272,9 +284,9 @@ public class MenuScreen implements Screen {
     private void initObj() {
         scoreStorage = new ScoreStorage();
         buttonStyleGenerator = new ButtonStyleGenerator();
-        playerStatusStorage = PlayerStatusStorage.getInstance();
+        playerService = ServiceFactory.getPlayerService();
         fontGenerator = new FontGenerator();
-        playerStatusStorage.readPlayerStatus();
+        playerService.getCurrentUser();
     }
 
     private void initTexture() {

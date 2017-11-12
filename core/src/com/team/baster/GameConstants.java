@@ -23,6 +23,8 @@ public class GameConstants {
     }
 
 
+    public static final String DEFAULT_PLAYER_NAME = "player";
+
     private static final int DEFAULT_WORLD_WIDTH = 720;
     public static final int WORLD_WIDTH = Gdx.graphics.getWidth();
     public static final int WORLD_HEIGHT = Gdx.graphics.getHeight();

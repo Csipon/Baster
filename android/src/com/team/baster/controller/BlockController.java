@@ -14,10 +14,9 @@ import com.team.baster.model.Burger;
 import com.team.baster.model.DynamicBlock;
 import com.team.baster.model.Pill;
 import com.team.baster.screens.GameOverScreen;
+import com.team.baster.service.PlayerService;
 import com.team.baster.service.ScoreService;
 import com.team.baster.service.ServiceFactory;
-import com.team.baster.service.UserService;
-import com.team.baster.storage.PlayerStatusStorage;
 import com.team.baster.storage.model.Score;
 
 import java.util.Date;
@@ -34,10 +33,9 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
  */
 
 public class BlockController {
-    private PlayerStatusStorage playerStatusStorage;
 
     private static ScoreService scoreService = ServiceFactory.getScoreService();
-    private static UserService userService = ServiceFactory.getUserService();
+    private static PlayerService playerService = ServiceFactory.getPlayerService();
     private Generator generator;
     public Array<UnitGeneration> units;
     BasterGame game;
@@ -52,7 +50,6 @@ public class BlockController {
         this.paratrooperController = paratrooperController;
         generator = new Generator();
         units = new Array<>();
-        playerStatusStorage = PlayerStatusStorage.getInstance();
     }
 
     public void controlItemsPosition(Circle head, Circle body, int speed, int score, int coins, ParticleEffect pe) {
@@ -134,11 +131,11 @@ public class BlockController {
     private void save(int score, int coins) {
         System.out.println("------- 0 " + TimeUtils.millis());
         Score scoreObj = new Score();
-        scoreObj.setLogin(userService.getCurrentUser().getLogin());
+        scoreObj.setLogin(playerService.getCurrentUser().getLogin());
         scoreObj.setScore(score);
         scoreObj.setDate(new Date(System.currentTimeMillis()));
         scoreService.saveScoreToBack(scoreObj);
-        new MyAsyncTask(scoreService, playerStatusStorage, score, coins).execute();
+        new MyAsyncTask(scoreService, playerService, score, coins).execute();
     }
 
     public void dropItem() {

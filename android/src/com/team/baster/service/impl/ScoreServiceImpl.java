@@ -4,9 +4,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
 import com.badlogic.gdx.utils.Array;
+import com.team.baster.service.PlayerService;
 import com.team.baster.service.ScoreService;
 import com.team.baster.storage.ScoreStorage;
-import com.team.baster.storage.UserStorage;
 import com.team.baster.storage.model.Score;
 
 import org.json.JSONArray;
@@ -31,12 +31,12 @@ import util.RequestUtil;
 
 public final class ScoreServiceImpl implements ScoreService{
     private ScoreStorage scoreStorage;
-    private UserStorage userStorage;
+    private PlayerService playerService;
     private static final String SERVER_URL = "http://192.162.132.33:8080";
 
-    public ScoreServiceImpl(ScoreStorage scoreStorage, UserStorage userStorage) {
+    public ScoreServiceImpl(ScoreStorage scoreStorage, PlayerService playerService) {
         this.scoreStorage = scoreStorage;
-        this.userStorage = userStorage;
+        this.playerService = playerService;
     }
 
     @Override
@@ -76,7 +76,7 @@ public final class ScoreServiceImpl implements ScoreService{
 
     @Override
     public void save(int score) {
-        scoreStorage.save(score, userStorage.getCurrentUser().getLogin());
+        scoreStorage.save(score, playerService.getCurrentUser().getLogin());
     }
 
     @Override

@@ -12,9 +12,8 @@ import com.team.baster.storage.core.SQLiteJDBC;
  */
 
 public class PlayerStatusStorage  {
-    private static final PlayerStatusStorage playerStatusStorage = new PlayerStatusStorage();
-
     private static final String TABLE_NAME = "actual_player_status";
+    private static final String COLUMN_ID = "id";
     private static final String COLUMN_PLAYER = "player";
     private static final String COLUMN_OVERALL_SCORE = "overall_score";
     private static final String COLUMN_ACTUAL_COINS = "actual_coins";
@@ -41,16 +40,26 @@ public class PlayerStatusStorage  {
         readPlayerStatus();
     }
 
+
     public void update(Integer coins, Integer score){
-        update(coins, score, null);
+        update(null, null, coins, score, null);
     }
 
     public void update(Integer experience){
-        update(null, null, experience);
+        update(null, null,null, null, experience);
     }
 
-    public void update(Integer coins, Integer score, Integer experience){
+    public void update(Integer id, String player, Integer coins, Integer score, Integer experience){
         ContentValues values = new ContentValues();
+        String where = null;
+        String[] whereParams = null;
+        if (id != null){
+            where = COLUMN_ID + " = ?";
+            whereParams = new String[]{String.valueOf(id)};
+        }
+        if (player != null){
+            values.put(COLUMN_PLAYER, player);
+        }
         if (coins != null){
             actualCoins += coins;
             values.put(COLUMN_ACTUAL_COINS, actualCoins);
@@ -65,7 +74,7 @@ public class PlayerStatusStorage  {
         }
 
         // Insert the new row, returning the primary key value of the new row
-        long newRowId = writableDB.update(TABLE_NAME, values, null, null);
+        long newRowId = writableDB.update(TABLE_NAME, values, where, whereParams);
 
         System.out.println("UPDATED = " + newRowId + " rows");
     }
@@ -85,16 +94,14 @@ public class PlayerStatusStorage  {
         );
         PlayerStatus playerStatus = new PlayerStatus();
         curs.moveToFirst();
+        playerStatus.id = curs.getInt(curs.getColumnIndex(COLUMN_ID));
         playerStatus.coins = curs.getInt(curs.getColumnIndex(COLUMN_ACTUAL_COINS));
         playerStatus.overallExperience = curs.getInt(curs.getColumnIndex(COLUMN_OVERALL_EXPERIENCE));
         playerStatus.overallScore = curs.getInt(curs.getColumnIndex(COLUMN_OVERALL_SCORE));
+        playerStatus.player = curs.getString(curs.getColumnIndex(COLUMN_PLAYER));
         actualCoins = playerStatus.coins;
         overallExperience = playerStatus.overallExperience;
         overallScore = playerStatus.overallScore;
         return playerStatus;
-    }
-
-    public static PlayerStatusStorage getInstance() {
-        return playerStatusStorage;
     }
 }

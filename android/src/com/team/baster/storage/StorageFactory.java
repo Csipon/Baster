@@ -6,8 +6,7 @@ package com.team.baster.storage;
 
 public final class StorageFactory {
     private static ScoreStorage scoreStorage;
-
-    private static UserStorage userStorage;
+    private static PlayerStatusStorage playerStorage;
 
     private StorageFactory() {
     }
@@ -19,10 +18,10 @@ public final class StorageFactory {
         }
         return scoreStorage;
     }
-    public static UserStorage getUserStorage() {
-        if (userStorage == null) {
-            userStorage = new UserStorage();
+    public static PlayerStatusStorage getPlayerStatusStorage() {
+        if (playerStorage == null) {
+            playerStorage = new PlayerStatusStorage();
         }
-        return userStorage;
+        return playerStorage;
     }
 }

@@ -5,6 +5,8 @@ package com.team.baster.model;
  */
 
 public class PlayerStatus {
+    public int id;
+    public String player;
     public Integer coins;
     public Integer overallExperience;
     public Integer overallScore;

@@ -1,7 +1,7 @@
 package com.team.baster.service;
 
+import com.team.baster.service.impl.PlayerServiceImpl;
 import com.team.baster.service.impl.ScoreServiceImpl;
-import com.team.baster.service.impl.UserServiceImpl;
 import com.team.baster.storage.StorageFactory;
 
 /**
@@ -9,19 +9,19 @@ import com.team.baster.storage.StorageFactory;
  */
 
 public class ServiceFactory {
-    private static UserService userService;
+    private static PlayerService playerService;
     private static ScoreService scoreService;
 
-    public static UserService getUserService(){
-        if (userService == null) {
-            userService = new UserServiceImpl(StorageFactory.getUserStorage());
+    public static PlayerService getPlayerService(){
+        if (playerService == null) {
+            playerService = new PlayerServiceImpl(StorageFactory.getPlayerStatusStorage());
         }
-        return userService;
+        return playerService;
     }
 
     public static ScoreService getScoreService(){
         if (scoreService == null) {
-            scoreService = new ScoreServiceImpl(StorageFactory.getScoreStorage(), StorageFactory.getUserStorage());
+            scoreService = new ScoreServiceImpl(StorageFactory.getScoreStorage(), getPlayerService());
         }
         return scoreService;
     }

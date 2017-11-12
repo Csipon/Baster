@@ -8,7 +8,13 @@ package com.team.baster.storage.model;
 
 // STUB
 public class User {
+    private Integer id;
     private String login;
+
+    public User(Integer id, String login) {
+        this.id = id;
+        this.login = login;
+    }
 
     public User(String login) {
         this.login = login;
@@ -20,5 +26,13 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
