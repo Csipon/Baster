@@ -37,7 +37,7 @@ allprojects {
 }
 
 project(":android") {
-    apply plugin: "android"
+    apply plugin: 'com.android.application'
 
     configurations { natives }
 
@@ -45,8 +45,8 @@ project(":android") {
         compile project(":core")
 
 
-        compile 'com.google.android.gms:play-services-auth:11.0.4'
-        compile 'com.google.android.gms:play-services:11.0.4'
+        compile 'com.google.android.gms:play-services-auth:11.2.0'
+        compile 'com.google.android.gms:play-services:11.2.0'
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
@@ -61,6 +61,8 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
     }
+
+    apply plugin: 'com.google.gms.google-services'
 }
 
 project(":core") {
