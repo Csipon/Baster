@@ -12,6 +12,8 @@ import static com.team.baster.GameConstants.WORLD_HEIGHT;
 
 public class BackgroundGenerator {
 
+
+
     private Array<Rectangle> backgrounds;
     public Rectangle lastDropBack;
     private Texture backgroundImg;

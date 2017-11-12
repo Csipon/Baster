@@ -1,23 +1,18 @@
 package com.team.baster.screens;
 
-import android.content.Context;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -28,22 +23,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
-import com.team.baster.service.ScoreService;
-import com.team.baster.service.ServiceFactory;
 import com.team.baster.storage.PlayerStatusStorage;
 import com.team.baster.storage.ScoreStorage;
-import com.team.baster.storage.model.Score;
 import com.team.baster.style.button.ButtonStyleGenerator;
 import com.team.baster.style.font.FontGenerator;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.List;
-
-import util.RequestUtil;
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
 
@@ -54,24 +40,22 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 public class MenuScreen implements Screen {
 
     final BasterGame game;
-    private SpriteBatch batch;
-    private static ScoreService scoreService = ServiceFactory.getScoreService();
+    private ScoreStorage scoreStorage;
     private PlayerStatusStorage playerStatusStorage;
-    private FontGenerator fontGenerator;
-    private ButtonStyleGenerator buttonStyleGenerator;
     protected Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
 
-    private Image exitImg;
+    private FontGenerator fontGenerator;
+    private ButtonStyleGenerator buttonStyleGenerator;
     private Image playImg;
-    private Image fly;
     private ImageButton scoreImgButton;
     private ImageButton coinsImgBtn;
     private ImageButton marketImgBtn;
     private ImageButton achieveImgBtn;
     private ImageButton rankImgBtn;
     private TextureRegionDrawable bg;
+    private TextureRegion mainBg;
     private Label.LabelStyle labelStyle;
     private Label.LabelStyle labelStyleYellow;
     private Label labelScore;
@@ -80,40 +64,33 @@ public class MenuScreen implements Screen {
     private Integer coins;
     private Array<Long> scores;
 
+    private ParticleEffect particleEffect = new ParticleEffect();
+
 
     public MenuScreen(BasterGame game) {
 
+        initSetting();
         this.game = game;
-        batch = new SpriteBatch();
-        camera = new OrthographicCamera();
-        viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
-        camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
-        camera.update();
-        viewport.apply();
-        stage = new Stage(viewport, batch);
-        buttonStyleGenerator = new ButtonStyleGenerator();
-        playerStatusStorage = PlayerStatusStorage.getInstance();
-        fontGenerator = new FontGenerator();
-        playerStatusStorage.readPlayerStatus();
+        stage = new Stage(viewport, game.batch);
 
-        bg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/bg.9.png"))));
+        initObj();
+        initTexture();
 
     }
 
 
     @Override
     public void show() {
-        scores = scoreService.readLastBestScore();
-        List<Score> backupQueue = scoreService.readFromBackupQueue();
-        if (!backupQueue.isEmpty()) {
-            scoreService.saveScoresToBack(backupQueue);
-        }
+        scores = scoreStorage.readLastBestScore();
+
         int scores = PlayerStatusStorage.overallScore;
         coins = PlayerStatusStorage.actualCoins;
 
-        System.out.println("COINS = " + coins);
-        System.out.println("SCORES = " + scores);
         Gdx.input.setInputProcessor(stage);
+
+        particleEffect.setPosition(WORLD_WIDTH/2 - 300, WORLD_HEIGHT/2 + 500);
+        particleEffect.start();
+
 
         setLabel();
         setButtons();
@@ -124,10 +101,14 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         stage.act();
+
+        stage.getBatch().begin();
+        stage.getBatch().draw(mainBg, 1, 1, WORLD_WIDTH, WORLD_HEIGHT);
+        particleEffect.update(Gdx.graphics.getDeltaTime());
+        particleEffect.draw(game.batch, delta);
+        stage.getBatch().end();
+
         stage.draw();
 
     }
@@ -157,6 +138,7 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        particleEffect.dispose();
 
     }
 
@@ -170,11 +152,11 @@ public class MenuScreen implements Screen {
 
     public void setNavigation() {
 
-        if (scores.size != 0) {
+        if(scores.size != 0) {
             String strScore = scores.get(0).toString();
             labelScore = new Label(strScore, labelStyle);
         }
-        if (coins != null) {
+        if(coins != null) {
             labelCoins = new Label(coins.toString(), labelStyleYellow);
         }
 
@@ -216,6 +198,7 @@ public class MenuScreen implements Screen {
         RepeatAction actionLoop = Actions.forever(Actions.sequence(Actions.scaleTo(1f, 1f, 1f, Interpolation.bounceOut), Actions.scaleTo(1.05f, 1.05f, 1.05f)));
         playImg.addAction(actionLoop);
 
+
         stage.addActor(mainTable);
         stage.addActor(coinsTable);
         stage.addActor(scoreTable);
@@ -225,70 +208,79 @@ public class MenuScreen implements Screen {
 
     private void setButtons() {
 
-        exitImg = new Image(new Texture(Gdx.files.internal("icons/exit.png")));
         playImg = new Image(new Texture(Gdx.files.internal("icons/start.png")));
         achieveImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/quality.png", 7, 7));
         rankImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/ranking.png", 7, 7));
         marketImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/shop.png", 7, 7));
         coinsImgBtn = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/coins.png", 7, 7));
-        scoreImgButton = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/score.png", 7, 7));
+        scoreImgButton = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/score.png", 7,7));
     }
 
 
     public void loadListeners() {
 
-        playImg.addListener(new ClickListener() {
+        playImg.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new BasterScreen(game));
-                dispose();
             }
         });
 
-        achieveImgBtn.addListener(new ClickListener() {
+        achieveImgBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.actionResolver.showDialog();
             }
         });
 
-        coinsImgBtn.addListener(new ClickListener() {
+        coinsImgBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.actionResolver.showDialog();
             }
         });
 
-        marketImgBtn.addListener(new ClickListener() {
+        marketImgBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new StoreScreen(game));
+            }
+        });
+
+        rankImgBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.actionResolver.showDialog();
             }
         });
 
-        rankImgBtn.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.actionResolver.showDialog();
-            }
-        });
-
-        exitImg.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                dispose();
-                System.exit(0);
-                Gdx.app.exit();
-            }
-        });
-
-        scoreImgButton.addListener(new ClickListener() {
+        scoreImgButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.actionResolver.showDialogWithBestScore();
             }
         });
+    }
 
+    private void initSetting() {
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
+        viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
+        viewport.apply();
+    }
+
+    private void initObj() {
+        scoreStorage = new ScoreStorage();
+        buttonStyleGenerator = new ButtonStyleGenerator();
+        playerStatusStorage = PlayerStatusStorage.getInstance();
+        fontGenerator = new FontGenerator();
+        playerStatusStorage.readPlayerStatus();
+    }
+
+    private void initTexture() {
+        mainBg = new TextureRegion(new Texture(Gdx.files.internal("icons/main-bg.png")));
+        bg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/bg.9.png"))));
+        particleEffect.load(Gdx.files.internal("particles/rain.p"), Gdx.files.internal("particles"));
     }
 
 }

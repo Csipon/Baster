@@ -1,6 +1,7 @@
 package com.team.baster.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -23,10 +24,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
+import static com.team.baster.CollisionChecker.intersect;
 import static com.team.baster.GameConstants.HORIZONTAL_SPEED;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
-import static com.team.baster.controller.HeroController.intersect;
 
 /**
  * Created by Pasha on 10/28/2017.
@@ -41,18 +42,20 @@ public class BlockController {
     public Array<UnitGeneration> units;
     BasterGame game;
     public HeroController heroController;
+    public ParatrooperController paratrooperController;
     private Random random;
 
-    public BlockController(BasterGame game, HeroController heroController) {
+    public BlockController(BasterGame game, HeroController heroController, ParatrooperController paratrooperController) {
         this.game = game;
         random = new Random();
         this.heroController = heroController;
+        this.paratrooperController = paratrooperController;
         generator = new Generator();
         units = new Array<>();
         playerStatusStorage = PlayerStatusStorage.getInstance();
     }
 
-    public void controlItemsPosition(Circle head, Circle body, int speed, int score, int coins) {
+    public void controlItemsPosition(Circle head, Circle body, int speed, int score, int coins, ParticleEffect pe) {
         for (UnitGeneration unit : units) {
             for (Rectangle rect : unit.blocks) {
                 rect.y += speed * Gdx.graphics.getDeltaTime();
@@ -65,7 +68,7 @@ public class BlockController {
             while (iterator.hasNext()) {
                 Rectangle rect = iterator.next();
                 rect.y += speed * Gdx.graphics.getDeltaTime();
-                if (checkActionItemCollision(rect, head, body)) {
+                if (checkActionItemCollision(rect, head, body, pe)) {
                     iterator.remove();
                 }
             }
@@ -77,6 +80,10 @@ public class BlockController {
             if (unit.minPointY > WORLD_HEIGHT) {
                 iter.remove();
             }
+        }
+        if (paratrooperController.isFly) {
+            paratrooperController.controlPosition((int) (paratrooperController.paratrooper.body.y + (int) (speed * Gdx.graphics.getDeltaTime()) * 1.8));
+            checkParatrooperCollision(score, coins);
         }
     }
 
@@ -96,13 +103,21 @@ public class BlockController {
             game.setScreen(new GameOverScreen(game, score, coins));
         }
     }
+    private void checkParatrooperCollision(int score, int coins){
+        if (paratrooperController.checkCollision(heroController)){
+            save(score, coins);
+            game.setScreen(new GameOverScreen(game, score, coins));
+        }
+    }
 
-    private boolean checkActionItemCollision(Rectangle item, Circle head, Circle body) {
+    private boolean checkActionItemCollision(Rectangle item, Circle head, Circle body, ParticleEffect pe) {
         if (intersect(item, head) || intersect(item, body)) {
             if (item instanceof Pill) {
                 heroController.diet();
             } else if (item instanceof Burger) {
                 heroController.eatFood();
+                pe.setPosition(item.x, item.y);
+                pe.start();
             }
             return true;
         }

@@ -21,4 +21,11 @@ public class ButtonStyleGenerator {
 
         return imageButtonStyle;
     }
+
+    public ImageButton.ImageButtonStyle generateButtonStyleWithoutPress(String pathToImg) {
+        ImageButton.ImageButtonStyle imageButtonStyle = new ImageButton.ImageButtonStyle();
+        imageButtonStyle.imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(pathToImg))));
+
+        return imageButtonStyle;
+    }
 }

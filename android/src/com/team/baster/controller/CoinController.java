@@ -1,19 +1,13 @@
 package com.team.baster.controller;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.generator.CoinGenerator;
 
-import java.util.Iterator;
-
-import static com.team.baster.GameConstants.COIN_SIDE;
 import static com.team.baster.GameConstants.MAX_COIN_GENER_TIME;
 import static com.team.baster.GameConstants.MIN_COIN_GENER_TIME;
-import static com.team.baster.GameConstants.WORLD_HEIGHT;
-import static com.team.baster.controller.HeroController.intersect;
 
 /**
  * Created by Pasha on 10/28/2017.
@@ -33,21 +27,6 @@ public class CoinController {
         coinGenerator = new CoinGenerator(coins);
     }
 
-    public void controlCoins(int speed) {
-        Iterator<Rectangle> iter = coins.iterator();
-        while (iter.hasNext()) {
-            Rectangle item = iter.next();
-            item.y += speed * Gdx.graphics.getDeltaTime();
-            if (intersect(item, heroController.circleHead) || intersect(item, heroController.circleBody)) {
-                coinsCounter += 1;
-                iter.remove();
-                heroController.diet();
-            }
-            if (item.y + COIN_SIDE > WORLD_HEIGHT + COIN_SIDE) {
-                iter.remove();
-            }
-        }
-    }
 //
 //    public boolean checkCoinCollisions(Rectangle item, Rectangle hero) {
 //        if (item.overlaps(hero)) {

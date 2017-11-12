@@ -39,7 +39,6 @@ public class ScoreScreen implements Screen {
     private static ScoreService scoreService = ServiceFactory.getScoreService();
     private FontGenerator fontGenerator;
     protected Stage stage;
-    private Skin skin;
     private Viewport viewport;
     private OrthographicCamera camera;
     private Image backImg;
