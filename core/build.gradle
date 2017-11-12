@@ -18,6 +18,4 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
 
 
-//    provided project(':android')
-//    compile project(path: ':database')
 }
