@@ -1,8 +1,10 @@
 package com.team.baster.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -61,6 +63,8 @@ public class BasterScreen implements Screen {
     private Texture burgerImg;
     private Texture pillImg;
 
+    private ParticleEffect particleEffect = new ParticleEffect();
+
 
     public BasterScreen(BasterGame game) {
         this.game = game;
@@ -88,6 +92,7 @@ public class BasterScreen implements Screen {
         drawNavBar();
         drawScoreCounter();
         drawCoinsCounter();
+        particleEffect.draw(game.batch, delta);
 
 //        particleEffect.update(delta);
 //        particleEffect.draw(game.batch, delta);
@@ -102,7 +107,7 @@ public class BasterScreen implements Screen {
 //        shapeRenderer.end();
 
         calculateSpeed();
-        blockController.controlItemsPosition(heroController.circleHead, heroController.circleBody, speed, scoreController.getScore(), coinController.getCoinsCounter());
+        blockController.controlItemsPosition(heroController.circleHead, heroController.circleBody, speed, scoreController.getScore(), coinController.getCoinsCounter(), particleEffect);
         heroController.resizeHero();
         scoreController.calculateScore(speed);
         backgroundController.checkLasDropBackground();
@@ -114,7 +119,8 @@ public class BasterScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void
+    resize(int width, int height) {
 
     }
 
@@ -161,6 +167,8 @@ public class BasterScreen implements Screen {
     }
 
     private void initTexture() {
+        particleEffect.load(Gdx.files.internal("particles/testEffect.p"), Gdx.files.internal("particles"));
+
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720) {
             airplaneLeftImg = new Texture("air_left.png");

@@ -1,6 +1,7 @@
 package com.team.baster.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -54,7 +55,7 @@ public class BlockController {
         playerStatusStorage = PlayerStatusStorage.getInstance();
     }
 
-    public void controlItemsPosition(Circle head, Circle body, int speed, int score, int coins) {
+    public void controlItemsPosition(Circle head, Circle body, int speed, int score, int coins, ParticleEffect pe) {
         for (UnitGeneration unit : units) {
             for (Rectangle rect : unit.blocks) {
                 rect.y += speed * Gdx.graphics.getDeltaTime();
@@ -67,7 +68,7 @@ public class BlockController {
             while (iterator.hasNext()) {
                 Rectangle rect = iterator.next();
                 rect.y += speed * Gdx.graphics.getDeltaTime();
-                if (checkActionItemCollision(rect, head, body)) {
+                if (checkActionItemCollision(rect, head, body, pe)) {
                     iterator.remove();
                 }
             }
@@ -109,12 +110,14 @@ public class BlockController {
         }
     }
 
-    private boolean checkActionItemCollision(Rectangle item, Circle head, Circle body) {
+    private boolean checkActionItemCollision(Rectangle item, Circle head, Circle body, ParticleEffect pe) {
         if (intersect(item, head) || intersect(item, body)) {
             if (item instanceof Pill) {
                 heroController.diet();
             } else if (item instanceof Burger) {
                 heroController.eatFood();
+                pe.setPosition(item.x, item.y);
+                pe.start();
             }
             return true;
         }
