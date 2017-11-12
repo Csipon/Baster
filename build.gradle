@@ -3,12 +3,13 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven { url 'https://maven.google.com' }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
-
+        classpath 'com.google.gms:google-services:3.1.1'
     }
 }
 
@@ -31,6 +32,7 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url 'https://maven.google.com' }
     }
 }
 
@@ -42,6 +44,9 @@ project(":android") {
     dependencies {
         compile project(":core")
 
+
+        compile 'com.google.android.gms:play-services-auth:11.0.4'
+        compile 'com.google.android.gms:play-services:11.0.4'
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
