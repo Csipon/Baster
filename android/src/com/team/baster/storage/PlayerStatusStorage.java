@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.team.baster.model.PlayerStatus;
 import com.team.baster.storage.core.SQLiteJDBC;
 
+import java.util.Arrays;
+
 /**
  * Created by Pasha on 10/29/2017.
  */
@@ -25,6 +27,8 @@ public class PlayerStatusStorage  {
 
 
     private static final String[] TABLE_COLUMNS  = {
+            COLUMN_ID,
+            COLUMN_PLAYER,
             COLUMN_OVERALL_SCORE,
             COLUMN_ACTUAL_COINS,
             COLUMN_OVERALL_EXPERIENCE
@@ -81,7 +85,7 @@ public class PlayerStatusStorage  {
 
     public PlayerStatus readPlayerStatus() {
         // How you want the results sorted in the resulting Cursor
-        String selection = COLUMN_PLAYER + " = ?";
+//        String selection = COLUMN_PLAYER + " = ?";
 //        String[] selectionArgs = {COLUMN_PLAYER};
         Cursor curs = readableDB.query(
                 TABLE_NAME,                                 // The table to query
@@ -93,15 +97,20 @@ public class PlayerStatusStorage  {
                 null                                        // The sort order
         );
         PlayerStatus playerStatus = new PlayerStatus();
+
         curs.moveToFirst();
-        playerStatus.id = curs.getInt(curs.getColumnIndex(COLUMN_ID));
         playerStatus.coins = curs.getInt(curs.getColumnIndex(COLUMN_ACTUAL_COINS));
         playerStatus.overallExperience = curs.getInt(curs.getColumnIndex(COLUMN_OVERALL_EXPERIENCE));
         playerStatus.overallScore = curs.getInt(curs.getColumnIndex(COLUMN_OVERALL_SCORE));
+        playerStatus.id = curs.getInt(curs.getColumnIndex(COLUMN_ID));
         playerStatus.player = curs.getString(curs.getColumnIndex(COLUMN_PLAYER));
+        System.out.println("COLUMNS ---------->>>>> " + Arrays.toString(curs.getColumnNames()));
+//        playerStatus.id = 1;
+//        playerStatus.player = "player";
         actualCoins = playerStatus.coins;
         overallExperience = playerStatus.overallExperience;
         overallScore = playerStatus.overallScore;
+        curs.close();
         return playerStatus;
     }
 }

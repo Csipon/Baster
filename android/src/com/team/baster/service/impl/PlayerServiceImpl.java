@@ -33,8 +33,8 @@ public final class PlayerServiceImpl implements PlayerService {
     public boolean createNewPlayer(String name){
         if (validatePlayerName(name)) {
             String hash = "#" + UUID.randomUUID().toString().replace("-", "");
-            currentUser.setLogin(name + hash);
-            storage.update(currentUser.getId(), currentUser.getLogin(), null, null, null);
+            getCurrentUser().setLogin(name + hash);
+            storage.update(getCurrentUser().getId(), getCurrentUser().getLogin(), null, null, null);
             return true;
         }
         return false;
@@ -50,7 +50,7 @@ public final class PlayerServiceImpl implements PlayerService {
 
 
     public boolean isDefaultPlayer(){
-        if (DEFAULT_PLAYER_NAME.equalsIgnoreCase(currentUser.getLogin())){
+        if (DEFAULT_PLAYER_NAME.equalsIgnoreCase(getCurrentUser().getLogin())){
             return true;
         }
         return false;

@@ -282,11 +282,11 @@ public class MenuScreen implements Screen {
     }
 
     private void initObj() {
+        playerService = ServiceFactory.getPlayerService();
+        playerService.getCurrentUser();
         scoreStorage = new ScoreStorage();
         buttonStyleGenerator = new ButtonStyleGenerator();
-        playerService = ServiceFactory.getPlayerService();
         fontGenerator = new FontGenerator();
-        playerService.getCurrentUser();
     }
 
     private void initTexture() {

@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteJDBC extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "/data/data/com.team.baster/baster.db";
     public static SQLiteJDBC jdbc;
 
@@ -20,13 +20,13 @@ public class SQLiteJDBC extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(SqlConstant.CREATE_PLAYER_STATUS);
+        db.execSQL(SqlConstant.INSERT_PLAYER_STATUS);
         db.execSQL(SqlConstant.CREATE_SCORE);
         db.execSQL(SqlConstant.CREATE_PRODUCT_TITLE);
         db.execSQL(SqlConstant.CREATE_PRODUCTS);
         db.execSQL(SqlConstant.CREATE_ACHIEVEMENTS);
         db.execSQL(SqlConstant.CREATE_ORDERS);
-        db.execSQL(SqlConstant.CREATE_PLAYER_STATUS);
-        db.execSQL(SqlConstant.INSERT_PLAYER_STATUS);
         System.out.println("DB is CREATED");
     }
 

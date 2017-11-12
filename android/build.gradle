@@ -19,6 +19,7 @@ android {
         exclude 'META-INF/DEPENDENCIES'
     }
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.team.baster"
         minSdkVersion 17
         targetSdkVersion 26
