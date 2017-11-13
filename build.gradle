@@ -9,7 +9,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath 'com.google.gms:google-services:3.1.1'
     }
 }
@@ -45,9 +45,6 @@ project(":android") {
     dependencies {
         compile project(":core")
 
-
-        compile 'com.google.android.gms:play-services-auth:11.2.0'
-        compile 'com.google.android.gms:play-services:11.2.0'
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
