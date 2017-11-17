@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.controller.BackgroundController;
 import com.team.baster.controller.BlockController;
-import com.team.baster.controller.CoinController;
 import com.team.baster.controller.HeroController;
 import com.team.baster.controller.ParatrooperController;
 import com.team.baster.controller.ScoreController;
@@ -45,7 +44,6 @@ public class BasterScreen implements Screen {
     Texture airplaneLeftImg;
     Texture airplaneRightImg;
     Texture backgroundImg;
-    Texture coinImg;
     Texture topNavImg;
     Texture paratrooperImg;
 
@@ -53,7 +51,6 @@ public class BasterScreen implements Screen {
 
     ParatrooperController paratrooperController;
     HeroController heroController;
-    CoinController coinController;
     ScoreController scoreController;
     BlockController blockController;
     BackgroundController backgroundController;
@@ -63,20 +60,17 @@ public class BasterScreen implements Screen {
     private Texture burgerImg;
     private Texture pillImg;
 
-    private ParticleEffect particleEffect = new ParticleEffect();
+    private ParticleEffect particleEffect;
 
 
     public BasterScreen(BasterGame game) {
-        this.game = game;
-        shapeRenderer = new ShapeRenderer();
-        startDate = TimeUtils.nanoTime();
+        this.game       = game;
+        startDate       = TimeUtils.nanoTime();
         initCamera();
         initTexture();
         initObjects();
-        coinController.lastDropCoinTime = startDate;
         backgroundController.dropStartBackground();
         blockController.dropItem();
-        coinController.generatePeriod();
     }
 
     @Override
@@ -87,27 +81,19 @@ public class BasterScreen implements Screen {
         drawBackground();
         drawHero();
         drawBlocks();
-        drawCoins();
         drawParatrooper();
         drawNavBar();
         drawScoreCounter();
-        drawCoinsCounter();
         particleEffect.draw(game.batch, delta);
 
-//        particleEffect.update(delta);
-//        particleEffect.draw(game.batch, delta);
 //        shapeRenderer.setColor(0, 1, 0, 1);
 //        shapeRenderer.circle(heroController.circleHead.x, heroController.circleHead.y, heroController.circleHead.radius);
 //        shapeRenderer.circle(heroController.circleBody.x, heroController.circleBody.y, heroController.circleBody.radius);
-//        for (Rectangle rectangle : blockController.blockGenerator.square) {
-//
-//            shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-//        }
         game.batch.end();
 //        shapeRenderer.end();
 
         calculateSpeed();
-        blockController.controlItemsPosition(heroController.circleHead, heroController.circleBody, speed, scoreController.getScore(), coinController.getCoinsCounter(), particleEffect);
+        blockController.controlItemsPosition(heroController.circleHead, heroController.circleBody, speed, scoreController.getScore(), 0, particleEffect);
         heroController.resizeHero();
         scoreController.calculateScore(speed);
         backgroundController.checkLasDropBackground();
@@ -150,7 +136,6 @@ public class BasterScreen implements Screen {
         airplaneLeftImg.dispose();
         airplaneRightImg.dispose();
         backgroundImg.dispose();
-        coinImg.dispose();
         topNavImg.dispose();
         paratrooperImg.dispose();
     }
@@ -167,24 +152,18 @@ public class BasterScreen implements Screen {
     }
 
     private void initTexture() {
-        particleEffect.load(Gdx.files.internal("particles/testEffect.p"), Gdx.files.internal("particles"));
-
         topNavImg = new Texture("Test.png");
         if (WORLD_WIDTH == 720) {
-            airplaneLeftImg = new Texture("air_left.png");
-            airplaneRightImg = new Texture("air_right.png");
-            burgerImg = new Texture("burger.png");
-            pillImg = new Texture("pills.png");
-            backgroundImg = new Texture("bg_sky.jpg");
-//            backgroundImg = new Texture("space_720.jpg");
-            blockImg = new Texture("block.jpg");
-//            blockVertImg = new Texture("block_vertical.jpg");
-//            blockVertImg = new Texture("barrel_1.png");
-            tubeTopImg = new Texture("mario_tube_top.png");
-            tubeBodyImg = new Texture("mario_tube_body.png");
-            tubeBotImg = new Texture("mario_tube_bot.png");
-            coinImg = new Texture("coin.png");
-            paratrooperImg = new Texture("paratrooper_720.png");
+            airplaneLeftImg     = new Texture("air_left.png");
+            airplaneRightImg    = new Texture("air_right.png");
+            burgerImg           = new Texture("burger.png");
+            pillImg             = new Texture("pills.png");
+            backgroundImg       = new Texture("bg_sky.jpg");
+            blockImg            = new Texture("block.jpg");
+            tubeTopImg          = new Texture("mario_tube_top.png");
+            tubeBodyImg         = new Texture("mario_tube_body.png");
+            tubeBotImg          = new Texture("mario_tube_bot.png");
+            paratrooperImg      = new Texture("paratrooper_720.png");
         }
     }
 
@@ -192,11 +171,6 @@ public class BasterScreen implements Screen {
         String strScore = "Score " + scoreController.getScore();
         game.customFont.draw(game.batch, strScore, 0, WORLD_HEIGHT - 10);
 
-    }
-
-    private void drawCoinsCounter() {
-        String strCoins = "Coins " + coinController.getCoinsCounter();
-        game.customFont.draw(game.batch, strCoins, 250, WORLD_HEIGHT - 10);
     }
 
     private void drawParatrooper(){
@@ -212,7 +186,7 @@ public class BasterScreen implements Screen {
     private void drawHero() {
 //        particleEffect.setPosition(heroController.hero.x + heroController.hero.width/2, heroController.hero.y + heroController.hero.height);
 //        particleEffect.start();
-        game.batch.draw(heroController.heroTexture, heroController.hero.x, heroController.hero.y);
+        game.batch.draw(heroController.heroTexture, heroController.hero.x, heroController.hero.y, heroController.currentHeroWidth, heroController.currentHeroHeight);
     }
 
     private void drawBackground() {
@@ -221,19 +195,15 @@ public class BasterScreen implements Screen {
         }
     }
 
-    private void drawCoins() {
-//        for (Rectangle rectangle : coinController.coins) {
-//            game.batch.draw(coinImg, rectangle.x, rectangle.y);
-//        }
-    }
-
     private void initObjects() {
-        heroController = new HeroController();
-        paratrooperController = new ParatrooperController();
-        coinController = new CoinController(heroController);
-        scoreController = new ScoreController();
-        blockController = new BlockController(game, heroController, paratrooperController);
-        backgroundController = new BackgroundController(backgroundImg);
+        particleEffect          = new ParticleEffect();
+        shapeRenderer           = new ShapeRenderer();
+        heroController          = new HeroController();
+        paratrooperController   = new ParatrooperController();
+        scoreController         = new ScoreController();
+        blockController         = new BlockController(game, heroController, paratrooperController);
+        backgroundController    = new BackgroundController(backgroundImg);
+        particleEffect.load(Gdx.files.internal("particles/testEffect.p"), Gdx.files.internal("particles"));
     }
 
     private void drawBlocks() {
@@ -268,16 +238,15 @@ public class BasterScreen implements Screen {
         }
     }
 
-    private int calculateSpeed() {
+    private void calculateSpeed() {
         long period = TimeUtils.nanoTime() - startDate;
 
         if (period / PERIOD_ACCELERATION > 1) {
-            startDate = TimeUtils.nanoTime();
+            startDate  = TimeUtils.nanoTime();
             int result = (int) (speed + (DEFAULT_SPEED * PART_ACCELERATION));
             if (result < DEFAULT_SPEED * 5) {
-                speed = result;
+                speed  = result;
             }
         }
-        return speed;
     }
 }

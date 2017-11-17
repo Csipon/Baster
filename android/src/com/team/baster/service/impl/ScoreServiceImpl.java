@@ -35,7 +35,7 @@ public final class ScoreServiceImpl implements ScoreService{
     private static final String SERVER_URL = "http://192.162.132.33:8080";
 
     public ScoreServiceImpl(ScoreStorage scoreStorage, PlayerService playerService) {
-        this.scoreStorage = scoreStorage;
+        this.scoreStorage  = scoreStorage;
         this.playerService = playerService;
     }
 

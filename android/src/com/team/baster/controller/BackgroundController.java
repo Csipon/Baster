@@ -19,7 +19,7 @@ public class BackgroundController {
     public BackgroundGenerator backgroundGenerator;
 
     public BackgroundController(Texture bgImg) {
-        background = new Array<>();
+        background          = new Array<>();
         backgroundGenerator = new BackgroundGenerator(bgImg, background);
     }
 

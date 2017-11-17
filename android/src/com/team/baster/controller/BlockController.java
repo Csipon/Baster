@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.asynch.MyAsyncTask;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.Generator;
@@ -34,28 +33,29 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 public class BlockController {
 
-    private static ScoreService scoreService = ServiceFactory.getScoreService();
-    private static PlayerService playerService = ServiceFactory.getPlayerService();
-    private Generator generator;
+    private static ScoreService scoreService    = ServiceFactory.getScoreService();
+    private static PlayerService playerService  = ServiceFactory.getPlayerService();
     public Array<UnitGeneration> units;
-    BasterGame game;
-    public HeroController heroController;
-    public ParatrooperController paratrooperController;
     private Random random;
+    private BasterGame game;
+    private Generator generator;
+    private HeroController heroController;
+    private ParatrooperController paratrooperController;
 
     public BlockController(BasterGame game, HeroController heroController, ParatrooperController paratrooperController) {
-        this.game = game;
-        random = new Random();
-        this.heroController = heroController;
-        this.paratrooperController = paratrooperController;
-        generator = new Generator();
-        units = new Array<>();
+        this.game                   = game;
+        this.heroController         = heroController;
+        this.paratrooperController  = paratrooperController;
+        random                      = new Random();
+        units                       = new Array<>();
+        generator                   = new Generator();
     }
 
     public void controlItemsPosition(Circle head, Circle body, int speed, int score, int coins, ParticleEffect pe) {
         for (UnitGeneration unit : units) {
+            float currentSpeed = speed * Gdx.graphics.getDeltaTime();
             for (Rectangle rect : unit.blocks) {
-                rect.y += speed * Gdx.graphics.getDeltaTime();
+                rect.y += currentSpeed;
                 if (rect instanceof DynamicBlock) {
                     controlDynamicPosition((DynamicBlock) rect);
                 }
@@ -64,23 +64,32 @@ public class BlockController {
             Iterator<Rectangle> iterator = unit.actionItems.iterator();
             while (iterator.hasNext()) {
                 Rectangle rect = iterator.next();
-                rect.y += speed * Gdx.graphics.getDeltaTime();
+                rect.y += currentSpeed;
                 if (checkActionItemCollision(rect, head, body, pe)) {
                     iterator.remove();
                 }
             }
-            unit.minPointY += speed * Gdx.graphics.getDeltaTime();
+            unit.minPointY += currentSpeed;
         }
+        controlParatrooper(speed, score, coins);
+        cleanUnits();
+    }
+    private void controlParatrooper(int speed, int score, int coins){
+        if (paratrooperController.isFly) {
+            int currentSpeed = (int) ((speed * Gdx.graphics.getDeltaTime()) * 1.8);
+            int currentYPos  = (int) paratrooperController.paratrooper.body.y;
+            paratrooperController.controlPosition(currentYPos + currentSpeed);
+            checkParatrooperCollision(score, coins);
+        }
+    }
+
+    private void cleanUnits(){
         Iterator<UnitGeneration> iter = units.iterator();
         while (iter.hasNext()) {
             UnitGeneration unit = iter.next();
             if (unit.minPointY > WORLD_HEIGHT) {
                 iter.remove();
             }
-        }
-        if (paratrooperController.isFly) {
-            paratrooperController.controlPosition((int) (paratrooperController.paratrooper.body.y + (int) (speed * Gdx.graphics.getDeltaTime()) * 1.8));
-            checkParatrooperCollision(score, coins);
         }
     }
 
@@ -127,9 +136,8 @@ public class BlockController {
         }
     }
 
-
+    @SuppressWarnings("unchecked")
     private void save(int score, int coins) {
-        System.out.println("------- 0 " + TimeUtils.millis());
         Score scoreObj = new Score();
         scoreObj.setLogin(playerService.getCurrentUser().getLogin());
         scoreObj.setScore(score);

@@ -2,7 +2,6 @@ package com.team.baster.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,17 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.team.baster.domain.BasterGame;
-import com.team.baster.style.font.FontGenerator;
 import com.team.baster.style.button.ButtonStyleGenerator;
+import com.team.baster.style.font.FontGenerator;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
@@ -52,54 +47,47 @@ public class GameOverScreen implements Screen {
     private ImageButton imgButtonAchieve;
     private Image imgScore;
     private Image imgCoins;
-    private Image imgLose;
     private TextureRegionDrawable bg;
 
     private int score;
     private int coins;
 
     public GameOverScreen(BasterGame game, int score, int coins) {
+        this.game   = game;
+        this.coins  = coins;
+        this.score  = score;
+        camera      = new OrthographicCamera();
+        viewport    =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
 
-        this.game = game;
-        this.coins = coins;
-        this.score = score;
-        camera = new OrthographicCamera();
-        viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
         viewport.apply();
         camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
         camera.update();
 
-        fontGenerator = new FontGenerator();
+        fontGenerator        = new FontGenerator();
         buttonStyleGenerator = new ButtonStyleGenerator();
-        stage = new Stage(viewport, game.batch);
+        stage                = new Stage(viewport, game.batch);
 
     }
 
     @Override
     public void show() {
-        System.out.println("------- 4 "  + TimeUtils.millis());
         Gdx.input.setInputProcessor(stage);
 
         bg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/bg.9.png"))));
         loadLabel();
         loadImgButton();
-
-        System.out.println("------- 5 "  + TimeUtils.millis());
         loadTable();
-        System.out.println("------- 6 "  + TimeUtils.millis());
-
     }
 
     private void loadLabel() {
-        Label.LabelStyle labelStyle = fontGenerator.getLabelStyle72();
-        Label.LabelStyle labelStyleYellow = fontGenerator.getLabelStyle72Yellow();
-        Label.LabelStyle labelStyle35 = fontGenerator.getLabelStyle35();
+        Label.LabelStyle labelStyle         = fontGenerator.getLabelStyle72();
+        Label.LabelStyle labelStyleYellow   = fontGenerator.getLabelStyle72Yellow();
+        Label.LabelStyle labelStyle35       = fontGenerator.getLabelStyle35();
 
-        labelAchievements = new Label("No achievements completed", labelStyle35);
-
-        labelLose = new Label("You lose", labelStyle);
-        labelScore = new Label("" + score, labelStyle);
-        labelCoins = new Label("+" + coins, labelStyleYellow);
+        labelAchievements                   = new Label("No achievements completed", labelStyle35);
+        labelLose                           = new Label("You lose", labelStyle);
+        labelScore                          = new Label("" + score, labelStyle);
+        labelCoins                          = new Label("+" + coins, labelStyleYellow);
     }
 
     private void loadTable() {
@@ -168,7 +156,6 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
         Gdx.gl.glClearColor(135/255f, 206/255f, 235/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

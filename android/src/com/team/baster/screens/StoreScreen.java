@@ -30,8 +30,8 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 public class StoreScreen implements Screen {
 
-    final BasterGame game;
-    protected Stage stage;
+    private BasterGame game;
+    private Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
 
@@ -65,8 +65,8 @@ public class StoreScreen implements Screen {
 
     public StoreScreen(BasterGame game) {
         initSetting();
-        this.game = game;
-        stage = new Stage(viewport, game.batch);
+        this.game   = game;
+        stage       = new Stage(viewport, game.batch);
 
         initObj();
         initTexture();
@@ -104,7 +104,6 @@ public class StoreScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
         viewport.update(width, height);
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
@@ -181,12 +180,12 @@ public class StoreScreen implements Screen {
 
     public void setImgButton() {
 
-        parashute = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/parashute.png", 7, 7));
-        eat = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/buffet.png", 7, 7));
-        money = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/rich.png", 7, 7));
-        buy = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/buy.png", 7, 7));
-        imgButtonMenu = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/back-arrow.png", 7, 7));
-        devider  = new Image(new Texture(Gdx.files.internal("icons/devider.png")));
+        parashute       = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/parashute.png", 7, 7));
+        eat             = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/buffet.png", 7, 7));
+        money           = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/rich.png", 7, 7));
+        buy             = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/buy.png", 7, 7));
+        imgButtonMenu   = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/back-arrow.png", 7, 7));
+        devider         = new Image(new Texture(Gdx.files.internal("icons/devider.png")));
 
         parashute.addListener(new ClickListener(){
             @Override
@@ -273,7 +272,6 @@ public class StoreScreen implements Screen {
 
 
     public void addSideNav() {
-
         sideNavTable = new Table();
         sideNavTable.center();
         sideNavTable.setSize(WORLD_WIDTH - 20, WORLD_HEIGHT/3 - 335 );
@@ -302,25 +300,25 @@ public class StoreScreen implements Screen {
     }
 
     private void initSetting() {
-        camera = new OrthographicCamera();
+        camera      = new OrthographicCamera();
         camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
-        viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
+        viewport    =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
         viewport.apply();
     }
 
     private void initTexture() {
-        mainBg = new TextureRegion(new Texture(Gdx.files.internal("icons/main-bg.png")));
-        bg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/blue-bg.png"))));
-        sideNavBg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/side-nav-bg.png"))));
+        mainBg      = new TextureRegion(new Texture(Gdx.files.internal("icons/main-bg.png")));
+        bg          = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/blue-bg.png"))));
+        sideNavBg   = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/side-nav-bg.png"))));
         naviPassive = new Texture(Gdx.files.internal("naviPassive.png"));
         naviActive  = new Texture(Gdx.files.internal("naviActive.png"));
     }
 
     private void initObj() {
         buttonStyleGenerator = new ButtonStyleGenerator();
-        fontGenerator = new FontGenerator();
-        styleTitle = fontGenerator.getStyleTitle();
-        styleDescribe = fontGenerator.getLabelStyle25();
+        fontGenerator        = new FontGenerator();
+        styleTitle           = fontGenerator.getStyleTitle();
+        styleDescribe        = fontGenerator.getLabelStyle25();
     }
 
 }

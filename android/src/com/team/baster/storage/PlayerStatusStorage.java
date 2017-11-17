@@ -7,23 +7,21 @@ import android.database.sqlite.SQLiteDatabase;
 import com.team.baster.model.PlayerStatus;
 import com.team.baster.storage.core.SQLiteJDBC;
 
-import java.util.Arrays;
-
 /**
  * Created by Pasha on 10/29/2017.
  */
 
 public class PlayerStatusStorage  {
-    private static final String TABLE_NAME = "actual_player_status";
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_PLAYER = "player";
-    private static final String COLUMN_OVERALL_SCORE = "overall_score";
-    private static final String COLUMN_ACTUAL_COINS = "actual_coins";
-    private static final String COLUMN_OVERALL_EXPERIENCE = "overall_experience";
+    private static final String TABLE_NAME                  = "actual_player_status";
+    private static final String COLUMN_ID                   = "id";
+    private static final String COLUMN_PLAYER               = "player";
+    private static final String COLUMN_OVERALL_SCORE        = "overall_score";
+    private static final String COLUMN_ACTUAL_COINS         = "actual_coins";
+    private static final String COLUMN_OVERALL_EXPERIENCE   = "overall_experience";
 
-    public static int actualCoins = 0;
+    public static int actualCoins       = 0;
     public static int overallExperience = 0;
-    public static int overallScore = 0;
+    public static int overallScore      = 0;
 
 
     private static final String[] TABLE_COLUMNS  = {
@@ -54,26 +52,26 @@ public class PlayerStatusStorage  {
     }
 
     public void update(Integer id, String player, Integer coins, Integer score, Integer experience){
-        ContentValues values = new ContentValues();
-        String where = null;
-        String[] whereParams = null;
+        ContentValues values     = new ContentValues();
+        String where             = null;
+        String[] whereParams     = null;
         if (id != null){
             where = COLUMN_ID + " = ?";
-            whereParams = new String[]{String.valueOf(id)};
+            whereParams          = new String[]{String.valueOf(id)};
         }
         if (player != null){
             values.put(COLUMN_PLAYER, player);
         }
         if (coins != null){
-            actualCoins += coins;
+            actualCoins         += coins;
             values.put(COLUMN_ACTUAL_COINS, actualCoins);
         }
         if (score != null){
-            overallScore += score;
+            overallScore        += score;
             values.put(COLUMN_OVERALL_SCORE, overallScore);
         }
         if (experience != null){
-            overallExperience += experience;
+            overallExperience   += experience;
             values.put(COLUMN_OVERALL_EXPERIENCE, overallExperience);
         }
 
@@ -96,20 +94,17 @@ public class PlayerStatusStorage  {
                 null,                                       // don't filter by row groups
                 null                                        // The sort order
         );
-        PlayerStatus playerStatus = new PlayerStatus();
+        PlayerStatus playerStatus       = new PlayerStatus();
 
         curs.moveToFirst();
-        playerStatus.coins = curs.getInt(curs.getColumnIndex(COLUMN_ACTUAL_COINS));
-        playerStatus.overallExperience = curs.getInt(curs.getColumnIndex(COLUMN_OVERALL_EXPERIENCE));
-        playerStatus.overallScore = curs.getInt(curs.getColumnIndex(COLUMN_OVERALL_SCORE));
-        playerStatus.id = curs.getInt(curs.getColumnIndex(COLUMN_ID));
-        playerStatus.player = curs.getString(curs.getColumnIndex(COLUMN_PLAYER));
-        System.out.println("COLUMNS ---------->>>>> " + Arrays.toString(curs.getColumnNames()));
-//        playerStatus.id = 1;
-//        playerStatus.player = "player";
-        actualCoins = playerStatus.coins;
-        overallExperience = playerStatus.overallExperience;
-        overallScore = playerStatus.overallScore;
+        playerStatus.coins              = curs.getInt(curs.getColumnIndex(COLUMN_ACTUAL_COINS));
+        playerStatus.overallExperience  = curs.getInt(curs.getColumnIndex(COLUMN_OVERALL_EXPERIENCE));
+        playerStatus.overallScore       = curs.getInt(curs.getColumnIndex(COLUMN_OVERALL_SCORE));
+        playerStatus.id                 = curs.getInt(curs.getColumnIndex(COLUMN_ID));
+        playerStatus.player             = curs.getString(curs.getColumnIndex(COLUMN_PLAYER));
+        actualCoins                     = playerStatus.coins;
+        overallExperience               = playerStatus.overallExperience;
+        overallScore                    = playerStatus.overallScore;
         curs.close();
         return playerStatus;
     }

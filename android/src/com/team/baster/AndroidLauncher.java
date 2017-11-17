@@ -20,13 +20,17 @@ public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		telephonyManager =(TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		SQLiteJDBC.jdbc = new SQLiteJDBC(getApplicationContext());
-		RequestUtil.instance = new RequestUtil(getApplicationContext());
-		actionResolverAndroid = new ActionResolverAndroid(this);
-		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		config.useAccelerometer = false;
-		config.useCompass = false;
+
+		telephonyManager 						=(TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		SQLiteJDBC.jdbc 						= new SQLiteJDBC(getApplicationContext());
+		RequestUtil.instance 					= new RequestUtil(getApplicationContext());
+
+		actionResolverAndroid 					= new ActionResolverAndroid(this);
+		AndroidApplicationConfiguration config 	= new AndroidApplicationConfiguration();
+
+		config.useAccelerometer 				= false;
+		config.useCompass 						= false;
+
 		initialize(new BasterGame(actionResolverAndroid, this), config);
 	}
 

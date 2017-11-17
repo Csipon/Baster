@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.team.baster.model.Paratrooper;
 
-import static com.team.baster.GameConstants.MAX_COIN_GENER_TIME;
-import static com.team.baster.GameConstants.MIN_COIN_GENER_TIME;
+import static com.team.baster.GameConstants.MAX_GENER_TIME;
+import static com.team.baster.GameConstants.MIN_GENER_TIME;
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
 
@@ -22,7 +22,7 @@ public class ParatrooperController {
     public ParatrooperController() {
         paratrooper = new Paratrooper();
         lastGenerated = TimeUtils.nanoTime();
-        periodGeneration = MathUtils.random(MIN_COIN_GENER_TIME, MAX_COIN_GENER_TIME);
+        periodGeneration = MathUtils.random(MIN_GENER_TIME, MAX_GENER_TIME);
     }
 
 
@@ -37,7 +37,7 @@ public class ParatrooperController {
         if (TimeUtils.nanoTime() - lastGenerated > periodGeneration && !isFly){
             generateParatrooper();
             lastGenerated = TimeUtils.nanoTime();
-            periodGeneration = MathUtils.random(MIN_COIN_GENER_TIME, MAX_COIN_GENER_TIME);
+            periodGeneration = MathUtils.random(MIN_GENER_TIME, MAX_GENER_TIME);
             isFly = true;
         }
     }

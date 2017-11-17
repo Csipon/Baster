@@ -7,14 +7,15 @@ package com.team.baster.storage.core;
 public class SqlConstant {
 
     public static final  String DROP_TABLE_ACTUAL_PLAYER_STATUS = "DROP TABLE actual_player_status;";
-    public static final  String DROP_TABLE_PRODUCT = "DROP TABLE product;";
-    public static final  String DROP_TABLE_PRODUCT_TYPE = "DROP TABLE product_type;";
-    public static final  String DROP_TABLE_SCORE = "DROP TABLE score;";
-    public static final  String DROP_TABLE_ORDERS = "DROP TABLE orders;";
-    public static final  String DROP_TABLE_ACHIEVEMENTS = "DROP TABLE achievements;";
+    public static final  String DROP_TABLE_PRODUCT              = "DROP TABLE product;";
+    public static final  String DROP_TABLE_PRODUCT_TYPE         = "DROP TABLE product_type;";
+    public static final  String DROP_TABLE_SCORE                = "DROP TABLE score;";
+    public static final  String DROP_TABLE_ORDERS               = "DROP TABLE orders;";
+    public static final  String DROP_TABLE_ACHIEVEMENTS         = "DROP TABLE achievements;";
 
 
-    public static final  String CREATE_PLAYER_STATUS = "CREATE TABLE \"actual_player_status\" (\n" +
+    public static final  String CREATE_PLAYER_STATUS =
+            "CREATE TABLE \"actual_player_status\" (\n" +
             " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
             " \"player\" text NOT NULL,\n" +
             " \"overall_score\" integer NOT NULL,\n" +
@@ -22,7 +23,8 @@ public class SqlConstant {
             " \"overall_experience\" integer NOT NULL\n" +
             ");";
 
-    public static final  String CREATE_PRODUCTS = "CREATE TABLE \"product\" (\n" +
+    public static final  String CREATE_PRODUCTS =
+            "CREATE TABLE \"product\" (\n" +
             " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
             " \"title\" text NOT NULL,\n" +
             " \"donat_price\" integer NOT NULL,\n" +
@@ -32,12 +34,14 @@ public class SqlConstant {
             "              FOREIGN KEY (product_type_id_fk) REFERENCES product_type(id)\n" +
             ");";
 
-    public static final  String CREATE_PRODUCT_TITLE = "CREATE TABLE \"product_type\" (\n" +
+    public static final  String CREATE_PRODUCT_TITLE =
+            "CREATE TABLE \"product_type\" (\n" +
             " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
             " \"title\" text NOT NULL\n" +
             ");";
 
-    public static final String CREATE_ACHIEVEMENTS = "CREATE TABLE \"achievements\" (\n" +
+    public static final String CREATE_ACHIEVEMENTS =
+            "CREATE TABLE \"achievements\" (\n" +
             " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
             " \"title\" text NOT NULL,\n" +
             " \"is_completed\" text NOT NULL,\n" +
@@ -46,7 +50,8 @@ public class SqlConstant {
             " \"date_completed\" text NOT NULL\n" +
             ");";
 
-    public static final String CREATE_ORDERS = "CREATE TABLE \"orders\" (\n" +
+    public static final String CREATE_ORDERS =
+            "CREATE TABLE \"orders\" (\n" +
             " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
             " \"type_currency\" text NOT NULL,\n" +
             " \"actual_count\" text NOT NULL,\n" +
@@ -56,7 +61,8 @@ public class SqlConstant {
             "             FOREIGN KEY (product_id_fk) REFERENCES product(id)\n" +
             ");";
 
-    public static final String INSERT_PLAYER_STATUS = "INSERT INTO actual_player_status(player, overall_score, actual_coins, overall_experience) VALUES('player', 0, 0, 0);";
+    public static final String INSERT_PLAYER_STATUS =
+            "INSERT INTO actual_player_status(player, overall_score, actual_coins, overall_experience) VALUES('player', 0, 0, 0);";
 
     public static final String CREATE_SCORE =
             "CREATE TABLE \"score\" (\n" +

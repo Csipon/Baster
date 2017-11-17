@@ -11,8 +11,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteJDBC extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 4;
-    public static final String DATABASE_NAME = "/data/data/com.team.baster/baster.db";
+    private static final int DATABASE_VERSION = 4;
+    private static final String DATABASE_NAME = "/data/data/com.team.baster/baster.db";
     public static SQLiteJDBC jdbc;
 
     public SQLiteJDBC(Context context) {

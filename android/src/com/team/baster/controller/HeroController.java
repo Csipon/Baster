@@ -4,10 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
-import static com.team.baster.GameConstants.*;
+import static com.team.baster.GameConstants.HEAD_HEIGHT;
+import static com.team.baster.GameConstants.HERO_HEIGHT;
+import static com.team.baster.GameConstants.HERO_MAX_SIZE;
+import static com.team.baster.GameConstants.HERO_SCALE_PER_TIME_HEIGHT;
+import static com.team.baster.GameConstants.HERO_SCALE_PER_TIME_WIDTH;
+import static com.team.baster.GameConstants.HERO_WIDTH;
+import static com.team.baster.GameConstants.PERIOD_RESIZE;
+import static com.team.baster.GameConstants.WORLD_HEIGHT;
+import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 /**
  * Created by Pasha on 10/28/2017.
@@ -20,24 +27,24 @@ public class HeroController {
     public Circle circleBody;
     public Circle circleHead;
     public Texture heroTexture;
-    private Array<Texture> heroSizes;
     private int heroSize = 0;
     private long timeLeft;
 
+    public int currentHeroWidth;
+    public int currentHeroHeight;
+
     public HeroController() {
-        hero = new Rectangle();
+        hero       = new Rectangle();
         circleBody = new Circle();
         circleHead = new Circle();
-        heroSizes = new Array<>();
-        timeLeft = TimeUtils.nanoTime();
-        initArray();
+        timeLeft   = TimeUtils.nanoTime();
         configHero();
     }
 
     public void controlHeroInput() {
         if (Gdx.input.isTouched()) {
-            double x = Gdx.input.getDeltaX() * SPEED_FACTOR;
-            hero.x += x;
+            double x      = Gdx.input.getDeltaX() * SPEED_FACTOR;
+            hero.x       += x;
             circleBody.x += x;
             circleHead.x += x;
         }
@@ -45,71 +52,71 @@ public class HeroController {
 
     public void controlHeroPosition() {
         if (hero.x < 0){
-            hero.x = 0;
+            hero.x       = 0;
             circleBody.x = hero.width / 2;
             circleHead.x = hero.width / 2;
         }
 
-        if (hero.x > WORLD_WIDTH - heroTexture.getWidth()){
-            hero.x = WORLD_WIDTH - heroTexture.getWidth();
+        if (hero.x > WORLD_WIDTH - hero.width){
+            hero.x       = WORLD_WIDTH - hero.width;
             circleBody.x = hero.x + hero.width / 2;
             circleHead.x = hero.x + hero.width / 2;
         }
     }
 
-    private void initArray() {
-        for (int i = 0; i < HERO_SIZES; i++) {
-            heroSizes.add(new Texture("hero/grif_" + i + ".png"));
-        }
-        heroTexture = heroSizes.first();
-    }
-
     private void configHero() {
-        hero.x = WORLD_WIDTH / 2 - HERO_WIDTH / 2;
-        hero.y = WORLD_HEIGHT - (WORLD_HEIGHT / 5) - HERO_HEIGHT;
-        hero.width = HERO_WIDTH;
-        hero.height = HERO_HEIGHT;
+        heroTexture       = new Texture("hero/griffin_origin.png");
+        currentHeroWidth  = HERO_WIDTH;
+        currentHeroHeight = HERO_HEIGHT;
+        hero.x            = WORLD_WIDTH / 2 - currentHeroWidth / 2;
+        hero.y            = WORLD_HEIGHT - (WORLD_HEIGHT / 5) - currentHeroHeight;
+        hero.width        = currentHeroWidth;
+        hero.height       = currentHeroHeight;
         circleHead.set(hero.x + HERO_WIDTH / 2, hero.y + HEAD_HEIGHT / 2 + 5,HEAD_HEIGHT / 2);
         circleBody.set(hero.x + HERO_WIDTH / 2, circleHead.y + circleHead.radius + HERO_WIDTH / 4 - 5,HERO_WIDTH / 2 - 5);
     }
 
-    public Texture resizeHero() {
+    public void resizeHero() {
         long time = TimeUtils.nanoTime() - timeLeft;
-        if (time / PERIOD_RESIZE >= 1 && heroSize < heroSizes.size - 1) {
-            return eatFood();
+        if (time / PERIOD_RESIZE >= 1) {
+            eatFood();
         }
-        return heroTexture;
     }
 
 
-    public Texture eatFood(){
-        if (heroSize < heroSizes.size - 1) {
-            heroTexture = heroSizes.get(++heroSize);
-            hero.width = heroTexture.getWidth();
-            hero.height = heroTexture.getHeight();
-            hero.x -= 2;
-            circleHead.set(hero.x + hero.width / 2, hero.y + circleHead.radius + 5, circleHead.radius + 2);
+    public void eatFood(){
+        if (heroSize < HERO_MAX_SIZE) {
+            currentHeroWidth   += HERO_SCALE_PER_TIME_WIDTH;
+            currentHeroHeight  += HERO_SCALE_PER_TIME_HEIGHT;
+            hero.width          = currentHeroWidth;
+            hero.height         = currentHeroHeight;
+            hero.x             -= HERO_SCALE_PER_TIME_WIDTH / 2;
+            circleHead.set(hero.x + hero.width / 2, hero.y + circleHead.radius + 5, circleHead.radius + HERO_SCALE_PER_TIME_WIDTH / 2);
             circleBody.set(hero.x + hero.width / 2, circleHead.y + circleHead.radius + hero.width / 4 - 5, hero.width / 2 - 5);
             timeLeft = TimeUtils.nanoTime();
+            heroSize++;
         }
-        return heroTexture;
     }
     public Texture diet() {
-        if (heroSize > 0) {
-            heroTexture = heroSizes.get(--heroSize);
-            hero.width = heroTexture.getWidth();
-            hero.height = heroTexture.getHeight();
-            hero.x += 2;
-            circleHead.set(hero.x + hero.width / 2, hero.y + circleHead.radius + 5,circleHead.radius - 2);
-            circleBody.set(hero.x + hero.width / 2, circleHead.y + circleHead.radius + hero.width / 4 - 5, hero.width / 2 - 5);
-            timeLeft = TimeUtils.nanoTime();
+        int partResize = 3;
+        if (heroSize < 3 && heroSize >= 0) {
+            partResize = heroSize;
         }
+        currentHeroWidth    -= HERO_SCALE_PER_TIME_WIDTH * partResize;
+        currentHeroHeight   -= HERO_SCALE_PER_TIME_HEIGHT * partResize;
+        hero.width           = currentHeroWidth;
+        hero.height          = currentHeroHeight;
+        hero.x              += HERO_SCALE_PER_TIME_WIDTH * (partResize * 2 >= 1 ? partResize * 2 : 1);
+        int headRadius       = heroSize == 0 ? HEAD_HEIGHT / 2 : (int) (circleHead.radius - HERO_SCALE_PER_TIME_WIDTH * (partResize / 2 >= 1 ? partResize / 2 : 1));
+        headRadius           = headRadius < HEAD_HEIGHT / 2 ? HEAD_HEIGHT / 2 : headRadius;
+        circleHead.set(hero.x + currentHeroWidth / 2, hero.y + headRadius + 5, headRadius);
+        circleBody.set(hero.x + currentHeroWidth / 2, circleHead.y + circleHead.radius + currentHeroWidth / 4 - 5, currentHeroWidth / 2 - 2);
+        timeLeft  = TimeUtils.nanoTime();
+        heroSize -= partResize;
         return heroTexture;
     }
 
     public void dispose() {
-        for (Texture t : heroSizes) {
-            t.dispose();
-        }
+        heroTexture.dispose();
     }
 }

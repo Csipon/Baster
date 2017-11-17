@@ -11,7 +11,7 @@ import static com.team.baster.GameConstants.ACTION_ITEM_SIDE;
 public class ActionItem extends Rectangle {
     public ActionItem() {
         this.height = ACTION_ITEM_SIDE;
-        this.width = ACTION_ITEM_SIDE;
+        this.width  = ACTION_ITEM_SIDE;
     }
 
 

@@ -11,8 +11,8 @@ import static com.team.baster.GameConstants.ITEM_WIDTH;
 
 public class HorizBlock extends Block {
     public HorizBlock() {
-        this.width = ITEM_WIDTH;
-        this.height = ITEM_HEIGHT;
+        this.width   = ITEM_WIDTH;
+        this.height  = ITEM_HEIGHT;
     }
 
     public HorizBlock(Rectangle rect) {

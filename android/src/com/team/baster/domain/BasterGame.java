@@ -27,19 +27,18 @@ public class BasterGame extends Game {
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
-        font = new BitmapFont();
-        customFont = generateCustomFont();
+        batch       = new SpriteBatch();
+        font        = new BitmapFont();
+        customFont  = generateCustomFont();
         setScreen(new MenuScreen(this));
     }
 
     private BitmapFont generateCustomFont() {
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 45;
+        parameter.size  = 45;
         parameter.color = Color.WHITE;
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Roboto-Bold.ttf"));
-        BitmapFont font = generator.generateFont(parameter);
-        return font;
+        return generator.generateFont(parameter);
     }
 
 

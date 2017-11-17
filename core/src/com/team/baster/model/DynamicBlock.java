@@ -21,19 +21,19 @@ public class DynamicBlock extends Block {
     }
 
     public DynamicBlock() {
-        this.height = ITEM_AIRPLANE_HEIGHT;
-        this.width = ITEM_AIRPLANE_WIDTH;
+        this.height  = ITEM_AIRPLANE_HEIGHT;
+        this.width   = ITEM_AIRPLANE_WIDTH;
     }
 
 
     public void moveLeft(){
-        left = true;
+        left  = true;
         right = false;
     }
 
     public void moveRight(){
         right = true;
-        left = false;
+        left  = false;
     }
 
     public boolean isLeft() {

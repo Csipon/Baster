@@ -33,13 +33,13 @@ public class Generator {
 
 
     private void dynamicBlock(){
-        UnitGeneration unitGeneration = new UnitGeneration();
-        DynamicBlock rectangle = new DynamicBlock();
-        rectangle.x = WORLD_WIDTH / 2;
-        rectangle.y = BUFFER_Y - ITEM_AIRPLANE_HEIGHT;
+        UnitGeneration unitGeneration   = new UnitGeneration();
+        DynamicBlock rectangle          = new DynamicBlock();
+        rectangle.x                     = WORLD_WIDTH / 2;
+        rectangle.y                     = BUFFER_Y - ITEM_AIRPLANE_HEIGHT;
         rectangle.moveLeft();
         unitGeneration.blocks.add(rectangle);
-        unitGeneration.minPointY = (int) rectangle.y;
+        unitGeneration.minPointY        = (int) rectangle.y;
         units.add(unitGeneration);
     }
 
@@ -47,7 +47,7 @@ public class Generator {
     private void tonelBlocks(){
         UnitGeneration unitGeneration = new UnitGeneration();
         int currentY = BUFFER_Y;
-        currentY -= ITEM_TOP_VERT_HEIGHT;
+        currentY    -= ITEM_TOP_VERT_HEIGHT;
         unitGeneration.blocks.addAll(makeTopBlocks(currentY));
         for (int i = 0; i < 3; i++) {
             currentY -= ITEM_VERT_HEIGHT;
@@ -71,8 +71,8 @@ public class Generator {
                 rectangle.x = WORLD_WIDTH - ITEM_TOP_VERT_WIDTH;
             }
             rectangle.y = currentY;
-            rectangle.width = ITEM_TOP_VERT_WIDTH;
-            rectangle.height = ITEM_TOP_VERT_HEIGHT;
+            rectangle.width     = ITEM_TOP_VERT_WIDTH;
+            rectangle.height    = ITEM_TOP_VERT_HEIGHT;
             rect[i] = rectangle;
         }
         return rect;
@@ -96,7 +96,7 @@ public class Generator {
                 rectangle.x = WORLD_WIDTH - ITEM_VERT_WIDTH - (ITEM_TOP_VERT_WIDTH - ITEM_VERT_WIDTH) / 2;
             }
             rectangle.y = y;
-            rectangle.width = ITEM_VERT_WIDTH;
+            rectangle.width  = ITEM_VERT_WIDTH;
             rectangle.height = ITEM_VERT_HEIGHT;
             rect[i] = rectangle;
         }
@@ -108,10 +108,10 @@ public class Generator {
         ActionItem rectLeft;
         ActionItem rectRight;
         if (iter % 2 == 0){
-            rectLeft = new Pill();
+            rectLeft  = new Pill();
             rectRight = new Burger();
         }else {
-            rectLeft = new Burger();
+            rectLeft  = new Burger();
             rectRight = new Pill();
         }
 
@@ -119,7 +119,7 @@ public class Generator {
         rectRight.x = WORLD_WIDTH / 2 + (WORLD_WIDTH / 2 - ITEM_VERT_WIDTH - ITEM_VERT_WIDTH / 2) / 2 + ITEM_VERT_WIDTH / 2 - ACTION_ITEM_SIDE / 2;
 
 
-        rectLeft.y = y + ITEM_VERT_HEIGHT / 2 - ACTION_ITEM_SIDE / 2;
+        rectLeft.y  = y + ITEM_VERT_HEIGHT / 2 - ACTION_ITEM_SIDE / 2;
         rectRight.y = y + ITEM_VERT_HEIGHT / 2 - ACTION_ITEM_SIDE / 2;
 
         actionItems[0] = rectLeft;
@@ -130,39 +130,39 @@ public class Generator {
 
     private void makeFiveBlock(){
         UnitGeneration unit = new UnitGeneration();
-        HorizBlock rect1 = new HorizBlock();
-        HorizBlock rect2 = new HorizBlock();
-        rect1.x = 0;
-        rect2.x = WORLD_WIDTH - ITEM_WIDTH;
-        rect1.y = BUFFER_Y - ITEM_HEIGHT;
-        rect2.y = BUFFER_Y - ITEM_HEIGHT;
+        HorizBlock rect1    = new HorizBlock();
+        HorizBlock rect2    = new HorizBlock();
+        rect1.x             = 0;
+        rect2.x             = WORLD_WIDTH - ITEM_WIDTH;
+        rect1.y             = BUFFER_Y - ITEM_HEIGHT;
+        rect2.y             = BUFFER_Y - ITEM_HEIGHT;
 
         Pill p1 = new Pill();
-        p1.x = WORLD_WIDTH / 2 - ACTION_ITEM_SIDE / 2;
-        p1.y = rect1.y;
+        p1.x    = WORLD_WIDTH / 2 - ACTION_ITEM_SIDE / 2;
+        p1.y    = rect1.y;
 
         HorizBlock rect3 = new HorizBlock();
-        rect3.x = WORLD_WIDTH / 2 - ITEM_WIDTH / 2;
-        rect3.y = rect1.y - DISTANCE_FIVE_BLOCK - ITEM_HEIGHT;
+        rect3.x          = WORLD_WIDTH / 2 - ITEM_WIDTH / 2;
+        rect3.y          = rect1.y - DISTANCE_FIVE_BLOCK - ITEM_HEIGHT;
 
         Pill p2 = new Pill();
-        p2.x = (WORLD_WIDTH / 2 - rect3.width / 2 - ACTION_ITEM_SIDE / 2) / 2;
-        p2.y = rect3.y;
+        p2.x    = (WORLD_WIDTH / 2 - rect3.width / 2 - ACTION_ITEM_SIDE / 2) / 2;
+        p2.y    = rect3.y;
 
         Burger b1 = new Burger();
-        b1.x = WORLD_WIDTH / 2 + rect3.width / 2 + (WORLD_WIDTH / 2 - rect3.width / 2 - ACTION_ITEM_SIDE / 2) / 2;
-        b1.y = rect3.y;
+        b1.x      = WORLD_WIDTH / 2 + rect3.width / 2 + (WORLD_WIDTH / 2 - rect3.width / 2 - ACTION_ITEM_SIDE / 2) / 2;
+        b1.y      = rect3.y;
 
         HorizBlock rect4 = new HorizBlock();
         HorizBlock rect5 = new HorizBlock();
-        rect4.x = 0;
-        rect5.x = WORLD_WIDTH - ITEM_WIDTH;
-        rect4.y = rect3.y - DISTANCE_FIVE_BLOCK - ITEM_HEIGHT;
-        rect5.y = rect3.y - DISTANCE_FIVE_BLOCK - ITEM_HEIGHT;
+        rect4.x          = 0;
+        rect5.x          = WORLD_WIDTH - ITEM_WIDTH;
+        rect4.y          = rect3.y - DISTANCE_FIVE_BLOCK - ITEM_HEIGHT;
+        rect5.y          = rect3.y - DISTANCE_FIVE_BLOCK - ITEM_HEIGHT;
 
         Burger b2 = new Burger();
-        b2.x = WORLD_WIDTH / 2 - ACTION_ITEM_SIDE / 2;
-        b2.y = rect5.y;
+        b2.x      = WORLD_WIDTH / 2 - ACTION_ITEM_SIDE / 2;
+        b2.y      = rect5.y;
 
         unit.blocks.add(rect1);
         unit.blocks.add(rect2);

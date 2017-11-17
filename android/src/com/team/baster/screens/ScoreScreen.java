@@ -2,7 +2,6 @@ package com.team.baster.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -21,7 +19,6 @@ import com.team.baster.service.ScoreService;
 import com.team.baster.service.ServiceFactory;
 import com.team.baster.storage.model.Score;
 import com.team.baster.style.font.FontGenerator;
-import com.team.baster.storage.ScoreStorage;
 
 import java.util.List;
 
@@ -34,28 +31,27 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 public class ScoreScreen implements Screen {
 
-    final BasterGame game;
+    private BasterGame game;
     private SpriteBatch batch;
-    private static ScoreService scoreService = ServiceFactory.getScoreService();
+    private ScoreService scoreService;
     private FontGenerator fontGenerator;
-    protected Stage stage;
+    private Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
     private Image backImg;
-
     private Table scoreTable;
 
     private Array<Long> scores;
 
 
     public ScoreScreen(BasterGame game) {
-        this.game = game;
-        batch = new SpriteBatch();
-        camera = new OrthographicCamera();
-        viewport =  new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
+        this.game    = game;
+        scoreService = ServiceFactory.getScoreService();
+        batch        = new SpriteBatch();
+        camera       = new OrthographicCamera();
+        viewport     = new ExtendViewport(WORLD_WIDTH , WORLD_HEIGHT, camera);
         viewport.apply();
-
-        stage = new Stage(viewport, batch);
+        stage        = new Stage(viewport, batch);
     }
 
 
@@ -119,17 +115,16 @@ public class ScoreScreen implements Screen {
 
     private void showScoreStats() {
 
-        fontGenerator = new FontGenerator();
-        scores = scoreService.readLastBestScore();
-        List<Score> backupQueue = scoreService.readFromBackupQueue();
+        scoreTable                  = new Table();
+        fontGenerator               = new FontGenerator();
+        scores                      = scoreService.readLastBestScore();
+        List<Score> backupQueue     = scoreService.readFromBackupQueue();
+        Label.LabelStyle labelStyle = fontGenerator.getLabelStyle72();
         if (!backupQueue.isEmpty()) {
             scoreService.saveScoresToBack(backupQueue);
         }
-        scoreTable = new Table();
         scoreTable.center();
         scoreTable.setFillParent(true);
-
-        Label.LabelStyle labelStyle = fontGenerator.getLabelStyle72();
 
         int counter = 1;
 
@@ -149,8 +144,6 @@ public class ScoreScreen implements Screen {
         } else {
             scoreTable.add(new Label("No records yet", labelStyle));
         }
-
         stage.addActor(scoreTable);
     }
-
 }

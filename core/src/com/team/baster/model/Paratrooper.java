@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.team.baster.CollisionChecker;
 
-import static com.team.baster.GameConstants.PARATROOPER_BODE_WIDTH;
+import static com.team.baster.GameConstants.PARATROOPER_BODY_WIDTH;
 import static com.team.baster.GameConstants.PARATROOPER_BODY_HEIGHT;
 import static com.team.baster.GameConstants.PARATROOPER_HEIGHT;
 import static com.team.baster.GameConstants.PARATROOPER_WIDTH;
@@ -28,14 +28,14 @@ public class Paratrooper {
 
 
     public Paratrooper() {
-        body = new Rectangle();
-        man = new Rectangle();
-        paratroop = new Circle();
-        body.width = PARATROOPER_BODE_WIDTH;
-        body.height = PARATROOPER_BODY_HEIGHT;
-        man.width = PARATROOPER_WIDTH;
-        man.height = PARATROOPER_HEIGHT;
-        paratroop.radius = PARATROOP_RADIUS;
+        body                = new Rectangle();
+        man                 = new Rectangle();
+        paratroop           = new Circle();
+        body.width          = PARATROOPER_BODY_WIDTH;
+        body.height         = PARATROOPER_BODY_HEIGHT;
+        man.width           = PARATROOPER_WIDTH;
+        man.height          = PARATROOPER_HEIGHT;
+        paratroop.radius    = PARATROOP_RADIUS;
         if (Math.random() > 0.5){
             moveRight();
         }else {
@@ -50,21 +50,21 @@ public class Paratrooper {
             body.x = body.x + speed * Gdx.graphics.getDeltaTime();
         }
         System.out.println("PARA^ ----------- " + y + " ==== " + body.x);
-        body.y = y;
-        man.x = body.x + body.width / 2  - man.width / 2;
-        man.y = body.y;
+        body.y      = y;
+        man.x       = body.x + body.width / 2  - man.width / 2;
+        man.y       = body.y;
         paratroop.x = body.width /2 + body.x;
         paratroop.y = body.y + body.height - paratroop.radius;
     }
 
     public void moveLeft(){
-        left = true;
-        right = false;
+        left    = true;
+        right   = false;
     }
 
     public void moveRight(){
-        right = true;
-        left = false;
+        right   = true;
+        left    = false;
     }
 
     public boolean isLeft() {
