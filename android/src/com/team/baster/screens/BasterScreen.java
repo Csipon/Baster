@@ -175,7 +175,12 @@ public class BasterScreen implements Screen {
 
     private void drawParatrooper(){
         if (paratrooperController.isFly){
-            game.batch.draw(paratrooperImg, paratrooperController.paratrooper.body.x, paratrooperController.paratrooper.body.y);
+            game.batch.draw(paratrooperImg,
+                    paratrooperController.paratrooper.body.x,
+                    paratrooperController.paratrooper.body.y,
+                    paratrooperController.paratrooper.body.width,
+                    paratrooperController.paratrooper.body.height
+            );
         }
     }
 
@@ -186,12 +191,22 @@ public class BasterScreen implements Screen {
     private void drawHero() {
 //        particleEffect.setPosition(heroController.hero.x + heroController.hero.width/2, heroController.hero.y + heroController.hero.height);
 //        particleEffect.start();
-        game.batch.draw(heroController.heroTexture, heroController.hero.x, heroController.hero.y, heroController.currentHeroWidth, heroController.currentHeroHeight);
+        game.batch.draw(heroController.heroTexture,
+                heroController.hero.x,
+                heroController.hero.y,
+                heroController.currentHeroWidth,
+                heroController.currentHeroHeight
+        );
     }
 
     private void drawBackground() {
         for (Rectangle rectangle : backgroundController.background) {
-            game.batch.draw(backgroundImg, rectangle.x, rectangle.y);
+            game.batch.draw(backgroundImg,
+                    rectangle.x,
+                    rectangle.y,
+                    rectangle.width,
+                    rectangle.height
+            );
         }
     }
 
@@ -211,27 +226,27 @@ public class BasterScreen implements Screen {
             for (Rectangle rectangle : unit.blocks) {
                 if (rectangle instanceof DynamicBlock) {
                     if (((DynamicBlock) rectangle).isLeft()){
-                        game.batch.draw(airplaneLeftImg, rectangle.x, rectangle.y);
+                        game.batch.draw(airplaneLeftImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                     }else {
-                        game.batch.draw(airplaneRightImg, rectangle.x, rectangle.y);
+                        game.batch.draw(airplaneRightImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                     }
                 } else if (rectangle instanceof HorizBlock){
-                    game.batch.draw(blockImg, rectangle.x, rectangle.y);
+                    game.batch.draw(blockImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                 }else if (rectangle instanceof VertBlock){
                     if (((VertBlock) rectangle).isTop){
-                        game.batch.draw(tubeTopImg, rectangle.x, rectangle.y);
+                        game.batch.draw(tubeTopImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                     }else if (((VertBlock) rectangle).isBody){
-                        game.batch.draw(tubeBodyImg, rectangle.x, rectangle.y);
+                        game.batch.draw(tubeBodyImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                     }else if (((VertBlock) rectangle).isBot){
-                        game.batch.draw(tubeBotImg, rectangle.x, rectangle.y);
+                        game.batch.draw(tubeBotImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                     }
                 }
             }
             for (Rectangle rectangle : unit.actionItems){
                 if (rectangle instanceof Pill){
-                    game.batch.draw(pillImg, rectangle.x, rectangle.y);
+                    game.batch.draw(pillImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                 }else if (rectangle instanceof Burger){
-                    game.batch.draw(burgerImg, rectangle.x, rectangle.y);
+                    game.batch.draw(burgerImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                 }
             }
 
