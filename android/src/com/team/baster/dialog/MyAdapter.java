@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.team.baster.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Smeet on 31.10.2017.
@@ -21,9 +22,9 @@ public class MyAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater lInflater;
-    private ArrayList<Long> scores;
+    private List<Long> scores;
 
-    MyAdapter(Context context, ArrayList<Long> scores) {
+    MyAdapter(Context context, List<Long> scores) {
         this.context = context;
         this.scores = scores;
         lInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -52,8 +53,8 @@ public class MyAdapter extends BaseAdapter {
             view = lInflater.inflate(R.layout.score_list, parent, false);
         }
 
-        Long p = getScore(position);
-        ((TextView) view.findViewById(R.id.textScore)).setText(p.toString());
+        long score = getScore(position);
+        ((TextView) view.findViewById(R.id.textScore)).setText(String.valueOf(score));
 
         return view;
     }

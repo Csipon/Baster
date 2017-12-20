@@ -41,7 +41,7 @@ public class ScoreScreen implements Screen {
     private Image backImg;
     private Table scoreTable;
 
-    private Array<Long> scores;
+    private List<Long> scores;
 
 
     public ScoreScreen(BasterGame game) {
@@ -114,7 +114,6 @@ public class ScoreScreen implements Screen {
     }
 
     private void showScoreStats() {
-
         scoreTable                  = new Table();
         fontGenerator               = new FontGenerator();
         scores                      = scoreService.readLastBestScore();
@@ -126,21 +125,13 @@ public class ScoreScreen implements Screen {
         scoreTable.center();
         scoreTable.setFillParent(true);
 
-        int counter = 1;
+        final int[] counter = {1};
 
-        if(scores.size != 0) {
-            if(scores.size < 10) {
-                for (int i = 0; i < scores.size; i++) {
-                    scoreTable.add(new Label(counter++ + ". " + scores.get(i).toString(), labelStyle));
-                    scoreTable.row();
-                }
-            } else {
-                for (int i = 0; i < 10; i++) {
-                    scoreTable.add(new Label(counter++ + ". " + scores.get(i).toString(), labelStyle));
-                    scoreTable.row();
-                }
-            }
-
+        if(scores.size() != 0) {
+            scores.forEach(score -> {
+                scoreTable.add(new Label(counter[0]++ + ". " + score, labelStyle));
+                scoreTable.row();
+            });
         } else {
             scoreTable.add(new Label("No records yet", labelStyle));
         }

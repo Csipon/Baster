@@ -17,47 +17,47 @@ public class SqlConstant {
     public static final  String CREATE_PLAYER_STATUS =
             "CREATE TABLE \"actual_player_status\" (\n" +
             " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
-            " \"player\" text NOT NULL,\n" +
-            " \"overall_score\" integer NOT NULL,\n" +
-            " \"actual_coins\" integer NOT NULL,\n" +
-            " \"overall_experience\" integer NOT NULL\n" +
+            " \"player\" text,\n" +
+            " \"overall_score\" integer,\n" +
+            " \"actual_coins\" integer,\n" +
+            " \"overall_experience\" integer\n" +
             ");";
 
     public static final  String CREATE_PRODUCTS =
             "CREATE TABLE \"product\" (\n" +
             " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
-            " \"title\" text NOT NULL,\n" +
-            " \"donat_price\" integer NOT NULL,\n" +
-            " \"coin_price\" integer NOT NULL,\n" +
-            " \"max_count\" integer NOT NULL,\n" +
-            " \"product_type_id_fk\" integer NOT NULL,\n" +
+            " \"title\" text,\n" +
+            " \"donat_price\" integer,\n" +
+            " \"coin_price\" integer,\n" +
+            " \"max_count\" integer,\n" +
+            " \"product_type_id_fk\" integer,\n" +
             "              FOREIGN KEY (product_type_id_fk) REFERENCES product_type(id)\n" +
             ");";
 
     public static final  String CREATE_PRODUCT_TITLE =
             "CREATE TABLE \"product_type\" (\n" +
             " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
-            " \"title\" text NOT NULL\n" +
+            " \"title\" text \n" +
             ");";
 
     public static final String CREATE_ACHIEVEMENTS =
             "CREATE TABLE \"achievements\" (\n" +
             " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
-            " \"title\" text NOT NULL,\n" +
-            " \"is_completed\" text NOT NULL,\n" +
-            " \"coin_reward\" integer NOT NULL,\n" +
-            " \"experience \" integer NOT NULL,\n" +
-            " \"date_completed\" text NOT NULL\n" +
+            " \"title\" text,\n" +
+            " \"is_completed\" text,\n" +
+            " \"coin_reward\" integer ,\n" +
+            " \"experience \" integer,\n" +
+            " \"date_completed\" text\n" +
             ");";
 
     public static final String CREATE_ORDERS =
             "CREATE TABLE \"orders\" (\n" +
             " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
-            " \"type_currency\" text NOT NULL,\n" +
-            " \"actual_count\" text NOT NULL,\n" +
-            " \"date_bought\" text NOT NULL,\n" +
-            " \"last_date_bought\" text NOT NULL,\n" +
-            "    \"product_id_fk\" integer NOT NULL,\n" +
+            " \"type_currency\" text ,\n" +
+            " \"actual_count\" text ,\n" +
+            " \"date_bought\" text ,\n" +
+            " \"last_date_bought\" text ,\n" +
+            "    \"product_id_fk\" integer ,\n" +
             "             FOREIGN KEY (product_id_fk) REFERENCES product(id)\n" +
             ");";
 
@@ -67,9 +67,9 @@ public class SqlConstant {
     public static final String CREATE_SCORE =
             "CREATE TABLE \"score\" (\n" +
                     " \"id\" integer PRIMARY KEY AUTOINCREMENT,\n" +
-                    " \"score\" integer NOT NULL,\n" +
-                    " \"login\" text NOT NULL,\n" +
-                    " \"isForBack\" boolean NOT NULL,\n" +
-                    " \"date\" text NOT NULL\n" +
+                    " \"score\" integer ,\n" +
+                    " \"login\" text ,\n" +
+                    " \"isForBack\" boolean,\n" +
+                    " \"date\" text \n" +
                     ");\n";
 }

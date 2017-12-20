@@ -36,6 +36,14 @@ public class DynamicBlock extends Block {
         left  = false;
     }
 
+    public void makeRandMove(){
+        if (Math.random() > 0.5) {
+            moveLeft();
+        } else {
+            moveRight();
+        }
+    }
+
     public boolean isLeft() {
         return left;
     }

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.team.baster.asynch.MyAsyncTask;
+import com.team.baster.asynch.SimpleAsyncTask;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.Generator;
 import com.team.baster.generator.UnitGeneration;
@@ -18,9 +18,12 @@ import com.team.baster.service.ScoreService;
 import com.team.baster.service.ServiceFactory;
 import com.team.baster.storage.model.Score;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static com.team.baster.CollisionChecker.intersect;
 import static com.team.baster.GameConstants.HORIZONTAL_SPEED;
@@ -35,7 +38,7 @@ public class BlockController {
 
     private static ScoreService scoreService    = ServiceFactory.getScoreService();
     private static PlayerService playerService  = ServiceFactory.getPlayerService();
-    public Array<UnitGeneration> units;
+    public List<UnitGeneration> units;
     private Random random;
     private BasterGame game;
     private Generator generator;
@@ -47,30 +50,25 @@ public class BlockController {
         this.heroController         = heroController;
         this.paratrooperController  = paratrooperController;
         random                      = new Random();
-        units                       = new Array<>();
+        units                       = new ArrayList<>();
         generator                   = new Generator();
     }
 
     public void controlItemsPosition(Circle head, Circle body, int speed, int score, int coins, ParticleEffect pe) {
-        for (UnitGeneration unit : units) {
+        units.forEach((unit) -> {
             float currentSpeed = speed * Gdx.graphics.getDeltaTime();
-            for (Rectangle rect : unit.blocks) {
+            unit.blocks.forEach((rect) -> {
                 rect.y += currentSpeed;
-                if (rect instanceof DynamicBlock) {
-                    controlDynamicPosition((DynamicBlock) rect);
-                }
+                if (rect instanceof DynamicBlock) {controlDynamicPosition((DynamicBlock) rect);}
                 checkHeroCollision(rect, head, body, score, coins);
-            }
-            Iterator<Rectangle> iterator = unit.actionItems.iterator();
-            while (iterator.hasNext()) {
-                Rectangle rect = iterator.next();
-                rect.y += currentSpeed;
-                if (checkActionItemCollision(rect, head, body, pe)) {
-                    iterator.remove();
-                }
-            }
+            });
+
+            unit.actionItems = unit.actionItems.stream()
+                    .filter((rect) -> !checkActionItemCollision(rect, head, body, pe))
+                    .collect(Collectors.toList());
+            unit.actionItems.forEach(rect -> rect.y += currentSpeed);
             unit.minPointY += currentSpeed;
-        }
+        });
         controlParatrooper(speed, score, coins);
         cleanUnits();
     }
@@ -84,13 +82,7 @@ public class BlockController {
     }
 
     private void cleanUnits(){
-        Iterator<UnitGeneration> iter = units.iterator();
-        while (iter.hasNext()) {
-            UnitGeneration unit = iter.next();
-            if (unit.minPointY > WORLD_HEIGHT) {
-                iter.remove();
-            }
-        }
+        units.stream().filter((unit) -> unit.minPointY < WORLD_HEIGHT);
     }
 
     private void controlDynamicPosition(DynamicBlock item) {
@@ -122,8 +114,8 @@ public class BlockController {
                 heroController.diet();
             } else if (item instanceof Burger) {
                 heroController.eatFood();
-                pe.setPosition(item.x, item.y);
-                pe.start();
+//                pe.setPosition(item.x, item.y);
+//                pe.start();
             }
             return true;
         }
@@ -131,7 +123,7 @@ public class BlockController {
     }
 
     public void checkLasDropItemTime() {
-        if (units.peek().minPointY > WORLD_HEIGHT / 4) {
+        if (units.get(units.size() - 1).minPointY > WORLD_HEIGHT / 4) {
             dropItem();
         }
     }
@@ -143,7 +135,7 @@ public class BlockController {
         scoreObj.setScore(score);
         scoreObj.setDate(new Date(System.currentTimeMillis()));
         scoreService.saveScoreToBack(scoreObj);
-        new MyAsyncTask(scoreService, playerService, score, coins).execute();
+        new SimpleAsyncTask(scoreService, playerService, score, coins).execute();
     }
 
     public void dropItem() {

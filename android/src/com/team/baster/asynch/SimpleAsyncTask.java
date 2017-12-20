@@ -9,13 +9,13 @@ import com.team.baster.service.ScoreService;
  * Created by Pasha on 10/29/2017.
  */
 
-public class MyAsyncTask extends AsyncTask {
+public class SimpleAsyncTask extends AsyncTask {
     private ScoreService scoreService;
     private PlayerService playerService;
     private int score;
     private int coins;
 
-    public MyAsyncTask(ScoreService scoreService, PlayerService playerService, int score, int coins) {
+    public SimpleAsyncTask(ScoreService scoreService, PlayerService playerService, int score, int coins) {
         this.scoreService   = scoreService;
         this.playerService  = playerService;
         this.score          = score;

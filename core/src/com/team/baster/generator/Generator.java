@@ -9,6 +9,8 @@ import com.team.baster.model.HorizBlock;
 import com.team.baster.model.Pill;
 import com.team.baster.model.VertBlock;
 
+import java.util.Arrays;
+
 import static com.team.baster.GameConstants.*;
 
 /**
@@ -18,6 +20,7 @@ import static com.team.baster.GameConstants.*;
 public class Generator {
 
     public Array<UnitGeneration> units;
+    private static final int COUNT_OF_BLOCKS = 3;
 
     public Generator() {
         this.units = new Array<>();
@@ -48,19 +51,19 @@ public class Generator {
         UnitGeneration unitGeneration = new UnitGeneration();
         int currentY = BUFFER_Y;
         currentY    -= ITEM_TOP_VERT_HEIGHT;
-        unitGeneration.blocks.addAll(makeTopBlocks(currentY));
-        for (int i = 0; i < 3; i++) {
+        unitGeneration.blocks.addAll(Arrays.asList(makeTopBlocks(currentY)));
+        for (int i = 0; i < COUNT_OF_BLOCKS; i++) {
             currentY -= ITEM_VERT_HEIGHT;
-            unitGeneration.blocks.addAll(makeBlockLine(currentY, i != 2));
-            unitGeneration.actionItems.addAll(makeActionItems(currentY, i));
+            unitGeneration.blocks.addAll(Arrays.asList(makeBlockLine(currentY, i != 2)));
+            unitGeneration.actionItems.addAll(Arrays.asList(makeActionItems(currentY, i)));
         }
         unitGeneration.minPointY = currentY;
         units.add(unitGeneration);
     }
 
     private Rectangle[] makeTopBlocks(int currentY) {
-        Rectangle[] rect = new VertBlock[3];
-        for (int i = 0; i < 3; i++){
+        Rectangle[] rect = new VertBlock[COUNT_OF_BLOCKS];
+        for (int i = 0; i < COUNT_OF_BLOCKS; i++){
             VertBlock rectangle = new VertBlock();
             rectangle.isTop = true;
             if (i == 0){
@@ -81,7 +84,7 @@ public class Generator {
 
     private Rectangle[] makeBlockLine(int y, boolean isBody){
         Rectangle[] rect = new VertBlock[3];
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < COUNT_OF_BLOCKS; i++){
             VertBlock rectangle = new VertBlock();
             if (isBody){
                 rectangle.isBody = true;

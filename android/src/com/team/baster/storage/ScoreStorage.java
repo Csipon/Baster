@@ -51,7 +51,6 @@ public class ScoreStorage {
         values.put(COLUMN_LOGIN, login);
 // Insert the new row, returning the primary key value of the new row
         long newRowId = writableDB.insert(TABLE_NAME, null, values);
-        System.out.println("INSERTED = " + newRowId + " rows");
     }
 
     public long saveForQueue(Score score) {
@@ -115,7 +114,7 @@ public class ScoreStorage {
     }
 
 
-    public Array<Long> readLastBestScore() {
+    public List<Long> readLastBestScore() {
         // How you want the results sorted in the resulting Cursor
         String sortOrder = COLUMN_SCORE + " DESC";
         Cursor curs = readableDB.query(
@@ -128,12 +127,12 @@ public class ScoreStorage {
                 sortOrder,                                  // The sort order
                 String.valueOf(LIMIT_ROWS)                  // Limit rows
         );
-        Array<Long> result = new Array<>(LIMIT_ROWS);
+        List<Long> result = new ArrayList<>(LIMIT_ROWS);
         for (int i = 0; i < curs.getCount(); i++) {
             curs.moveToPosition(i);
             result.add(curs.getLong(curs.getColumnIndex(COLUMN_SCORE)));
-            System.out.println(curs.getInt(curs.getColumnIndex("id")) + " = " + curs.getInt(curs.getColumnIndex("score")) + " --> " + curs.getString(curs.getColumnIndex("date")));
         }
+        curs.close();
         return result;
     }
 

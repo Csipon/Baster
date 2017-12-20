@@ -1,44 +1,38 @@
 package com.team.baster.generator;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import com.team.baster.model.Burger;
+import com.team.baster.model.DynamicBlock;
 import com.team.baster.model.HorizBlock;
 import com.team.baster.model.Pill;
-import com.team.baster.model.DynamicBlock;
 import com.team.baster.model.VertBlock;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Pasha on 11/3/2017.
  */
 
 public class UnitGeneration {
-    public Array<Rectangle> blocks;
-    public Array<Rectangle> actionItems;
+    public List<Rectangle> blocks;
+    public List<Rectangle> actionItems;
     public int minPointY;
 
 
     public UnitGeneration() {
-        blocks = new Array<>();
-        actionItems = new Array<>();
+        blocks = new ArrayList<>();
+        actionItems = new ArrayList<>();
     }
 
 
     public UnitGeneration getCopy() {
         UnitGeneration unit = new UnitGeneration();
-        for (Rectangle rectangle : blocks) {
-            unit.blocks.add(getCopy(rectangle));
-        }
-        for (Rectangle rectangle : actionItems) {
-            unit.actionItems.add(getCopy(rectangle));
-        }
+        blocks.forEach((element) -> unit.blocks.add(getCopy(element)));
+        actionItems.forEach((element) -> unit.actionItems.add(getCopy(element)));
         unit.minPointY = minPointY;
-        if (blocks.first() instanceof DynamicBlock) {
-            if (Math.random() > 0.5) {
-                ((DynamicBlock) unit.blocks.first()).moveLeft();
-            } else {
-                ((DynamicBlock) unit.blocks.first()).moveRight();
-            }
+        if (blocks.get(0) instanceof DynamicBlock) {
+            ((DynamicBlock) unit.blocks.get(0)).makeRandMove();
         }
         return unit;
     }

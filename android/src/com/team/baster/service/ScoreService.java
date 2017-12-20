@@ -1,6 +1,5 @@
 package com.team.baster.service;
 
-import com.badlogic.gdx.utils.Array;
 import com.team.baster.storage.model.Score;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public interface ScoreService{
 
     List<Score> readFromBackupQueue();
 
-    Array<Long> readLastBestScore();
+    List<Long> readLastBestScore();
 
     void saveScoresToBack(List<Score> scores);
 }

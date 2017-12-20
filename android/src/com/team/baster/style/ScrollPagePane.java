@@ -6,10 +6,11 @@ package com.team.baster.style;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.Arrays;
 
 public class ScrollPagePane extends ScrollPane {
 
@@ -29,9 +30,7 @@ public class ScrollPagePane extends ScrollPane {
     }
 
     public void addPages (Actor... pages) {
-        for (Actor page : pages) {
-            content.add(page).expandY().fillY();
-        }
+        Arrays.asList(pages).forEach(page -> content.add(page).expandY().fillY());
     }
 
     public void addPage (Actor page) {
@@ -51,10 +50,6 @@ public class ScrollPagePane extends ScrollPane {
         }
     }
 
-    @Override
-    public void setWidget (Actor widget) {
-        throw new UnsupportedOperationException("Use PagedScrollPane#addPage.");
-    }
 //
 //    @Override
 //    public void setWidth (float width) {
@@ -70,9 +65,7 @@ public class ScrollPagePane extends ScrollPane {
     public void setPageSpacing (float pageSpacing) {
         if (content != null) {
             content.defaults().space(pageSpacing);
-            for (Cell cell : content.getCells()) {
-                cell.space(pageSpacing);
-            }
+            content.getCells().forEach(cell -> cell.space(pageSpacing));
             content.invalidate();
         }
     }

@@ -6,7 +6,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.team.baster.generator.BackgroundGenerator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 
@@ -15,24 +17,18 @@ import static com.team.baster.GameConstants.WORLD_HEIGHT;
  */
 
 public class BackgroundController {
-    public Array<Rectangle> background;
-    public BackgroundGenerator backgroundGenerator;
+    private BackgroundGenerator backgroundGenerator;
+    public List<Rectangle> background;
 
     public BackgroundController(Texture bgImg) {
-        background          = new Array<>();
+        background          = new ArrayList<>();
         backgroundGenerator = new BackgroundGenerator(bgImg, background);
     }
 
 
     public void controlBackgroundPosition(int speed) {
-        Iterator<Rectangle> iter = background.iterator();
-        while (iter.hasNext()) {
-            Rectangle item = iter.next();
-            item.y += speed * Gdx.graphics.getDeltaTime();
-            if (item.y + WORLD_HEIGHT > WORLD_HEIGHT * 2) {
-                iter.remove();
-            }
-        }
+        background.forEach((background) -> background.y += speed * Gdx.graphics.getDeltaTime());
+        background.stream().filter((background) -> background.y + WORLD_HEIGHT < WORLD_HEIGHT * 2);
     }
 
     public void checkLasDropBackground() {

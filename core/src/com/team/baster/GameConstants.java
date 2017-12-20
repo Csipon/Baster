@@ -23,6 +23,8 @@ public class GameConstants {
     public static final float PART_ACCELERATION         = 0.025f;
 
 
+    public static int RICK_WIDTH                = 256;
+    public static int RICK_HEIGHT               = 256;
     public static int ITEM_WIDTH                = 180;
     public static int ITEM_HEIGHT               = 70;
     public static int ITEM_TOP_VERT_WIDTH       = 100;
@@ -50,13 +52,15 @@ public class GameConstants {
     public GameConstants() {
         double differenceWidth = WORLD_WIDTH / DEFAULT_WORLD_WIDTH;
         if (WORLD_WIDTH != DEFAULT_WORLD_WIDTH) {
+            RICK_WIDTH              *= differenceWidth;
+            RICK_HEIGHT             *= differenceWidth;
             ITEM_WIDTH              *= differenceWidth;
             ITEM_HEIGHT             *= differenceWidth;
             ITEM_TOP_VERT_WIDTH     *= differenceWidth;
             ITEM_VERT_WIDTH         *= differenceWidth;
             ITEM_TOP_VERT_HEIGHT    *= differenceWidth;
             ITEM_VERT_HEIGHT        *= differenceWidth;
-            PARATROOPER_BODY_WIDTH *= differenceWidth;
+            PARATROOPER_BODY_WIDTH  *= differenceWidth;
             PARATROOPER_WIDTH       *= differenceWidth;
             PARATROOPER_BODY_HEIGHT *= differenceWidth;
             PARATROOPER_HEIGHT      *= differenceWidth;

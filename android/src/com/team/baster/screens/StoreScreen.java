@@ -29,6 +29,8 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
  */
 
 public class StoreScreen implements Screen {
+    private static final int ITEM_COUNT = 2;
+
 
     private BasterGame game;
     private Stage stage;
@@ -46,9 +48,9 @@ public class StoreScreen implements Screen {
     private ImageButton money;
     private ImageButton buy;
     private ScrollPagePane scroller;
-    private ScrollPagePane scroller1;
+    private ScrollPagePane scrollerHidden;
     private Table table;
-    private Table table1;
+    private Table tableHidden;
     private Table sideNavTable;
     private Table statusBar;
     private Table busterTable;
@@ -82,9 +84,8 @@ public class StoreScreen implements Screen {
         addSideNav();
         addStatusBar();
 
-        createScrollMarkt();
-        createScrollMarkt1();
-
+        createScrollMarket(true);
+        createScrollMarket(false);
     }
 
 
@@ -129,53 +130,36 @@ public class StoreScreen implements Screen {
         stage.dispose();
     }
 
-    private void createScrollMarkt() {
-        table = new Table();
+    private void createScrollMarket(boolean visible) {
+        Table table;
+        ScrollPagePane scroller;
+        if (visible){
+            table = this.table;
+            scroller = this.scroller;
+            scroller.setPageSpacing(20);
+        }else {
+            table = tableHidden;
+            scroller = scrollerHidden;
+        }
         stage.addActor(table);
         table.setPosition(WORLD_WIDTH/2 - 350, WORLD_HEIGHT/2 - 350);
         table.setSize(WORLD_WIDTH/2 + 350, WORLD_HEIGHT/2 + 150);
-
-        scroller = new ScrollPagePane();
         scroller.setFlingTime(0.3f);
         scroller.setFadeScrollBars(false);
-        scroller.setPageSpacing(20);
 
-        for (int l = 0; l < 2; l++) {
+
+        for (int i = 0; i < ITEM_COUNT; i++) {
             Table items = new Table();
-            for (int y = 0; y < 2; y++) {
+            for (int y = 0; y < ITEM_COUNT; y++) {
                 items.row();
-                for (int x = 0; x < 2; x++) {
+                for (int x = 0; x < ITEM_COUNT; x++) {
                     items.add(addBusterContent()).size(WORLD_WIDTH/2 - 50, WORLD_HEIGHT/2 - 300).pad(25,15,20,30);
                 }
             }
             scroller.addPage(items);
         }
         table.add(scroller).expand().fill();
-        table.setVisible(true);
-    }
-
-    private void createScrollMarkt1() {
-        table1 = new Table();
-        stage.addActor(table1);
-        table1.setPosition(WORLD_WIDTH/2 - 350, WORLD_HEIGHT/2 - 350);
-        table1.setSize(WORLD_WIDTH/2 + 350, WORLD_HEIGHT/2 + 150);
-
-        scroller1 = new ScrollPagePane();
-        scroller1.setFlingTime(0.3f);
-        scroller1.setFadeScrollBars(false);
-
-        for (int l = 0; l < 3; l++) {
-            Table items = new Table();
-            for (int y = 0; y < 2; y++) {
-                items.row();
-                for (int x = 0; x < 2; x++) {
-                    items.add(addBusterContent()).size(WORLD_WIDTH/2 - 50, WORLD_HEIGHT/2 - 300).pad(25,15,20,30);
-                }
-            }
-            scroller1.addPage(items);
-        }
-        table1.add(scroller1).expand().fill();
-        table1.setVisible(false);
+        table.setVisible(visible);
     }
 
     public void setImgButton() {
@@ -192,7 +176,7 @@ public class StoreScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Got press");
                 table.setVisible(true);
-                table1.setVisible(false);
+                tableHidden.setVisible(false);
                 System.out.println("Do logic");
 
             }
@@ -202,7 +186,7 @@ public class StoreScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 table.setVisible(false);
-                table1.setVisible(true);
+                tableHidden.setVisible(true);
 
             }
         });
@@ -257,13 +241,13 @@ public class StoreScreen implements Screen {
             }
         }
 
-        if(table1.isVisible()) {
-            for(int i = 1; i <= scroller1.getSectionsCount(); i++) {
-                if ( i == scroller1.calculateCurrentSection() ) {
-                    stage.getBatch().draw( naviActive, WORLD_WIDTH/2 - scroller1.getSectionsCount()*20/2 + i*20 , 50);
+        if(tableHidden.isVisible()) {
+            for(int i = 1; i <= scrollerHidden.getSectionsCount(); i++) {
+                if ( i == scrollerHidden.calculateCurrentSection() ) {
+                    stage.getBatch().draw( naviActive, WORLD_WIDTH/2 - scrollerHidden.getSectionsCount()*20/2 + i*20 , 50);
                 }
                 else {
-                    stage.getBatch().draw( naviPassive, WORLD_WIDTH/2 - scroller1.getSectionsCount()*20/2 + i*20 , 50);
+                    stage.getBatch().draw( naviPassive, WORLD_WIDTH/2 - scrollerHidden.getSectionsCount()*20/2 + i*20 , 50);
                 }
             }
         }
@@ -315,6 +299,10 @@ public class StoreScreen implements Screen {
     }
 
     private void initObj() {
+        table           = new Table();
+        tableHidden     = new Table();
+        scroller                = new ScrollPagePane();
+        scrollerHidden          = new ScrollPagePane();
         buttonStyleGenerator = new ButtonStyleGenerator();
         fontGenerator        = new FontGenerator();
         styleTitle           = fontGenerator.getStyleTitle();

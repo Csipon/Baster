@@ -1,10 +1,12 @@
 package com.team.baster.screens;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -33,27 +35,26 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 public class BasterScreen implements Screen {
 
-    final BasterGame game;
+    private final BasterGame game;
 
-    OrthographicCamera camera;
-    Texture blockImg;
-    Texture blockVertImg;
-    Texture tubeTopImg;
-    Texture tubeBodyImg;
-    Texture tubeBotImg;
-    Texture airplaneLeftImg;
-    Texture airplaneRightImg;
-    Texture backgroundImg;
-    Texture topNavImg;
-    Texture paratrooperImg;
+    private OrthographicCamera camera;
+    private Texture blockImg;
+    private Texture tubeTopImg;
+    private Texture tubeBodyImg;
+    private Texture tubeBotImg;
+    private Texture airplaneLeftImg;
+    private Texture airplaneRightImg;
+    private Texture backgroundImg;
+    private Texture paratrooperImg;
+    private TextureAtlas rickAtlas;
 
-    ShapeRenderer shapeRenderer;
+    private ShapeRenderer shapeRenderer;
 
-    ParatrooperController paratrooperController;
-    HeroController heroController;
-    ScoreController scoreController;
-    BlockController blockController;
-    BackgroundController backgroundController;
+    private ParatrooperController paratrooperController;
+    private HeroController heroController;
+    private ScoreController scoreController;
+    private BlockController blockController;
+    private BackgroundController backgroundController;
 
     private int speed = DEFAULT_SPEED;
     private long startDate;
@@ -61,6 +62,8 @@ public class BasterScreen implements Screen {
     private Texture pillImg;
 
     private ParticleEffect particleEffect;
+//    private Animation<TextureAtlas.AtlasRegion> rickAnimation;
+    private float timePassed = 0;
 
 
     public BasterScreen(BasterGame game) {
@@ -77,14 +80,16 @@ public class BasterScreen implements Screen {
     public void render(float delta) {
         game.batch.setProjectionMatrix(camera.combined);
 //        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        timePassed += Gdx.graphics.getDeltaTime();
         game.batch.begin();
         drawBackground();
         drawHero();
         drawBlocks();
         drawParatrooper();
-        drawNavBar();
         drawScoreCounter();
+        drawRick();
         particleEffect.draw(game.batch, delta);
+
 
 //        shapeRenderer.setColor(0, 1, 0, 1);
 //        shapeRenderer.circle(heroController.circleHead.x, heroController.circleHead.y, heroController.circleHead.radius);
@@ -129,15 +134,14 @@ public class BasterScreen implements Screen {
     public void dispose() {
         heroController.dispose();
         blockImg.dispose();
-        blockVertImg.dispose();
         tubeTopImg.dispose();
         tubeBodyImg.dispose();
         tubeBotImg.dispose();
         airplaneLeftImg.dispose();
         airplaneRightImg.dispose();
         backgroundImg.dispose();
-        topNavImg.dispose();
         paratrooperImg.dispose();
+        rickAtlas.dispose();
     }
 
     @Override
@@ -151,24 +155,24 @@ public class BasterScreen implements Screen {
         camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
     }
 
+    @SuppressWarnings("uncheced")
     private void initTexture() {
-        topNavImg = new Texture("Test.png");
-        if (WORLD_WIDTH == 720) {
-            airplaneLeftImg     = new Texture("air_left.png");
-            airplaneRightImg    = new Texture("air_right.png");
-            burgerImg           = new Texture("burger.png");
-            pillImg             = new Texture("pills.png");
-            backgroundImg       = new Texture("bg_sky.jpg");
-            blockImg            = new Texture("block.jpg");
-            tubeTopImg          = new Texture("mario_tube_top.png");
-            tubeBodyImg         = new Texture("mario_tube_body.png");
-            tubeBotImg          = new Texture("mario_tube_bot.png");
-            paratrooperImg      = new Texture("paratrooper_720.png");
-        }
+        airplaneLeftImg     = new Texture("air_left.png");
+        airplaneRightImg    = new Texture("air_right.png");
+        burgerImg           = new Texture("burger.png");
+        pillImg             = new Texture("pills.png");
+        backgroundImg       = new Texture("bg_sky.jpg");
+        blockImg            = new Texture("block.jpg");
+        tubeTopImg          = new Texture("mario_tube_top.png");
+        tubeBodyImg         = new Texture("mario_tube_body.png");
+        tubeBotImg          = new Texture("mario_tube_bot.png");
+        paratrooperImg      = new Texture("paratrooper_720.png");
+        rickAtlas           = new TextureAtlas(Gdx.files.internal("rick/rick.atlas"));
+//        rickAnimation       = new Animation<>(1/10f, rickAtlas.getRegions());
     }
 
     private void drawScoreCounter() {
-        String strScore = "Score " + scoreController.getScore();
+        String strScore = String.format("Score %s", scoreController.getScore());
         game.customFont.draw(game.batch, strScore, 0, WORLD_HEIGHT - 10);
 
     }
@@ -184,14 +188,12 @@ public class BasterScreen implements Screen {
         }
     }
 
-    private void drawNavBar() {
-        game.batch.draw(topNavImg, 0, WORLD_HEIGHT - 55);
+    private void drawRick(){
+//        game.batch.draw(rickAnimation.getKeyFrame(timePassed, true), 100, 300, RICK_WIDTH, RICK_HEIGHT);
     }
 
     private void drawHero() {
-//        particleEffect.setPosition(heroController.hero.x + heroController.hero.width/2, heroController.hero.y + heroController.hero.height);
-//        particleEffect.start();
-        game.batch.draw(heroController.heroTexture,
+        game.batch.draw(heroController.heroAnimation.getKeyFrame(timePassed, true),
                 heroController.hero.x,
                 heroController.hero.y,
                 heroController.currentHeroWidth,
@@ -200,14 +202,7 @@ public class BasterScreen implements Screen {
     }
 
     private void drawBackground() {
-        for (Rectangle rectangle : backgroundController.background) {
-            game.batch.draw(backgroundImg,
-                    rectangle.x,
-                    rectangle.y,
-                    rectangle.width,
-                    rectangle.height
-            );
-        }
+        backgroundController.background.forEach((bg) -> game.batch.draw(backgroundImg, bg.x, bg.y, bg.width, bg.height));
     }
 
     private void initObjects() {
@@ -222,35 +217,34 @@ public class BasterScreen implements Screen {
     }
 
     private void drawBlocks() {
-        for (UnitGeneration unit : blockController.units){
-            for (Rectangle rectangle : unit.blocks) {
-                if (rectangle instanceof DynamicBlock) {
-                    if (((DynamicBlock) rectangle).isLeft()){
-                        game.batch.draw(airplaneLeftImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+        blockController.units.forEach(unit -> {
+            unit.blocks.forEach(block -> {
+                if (block instanceof DynamicBlock) {
+                    if (((DynamicBlock) block).isLeft()){
+                        game.batch.draw(airplaneLeftImg, block.x, block.y, block.width, block.height);
                     }else {
-                        game.batch.draw(airplaneRightImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+                        game.batch.draw(airplaneRightImg, block.x, block.y, block.width, block.height);
                     }
-                } else if (rectangle instanceof HorizBlock){
-                    game.batch.draw(blockImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-                }else if (rectangle instanceof VertBlock){
-                    if (((VertBlock) rectangle).isTop){
-                        game.batch.draw(tubeTopImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-                    }else if (((VertBlock) rectangle).isBody){
-                        game.batch.draw(tubeBodyImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-                    }else if (((VertBlock) rectangle).isBot){
-                        game.batch.draw(tubeBotImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+                } else if (block instanceof HorizBlock){
+                    game.batch.draw(blockImg, block.x, block.y, block.width, block.height);
+                }else if (block instanceof VertBlock){
+                    if (((VertBlock) block).isTop){
+                        game.batch.draw(tubeTopImg, block.x, block.y, block.width, block.height);
+                    }else if (((VertBlock) block).isBody){
+                        game.batch.draw(tubeBodyImg, block.x, block.y, block.width, block.height);
+                    }else if (((VertBlock) block).isBot){
+                        game.batch.draw(tubeBotImg, block.x, block.y, block.width, block.height);
                     }
                 }
-            }
-            for (Rectangle rectangle : unit.actionItems){
-                if (rectangle instanceof Pill){
-                    game.batch.draw(pillImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-                }else if (rectangle instanceof Burger){
-                    game.batch.draw(burgerImg, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+            });
+            unit.actionItems.forEach( actyionItem -> {
+                if (actyionItem instanceof Pill){
+                    game.batch.draw(pillImg, actyionItem.x, actyionItem.y, actyionItem.width, actyionItem.height);
+                }else if (actyionItem instanceof Burger){
+                    game.batch.draw(burgerImg, actyionItem.x, actyionItem.y, actyionItem.width, actyionItem.height);
                 }
-            }
-
-        }
+            });
+        });
     }
 
     private void calculateSpeed() {

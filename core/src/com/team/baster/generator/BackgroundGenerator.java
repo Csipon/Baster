@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.List;
+
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 
 /**
@@ -14,11 +16,11 @@ public class BackgroundGenerator {
 
 
 
-    private Array<Rectangle> backgrounds;
+    private List<Rectangle> backgrounds;
     public Rectangle lastDropBack;
     private Texture backgroundImg;
 
-    public BackgroundGenerator(Texture backgroundImg, Array<Rectangle> backgrounds) {
+    public BackgroundGenerator(Texture backgroundImg, List<Rectangle> backgrounds) {
         this.backgroundImg = backgroundImg;
         this.backgrounds = backgrounds;
     }
@@ -26,8 +28,8 @@ public class BackgroundGenerator {
 
     public void dropBackground() {
         Rectangle back;
-        if (backgrounds.size == 5) {
-            back = backgrounds.removeIndex(0);
+        if (backgrounds.size() == 5) {
+            back = backgrounds.remove(0);
         } else {
             back = new Rectangle();
         }

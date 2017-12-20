@@ -1,7 +1,8 @@
 package com.team.baster.controller;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -26,7 +27,9 @@ public class HeroController {
     public Rectangle hero;
     public Circle circleBody;
     public Circle circleHead;
-    public Texture heroTexture;
+    public TextureAtlas heroAtlas;
+    public Animation<TextureAtlas.AtlasRegion> heroAnimation;
+//    public Texture heroTexture;
     private int heroSize = 0;
     private long timeLeft;
 
@@ -65,7 +68,9 @@ public class HeroController {
     }
 
     private void configHero() {
-        heroTexture       = new Texture("hero/griffin_origin.png");
+        heroAtlas         = new TextureAtlas(Gdx.files.internal("hero/griffin.atlas"));
+        heroAnimation     = new Animation<>(1 / 10f, heroAtlas.getRegions());
+//        heroTexture       = new Texture("hero/griffin_origin.png");
         currentHeroWidth  = HERO_WIDTH;
         currentHeroHeight = HERO_HEIGHT;
         hero.x            = WORLD_WIDTH / 2 - currentHeroWidth / 2;
@@ -97,7 +102,7 @@ public class HeroController {
             heroSize++;
         }
     }
-    public Texture diet() {
+    public void diet() {
         int partResize = 3;
         if (heroSize < 3 && heroSize >= 0) {
             partResize = heroSize;
@@ -113,10 +118,9 @@ public class HeroController {
         circleBody.set(hero.x + currentHeroWidth / 2, circleHead.y + circleHead.radius + currentHeroWidth / 4 - 5, currentHeroWidth / 2 - 2);
         timeLeft  = TimeUtils.nanoTime();
         heroSize -= partResize;
-        return heroTexture;
     }
 
     public void dispose() {
-        heroTexture.dispose();
+        heroAtlas.dispose();
     }
 }

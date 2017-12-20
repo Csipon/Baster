@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
@@ -26,6 +25,8 @@ import com.team.baster.service.ServiceFactory;
 import com.team.baster.storage.ScoreStorage;
 import com.team.baster.style.button.ButtonStyleGenerator;
 import com.team.baster.style.font.FontGenerator;
+
+import java.util.List;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
 import static com.team.baster.GameConstants.WORLD_WIDTH;
@@ -60,7 +61,7 @@ public class MenuScreen implements Screen {
     private FontGenerator fontGenerator;
 
     private Integer coins;
-    private Array<Long> scores;
+    private List<Long> scores;
     private ParticleEffect particleEffect;
 
     public MenuScreen(BasterGame game) {
@@ -76,23 +77,14 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-
-//        EXAMPLE for set new player login
-//        in the start need check player
         if (playerService.isDefaultPlayer()){
             while (true) {
-//          if this is default player user must to write new nickname
-//          TODO make dialog window when we ask player him name this need to make into loop and interrupt when player will write correct name
                 String nickname = "SOME_NAME";
                 if (playerService.createNewPlayer(nickname)) {
-//                if player is created it's OK break loop and allow play game
                     break;
                 }
             }
         }
-//        TODO next make all logic that will take player possibility play game
-
-
         scores      = scoreStorage.readLastBestScore();
         coins       = playerService.getActualCoins();
 
@@ -118,7 +110,6 @@ public class MenuScreen implements Screen {
         stage.getBatch().end();
 
         stage.draw();
-
     }
 
     @Override
@@ -159,7 +150,7 @@ public class MenuScreen implements Screen {
 
     public void setNavigation() {
 
-        if(scores.size != 0) {
+        if(scores.size() != 0) {
             String strScore = scores.get(0).toString();
             labelScore = new Label(strScore, labelStyle);
         }

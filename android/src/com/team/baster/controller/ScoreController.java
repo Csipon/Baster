@@ -1,8 +1,9 @@
 package com.team.baster.controller;
 
-import com.badlogic.gdx.utils.Array;
 import com.team.baster.service.ScoreService;
 import com.team.baster.service.ServiceFactory;
+
+import java.util.List;
 
 /**
  * Created by Pasha on 10/28/2017.
@@ -28,7 +29,7 @@ public class ScoreController {
         scoreService.save(score);
     }
 
-    public Array<Long> fetchLastBestScores(){
+    public List<Long> fetchLastBestScores(){
         return scoreService.readLastBestScore();
     }
 }

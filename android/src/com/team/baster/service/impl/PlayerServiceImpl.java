@@ -42,18 +42,12 @@ public final class PlayerServiceImpl implements PlayerService {
 
 
     private boolean validatePlayerName(String name){
-        if (name != null && !name.isEmpty() && !DEFAULT_PLAYER_NAME.equalsIgnoreCase(name) && name.length() >= 2){
-            return true;
-        }
-        return false;
+        return name != null && !name.isEmpty() && !DEFAULT_PLAYER_NAME.equalsIgnoreCase(name) && name.length() >= 2;
     }
 
 
     public boolean isDefaultPlayer(){
-        if (DEFAULT_PLAYER_NAME.equalsIgnoreCase(getCurrentUser().getLogin())){
-            return true;
-        }
-        return false;
+        return DEFAULT_PLAYER_NAME.equalsIgnoreCase(getCurrentUser().getLogin());
     }
 
     @Override

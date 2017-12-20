@@ -1,9 +1,6 @@
 package com.team.baster.service.impl;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
-import com.badlogic.gdx.utils.Array;
 import com.team.baster.service.PlayerService;
 import com.team.baster.service.ScoreService;
 import com.team.baster.storage.ScoreStorage;
@@ -43,20 +40,14 @@ public final class ScoreServiceImpl implements ScoreService{
     public void saveScoreToBack(final Score score){
         try {
             RequestUtil.instance.postObj(new URL(SERVER_URL + "/score/saveScore"),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            score.setForBack(true);
-                            scoreStorage.saveForQueue(score);
-                            System.out.println("Cannot send score on the back " + error);
-                        }
+                    response -> {
+                    }, error -> {
+                        score.setForBack(true);
+//                        scoreStorage.saveForQueue(score);
+                        System.out.println("Cannot send score on the back " + error);
                     }, score.toJson());
         } catch (MalformedURLException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
     //todo
@@ -85,7 +76,7 @@ public final class ScoreServiceImpl implements ScoreService{
     }
 
     @Override
-    public Array<Long> readLastBestScore() {
+    public List<Long> readLastBestScore() {
         return scoreStorage.readLastBestScore();
     }
 
@@ -93,28 +84,20 @@ public final class ScoreServiceImpl implements ScoreService{
     public void saveScoresToBack(final List<Score> scores) {
         try {
             RequestUtil.instance.postArray(new URL(SERVER_URL + "/score/saveScores"),
-                    new Response.Listener<JSONArray>() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
+                    response -> {
+                    }, error -> {
 
-                            scoreStorage.saveForQueue(scores);
-                            System.out.println("Cannot send score on the back " + error);
-                        }
+//                        scoreStorage.saveForQueue(scores);
+                        System.out.println("Cannot send score on the back " + error);
                     }, parseListToJSONArray(scores));
         } catch (MalformedURLException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 
     private static JSONArray parseListToJSONArray(List<Score> scores) {
         JSONArray jsonArray = new JSONArray();
-        for (Score score : scores) {
-            jsonArray.put(score.toJson());
-        }
+        scores.forEach(score -> jsonArray.put(score.toJson()));
         return jsonArray;
     }
 
