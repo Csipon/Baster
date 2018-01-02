@@ -9,6 +9,7 @@ import com.team.baster.storage.model.User;
 public interface PlayerService {
 
     User getCurrentUser();
+    boolean validatePlayerName(String name);
     boolean createNewPlayer(String name);
     boolean isDefaultPlayer();
     Integer getOverallScore();

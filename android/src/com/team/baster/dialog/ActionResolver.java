@@ -1,7 +1,5 @@
 package com.team.baster.dialog;
 
-import com.badlogic.gdx.utils.Array;
-
 import java.util.List;
 
 /**
@@ -9,7 +7,8 @@ import java.util.List;
  */
 
 public interface ActionResolver {
-    public void showToast(CharSequence text);
-    public void showDialog();
-    public void showDialogWithBestScore();
+    void showToast(CharSequence text);
+    void showDialog();
+    void showDialogWithBestScore();
+    List<String> showDialogLogin();
 }

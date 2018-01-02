@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
@@ -26,6 +27,7 @@ import com.team.baster.storage.ScoreStorage;
 import com.team.baster.style.button.ButtonStyleGenerator;
 import com.team.baster.style.font.FontGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
@@ -61,8 +63,10 @@ public class MenuScreen implements Screen {
     private FontGenerator fontGenerator;
 
     private Integer coins;
-    private List<Long> scores;
+    private Array<Long> scores;
     private ParticleEffect particleEffect;
+
+    private List<String> nickNames;
 
     public MenuScreen(BasterGame game) {
         initSetting();
@@ -77,18 +81,23 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
+
+        Gdx.input.setInputProcessor(stage);
+
         if (playerService.isDefaultPlayer()){
+
+            nickNames = game.actionResolver.showDialogLogin();
             while (true) {
-                String nickname = "SOME_NAME";
-                if (playerService.createNewPlayer(nickname)) {
-                    break;
+                if(nickNames.size() > 0) {
+                    if(playerService.createNewPlayer(nickNames.get(0))) {
+                        break;
+                    }
                 }
             }
         }
+
         scores      = scoreStorage.readLastBestScore();
         coins       = playerService.getActualCoins();
-
-        Gdx.input.setInputProcessor(stage);
 
         particleEffect.setPosition(WORLD_WIDTH/2 - 300, WORLD_HEIGHT/2 + 500);
         particleEffect.start();
@@ -97,6 +106,7 @@ public class MenuScreen implements Screen {
         setButtons();
         setNavigation();
         loadListeners();
+
     }
 
     @Override
@@ -110,6 +120,7 @@ public class MenuScreen implements Screen {
         stage.getBatch().end();
 
         stage.draw();
+
     }
 
     @Override
@@ -146,11 +157,12 @@ public class MenuScreen implements Screen {
         labelStyleYellow    = fontGenerator.getLabelStyle72Yellow();
         labelScore          = new Label("0", labelStyle);
         labelCoins          = new Label("0", labelStyleYellow);
+
     }
 
-    public void setNavigation() {
+    private void setNavigation() {
 
-        if(scores.size() != 0) {
+        if(scores.size != 0) {
             String strScore = scores.get(0).toString();
             labelScore = new Label(strScore, labelStyle);
         }
@@ -215,12 +227,13 @@ public class MenuScreen implements Screen {
     }
 
 
-    public void loadListeners() {
+    private void loadListeners() {
 
         playImg.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new BasterScreen(game));
+                dispose();
             }
         });
 
