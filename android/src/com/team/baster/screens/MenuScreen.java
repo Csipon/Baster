@@ -63,7 +63,7 @@ public class MenuScreen implements Screen {
     private FontGenerator fontGenerator;
 
     private Integer coins;
-    private Array<Long> scores;
+    private List<Long> scores;
     private ParticleEffect particleEffect;
 
     private List<String> nickNames;
@@ -162,7 +162,7 @@ public class MenuScreen implements Screen {
 
     private void setNavigation() {
 
-        if(scores.size != 0) {
+        if(scores.size() != 0) {
             String strScore = scores.get(0).toString();
             labelScore = new Label(strScore, labelStyle);
         }

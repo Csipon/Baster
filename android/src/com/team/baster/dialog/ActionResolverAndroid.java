@@ -29,11 +29,12 @@ import static com.team.baster.GameConstants.DEFAULT_PLAYER_NAME;
  */
 
 public class ActionResolverAndroid implements ActionResolver {
-//zdzichorowerzysta
+
     private Handler handler;
     private static ScoreService scoreService = ServiceFactory.getScoreService();
     private Context context;
     EditText nameEdit;
+    EditText passwordEdit;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
     private ArrayList<String> myList = new ArrayList<>();
@@ -57,10 +58,10 @@ public class ActionResolverAndroid implements ActionResolver {
                 dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
                 dialog.setContentView(R.layout.dialog_layout);
 
-                Array<Long> lastBest = scoreService.readLastBestScore();
+                List<Long> lastBest = scoreService.readLastBestScore();
                 ArrayList<Long> scores = new ArrayList<>();
-                if(lastBest.size != 0) {
-                    if(lastBest.size < 10) {
+                if(lastBest.size() != 0) {
+                    if(lastBest.size() < 10) {
                         for(Long score : lastBest) {
                             scores.add(score);
                         }
@@ -131,11 +132,15 @@ public class ActionResolverAndroid implements ActionResolver {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nameEdit = dialog.findViewById(R.id.Nickname);
+                nameEdit = dialog.findViewById(R.id.nickname);
+                passwordEdit = dialog.findViewById(R.id.password);
 
-                String nickName = nameEdit.getText().toString();
-                if(playerService.validatePlayerName(nickName)) {
-                    myList.add(nickName);
+                String login = nameEdit.getText().toString();
+                String password = passwordEdit.getText().toString();
+
+                //TODO valid for password
+                if(playerService.validatePlayerName(login)) {
+                    myList.add(login);
                     dialog.dismiss();
                 } else {
                     dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
