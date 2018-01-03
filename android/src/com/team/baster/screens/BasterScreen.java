@@ -202,7 +202,11 @@ public class BasterScreen implements Screen {
     }
 
     private void drawBackground() {
-        backgroundController.background.forEach((bg) -> game.batch.draw(backgroundImg, bg.x, bg.y, bg.width, bg.height));
+
+        for(Rectangle bg : backgroundController.background) {
+            game.batch.draw(backgroundImg, bg.x, bg.y, bg.width, bg.height);
+        }
+        //backgroundController.background.forEach((bg) -> game.batch.draw(backgroundImg, bg.x, bg.y, bg.width, bg.height));
     }
 
     private void initObjects() {
@@ -217,8 +221,10 @@ public class BasterScreen implements Screen {
     }
 
     private void drawBlocks() {
-        blockController.units.forEach(unit -> {
-            unit.blocks.forEach(block -> {
+
+        for(UnitGeneration unit : blockController.units) {
+
+            for(Rectangle block : unit.blocks) {
                 if (block instanceof DynamicBlock) {
                     if (((DynamicBlock) block).isLeft()){
                         game.batch.draw(airplaneLeftImg, block.x, block.y, block.width, block.height);
@@ -236,15 +242,45 @@ public class BasterScreen implements Screen {
                         game.batch.draw(tubeBotImg, block.x, block.y, block.width, block.height);
                     }
                 }
-            });
-            unit.actionItems.forEach( actyionItem -> {
-                if (actyionItem instanceof Pill){
-                    game.batch.draw(pillImg, actyionItem.x, actyionItem.y, actyionItem.width, actyionItem.height);
-                }else if (actyionItem instanceof Burger){
-                    game.batch.draw(burgerImg, actyionItem.x, actyionItem.y, actyionItem.width, actyionItem.height);
+            }
+
+            for(Rectangle actionItem : unit.actionItems) {
+                if (actionItem instanceof Pill){
+                    game.batch.draw(pillImg, actionItem.x, actionItem.y, actionItem.width, actionItem.height);
+                }else if (actionItem instanceof Burger){
+                    game.batch.draw(burgerImg, actionItem.x, actionItem.y, actionItem.width, actionItem.height);
                 }
-            });
-        });
+            }
+        }
+
+//        blockController.units.forEach(unit -> {
+//            unit.blocks.forEach(block -> {
+//                if (block instanceof DynamicBlock) {
+//                    if (((DynamicBlock) block).isLeft()){
+//                        game.batch.draw(airplaneLeftImg, block.x, block.y, block.width, block.height);
+//                    }else {
+//                        game.batch.draw(airplaneRightImg, block.x, block.y, block.width, block.height);
+//                    }
+//                } else if (block instanceof HorizBlock){
+//                    game.batch.draw(blockImg, block.x, block.y, block.width, block.height);
+//                }else if (block instanceof VertBlock){
+//                    if (((VertBlock) block).isTop){
+//                        game.batch.draw(tubeTopImg, block.x, block.y, block.width, block.height);
+//                    }else if (((VertBlock) block).isBody){
+//                        game.batch.draw(tubeBodyImg, block.x, block.y, block.width, block.height);
+//                    }else if (((VertBlock) block).isBot){
+//                        game.batch.draw(tubeBotImg, block.x, block.y, block.width, block.height);
+//                    }
+//                }
+//            });
+//            unit.actionItems.forEach( actyionItem -> {
+//                if (actyionItem instanceof Pill){
+//                    game.batch.draw(pillImg, actyionItem.x, actyionItem.y, actyionItem.width, actyionItem.height);
+//                }else if (actyionItem instanceof Burger){
+//                    game.batch.draw(burgerImg, actyionItem.x, actyionItem.y, actyionItem.width, actyionItem.height);
+//                }
+//            });
+//        });
     }
 
     private void calculateSpeed() {

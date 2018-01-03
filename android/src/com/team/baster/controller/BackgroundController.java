@@ -27,8 +27,20 @@ public class BackgroundController {
 
 
     public void controlBackgroundPosition(int speed) {
-        background.forEach((background) -> background.y += speed * Gdx.graphics.getDeltaTime());
-        background.stream().filter((background) -> background.y + WORLD_HEIGHT < WORLD_HEIGHT * 2);
+        for(Rectangle background : background) {
+            background.y += speed * Gdx.graphics.getDeltaTime();
+        }
+        //background.forEach((background) -> background.y += speed * Gdx.graphics.getDeltaTime());
+
+        Iterator<Rectangle> iterator = background.iterator();
+        while(iterator.hasNext()) {
+            Rectangle rect = iterator.next();
+            if (rect.y + WORLD_HEIGHT > WORLD_HEIGHT * 2) {
+                iterator.remove();
+            }
+
+        }
+        //background.stream().filter((background) -> background.y + WORLD_HEIGHT < WORLD_HEIGHT * 2);
     }
 
     public void checkLasDropBackground() {

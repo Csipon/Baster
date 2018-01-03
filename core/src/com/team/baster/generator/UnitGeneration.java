@@ -28,8 +28,19 @@ public class UnitGeneration {
 
     public UnitGeneration getCopy() {
         UnitGeneration unit = new UnitGeneration();
-        blocks.forEach((element) -> unit.blocks.add(getCopy(element)));
-        actionItems.forEach((element) -> unit.actionItems.add(getCopy(element)));
+
+        for(Rectangle element : blocks) {
+            unit.blocks.add(getCopy(element));
+        }
+//      blocks.forEach((element) -> unit.blocks.add(getCopy(element)));
+
+        for(Rectangle element : actionItems) {
+            unit.actionItems.add(getCopy(element));
+        }
+        //actionItems.forEach((element) -> unit.actionItems.add(getCopy(element)));
+
+
+
         unit.minPointY = minPointY;
         if (blocks.get(0) instanceof DynamicBlock) {
             ((DynamicBlock) unit.blocks.get(0)).makeRandMove();

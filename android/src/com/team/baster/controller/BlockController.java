@@ -1,5 +1,7 @@
 package com.team.baster.controller;
 
+import android.graphics.Rect;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Circle;
@@ -55,22 +57,49 @@ public class BlockController {
     }
 
     public void controlItemsPosition(Circle head, Circle body, int speed, int score, int coins, ParticleEffect pe) {
-        units.forEach((unit) -> {
+        for(UnitGeneration unit : units) {
             float currentSpeed = speed * Gdx.graphics.getDeltaTime();
-            unit.blocks.forEach((rect) -> {
-                rect.y += currentSpeed;
-                if (rect instanceof DynamicBlock) {controlDynamicPosition((DynamicBlock) rect);}
-                checkHeroCollision(rect, head, body, score, coins);
-            });
 
-            unit.actionItems = unit.actionItems.stream()
-                    .filter((rect) -> !checkActionItemCollision(rect, head, body, pe))
-                    .collect(Collectors.toList());
-            unit.actionItems.forEach(rect -> rect.y += currentSpeed);
+            for(Rectangle rect : unit.blocks) {
+                rect.y += currentSpeed;
+                if (rect instanceof DynamicBlock) {
+                    controlDynamicPosition((DynamicBlock) rect);
+                }
+                checkHeroCollision(rect, head, body, score, coins);
+            }
+
+            Iterator<Rectangle> iterator = unit.actionItems.iterator();
+            while (iterator.hasNext()) {
+                Rectangle rect = iterator.next();
+                if (checkActionItemCollision(rect, head, body, pe)) {
+                    iterator.remove();
+                }
+            }
+
+            for(Rectangle rect : unit.actionItems) {
+                rect.y += currentSpeed;
+            }
+
             unit.minPointY += currentSpeed;
-        });
+        }
         controlParatrooper(speed, score, coins);
         cleanUnits();
+
+//        units.forEach((unit) -> {
+//            float currentSpeed = speed * Gdx.graphics.getDeltaTime();
+//            unit.blocks.forEach((rect) -> {
+//                rect.y += currentSpeed;
+//                if (rect instanceof DynamicBlock) {controlDynamicPosition((DynamicBlock) rect);}
+//                checkHeroCollision(rect, head, body, score, coins);
+//            });
+//
+//            unit.actionItems = unit.actionItems.stream()
+//                    .filter((rect) -> !checkActionItemCollision(rect, head, body, pe))
+//                    .collect(Collectors.toList());
+//            unit.actionItems.forEach(rect -> rect.y += currentSpeed);
+//            unit.minPointY += currentSpeed;
+//        });
+
     }
     private void controlParatrooper(int speed, int score, int coins){
         if (paratrooperController.isFly) {
@@ -82,7 +111,15 @@ public class BlockController {
     }
 
     private void cleanUnits(){
-        units.stream().filter((unit) -> unit.minPointY < WORLD_HEIGHT);
+
+        Iterator<UnitGeneration> iterator = units.iterator();
+        while(iterator.hasNext()) {
+            UnitGeneration unit = iterator.next();
+            if(unit.minPointY > WORLD_HEIGHT) {
+                iterator.remove();
+            }
+        }
+        //units.stream().filter((unit) -> unit.minPointY < WORLD_HEIGHT);
     }
 
     private void controlDynamicPosition(DynamicBlock item) {
