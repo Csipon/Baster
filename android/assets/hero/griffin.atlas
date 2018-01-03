@@ -1,0 +1,26 @@
+
+griffin.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+griffin_origin1
+  rotate: false
+  xy: 1, 1
+  size: 182, 323
+  orig: 182, 323
+  offset: 0, 0
+  index: -1
+griffin_origin2
+  rotate: false
+  xy: 185, 1
+  size: 182, 323
+  orig: 182, 323
+  offset: 0, 0
+  index: -1
+griffin_origin3
+  rotate: false
+  xy: 369, 1
+  size: 182, 323
+  orig: 182, 323
+  offset: 0, 0
+  index: -1
