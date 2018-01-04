@@ -40,8 +40,8 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 public class MenuScreen implements Screen {
 
-    private static final String EMAIL = "oxeygenoxeygen@gmail.com";
-    private static final String PASSWORD = "wsgf1996";
+    private static final String EMAIL = "*@gmail.com";
+    private static final String PASSWORD = "*";
     private static final String TAG = "FirebaseAuthentication";
 
     private Stage stage;
