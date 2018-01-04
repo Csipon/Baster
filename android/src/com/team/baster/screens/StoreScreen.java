@@ -29,7 +29,8 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
  */
 
 public class StoreScreen implements Screen {
-    private static final int ITEM_COUNT = 2;
+    private static final int ITEM_COUNT = 3;
+    private static final int ROW_COUNT = 2;
 
 
     private BasterGame game;
@@ -150,7 +151,7 @@ public class StoreScreen implements Screen {
 
         for (int i = 0; i < ITEM_COUNT; i++) {
             Table items = new Table();
-            for (int y = 0; y < ITEM_COUNT; y++) {
+            for (int y = 0; y < ROW_COUNT; y++) {
                 items.row();
                 for (int x = 0; x < ITEM_COUNT; x++) {
                     items.add(addBusterContent()).size(WORLD_WIDTH/2 - 50, WORLD_HEIGHT/2 - 300).pad(25,15,20,30);
