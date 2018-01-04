@@ -5,8 +5,6 @@ import com.team.baster.service.PlayerService;
 import com.team.baster.storage.PlayerStatusStorage;
 import com.team.baster.storage.model.User;
 
-import java.util.UUID;
-
 import static com.team.baster.GameConstants.DEFAULT_PLAYER_NAME;
 
 /**
@@ -32,9 +30,7 @@ public final class PlayerServiceImpl implements PlayerService {
 
     public boolean createNewPlayer(String name){
         if (validatePlayerName(name)) {
-            String hash = "#" + UUID.randomUUID().toString().replace("-", "");
-            getCurrentUser().setLogin(name + hash);
-            storage.update(getCurrentUser().getId(), getCurrentUser().getLogin(), null, null, null);
+            storage.update(name, null, null, null);
             return true;
         }
         return false;
@@ -50,7 +46,7 @@ public final class PlayerServiceImpl implements PlayerService {
 
 
     public boolean isDefaultPlayer(){
-        if (DEFAULT_PLAYER_NAME.equalsIgnoreCase(getCurrentUser().getLogin())){
+        if (DEFAULT_PLAYER_NAME.equalsIgnoreCase(getCurrentUser().getLogin()) || getCurrentUser().getLogin() == null){
             return true;
         }
         return false;

@@ -167,7 +167,7 @@ public class BasterScreen implements Screen {
         tubeBodyImg         = new Texture("mario_tube_body.png");
         tubeBotImg          = new Texture("mario_tube_bot.png");
         paratrooperImg      = new Texture("paratrooper_720.png");
-        rickAtlas           = new TextureAtlas(Gdx.files.internal("rick/rick.atlas"));
+//        rickAtlas           = new TextureAtlas(Gdx.files.internal("rick/rick.atlas"));
 //        rickAnimation       = new Animation<>(1/10f, rickAtlas.getRegions());
     }
 

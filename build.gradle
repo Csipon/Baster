@@ -10,6 +10,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.google.gms:google-services:3.1.1'
     }
 }
 
@@ -32,6 +33,7 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        google()
     }
 }
 
@@ -42,6 +44,21 @@ project(":android") {
 
     dependencies {
         compile project(":core")
+
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        compile 'com.android.support:appcompat-v7:27.0.2'
+
+        // Google Play services Auth split
+        compile 'com.google.android.gms:play-services-ads:11.8.0'
+        compile 'com.google.firebase:firebase-auth:11.8.0'
+        // Google Api Client library and Android extension
+        compile 'com.google.api-client:google-api-client:1.22.0'
+        compile 'com.google.api-client:google-api-client-android:1.22.0'
+        // Change to the API you want to access:
+        // Below is just an example for People REST API access
+        compile 'com.google.apis:google-api-services-people:v1-rev4-1.22.0'
+
+        compile 'org.xerial:sqlite-jdbc:3.20.1'
 
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"

@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -12,17 +11,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.badlogic.gdx.utils.Array;
 import com.team.baster.R;
 import com.team.baster.service.PlayerService;
 import com.team.baster.service.ScoreService;
 import com.team.baster.service.ServiceFactory;
-import com.team.baster.service.impl.PlayerServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.team.baster.GameConstants.DEFAULT_PLAYER_NAME;
 
 /**
  * Created by Smeet on 31.10.2017.
@@ -37,7 +32,7 @@ public class ActionResolverAndroid implements ActionResolver {
     EditText passwordEdit;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
-    private ArrayList<String> myList = new ArrayList<>();
+    private ArrayList<String> myList;
 
     public ActionResolverAndroid(Context context) {
         handler = new Handler();
@@ -93,18 +88,16 @@ public class ActionResolverAndroid implements ActionResolver {
 
     @Override
     public void showDialog() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Dialog dialog = new Dialog(context);
-                dialog.setTitle("Available soon");
-                dialog.show();
-            }
+        handler.post(() -> {
+            Dialog dialog = new Dialog(context);
+            dialog.setTitle("Available soon");
+            dialog.show();
         });
     }
 
     @Override
     public List<String> showDialogLogin() {
+        myList = new ArrayList<>();
 
         handler.post(new Runnable() {
             @Override
@@ -141,6 +134,7 @@ public class ActionResolverAndroid implements ActionResolver {
                 //TODO valid for password
                 if(playerService.validatePlayerName(login)) {
                     myList.add(login);
+                    myList.add(password);
                     dialog.dismiss();
                 } else {
                     dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);

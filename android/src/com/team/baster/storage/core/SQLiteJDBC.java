@@ -11,12 +11,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteJDBC extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "/data/data/com.team.baster/db.db";
+    private static final int DATABASE_VERSION = 5;
     public static SQLiteJDBC jdbc;
 
     public SQLiteJDBC(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context,  "/data/data/com.team.baster/baster.db", null, DATABASE_VERSION);
     }
 
     public void onCreate(SQLiteDatabase db) {

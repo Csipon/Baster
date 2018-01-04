@@ -18,6 +18,7 @@ public class PlayerStatusStorage  {
     private static final String COLUMN_OVERALL_SCORE        = "overall_score";
     private static final String COLUMN_ACTUAL_COINS         = "actual_coins";
     private static final String COLUMN_OVERALL_EXPERIENCE   = "overall_experience";
+    private static final Integer ID = 1;
 
     public static int actualCoins       = 0;
     public static int overallExperience = 0;
@@ -44,23 +45,20 @@ public class PlayerStatusStorage  {
 
 
     public void update(Integer coins, Integer score){
-        update(null, null, coins, score, null);
+        update( null, coins, score, null);
     }
 
     public void update(Integer experience){
-        update(null, null,null, null, experience);
+        update(null,null, null, experience);
     }
 
-    public void update(Integer id, String player, Integer coins, Integer score, Integer experience){
+    public void update(String playerName, Integer coins, Integer score, Integer experience){
         ContentValues values     = new ContentValues();
-        String where             = null;
-        String[] whereParams     = null;
-        if (id != null){
-            where = COLUMN_ID + " = ?";
-            whereParams          = new String[]{String.valueOf(id)};
-        }
-        if (player != null){
-            values.put(COLUMN_PLAYER, player);
+        String where             = COLUMN_ID + " = ?";
+        String[] whereParams     = new String[]{String.valueOf(ID)};
+
+        if (playerName != null){
+            values.put(COLUMN_PLAYER, playerName);
         }
         if (coins != null){
             actualCoins         += coins;
@@ -82,9 +80,6 @@ public class PlayerStatusStorage  {
     }
 
     public PlayerStatus readPlayerStatus() {
-        // How you want the results sorted in the resulting Cursor
-//        String selection = COLUMN_PLAYER + " = ?";
-//        String[] selectionArgs = {COLUMN_PLAYER};
         Cursor curs = readableDB.query(
                 TABLE_NAME,                                 // The table to query
                 TABLE_COLUMNS,                              // The columns to return

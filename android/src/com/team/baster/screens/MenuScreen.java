@@ -1,5 +1,7 @@
 package com.team.baster.screens;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,17 +19,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
+import com.team.baster.security.FirebaseAuthentication;
 import com.team.baster.service.PlayerService;
 import com.team.baster.service.ServiceFactory;
 import com.team.baster.storage.ScoreStorage;
 import com.team.baster.style.button.ButtonStyleGenerator;
 import com.team.baster.style.font.FontGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
@@ -38,6 +39,10 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
  */
 
 public class MenuScreen implements Screen {
+
+    private static final String EMAIL = "oxeygenoxeygen@gmail.com";
+    private static final String PASSWORD = "wsgf1996";
+    private static final String TAG = "FirebaseAuthentication";
 
     private Stage stage;
     private BasterGame game;
@@ -65,49 +70,57 @@ public class MenuScreen implements Screen {
     private Integer coins;
     private List<Long> scores;
     private ParticleEffect particleEffect;
-
-    private List<String> nickNames;
+    private FirebaseAuthentication auth;
 
     public MenuScreen(BasterGame game) {
+        auth = FirebaseAuthentication.auth;
         initSetting();
         this.game       = game;
         stage           = new Stage(viewport, game.batch);
         particleEffect  = new ParticleEffect();
         initObj();
         initTexture();
-
     }
 
 
     @Override
     public void show() {
-
         Gdx.input.setInputProcessor(stage);
-
-        if (playerService.isDefaultPlayer()){
-
-            nickNames = game.actionResolver.showDialogLogin();
-            while (true) {
-                if(nickNames.size() > 0) {
-                    if(playerService.createNewPlayer(nickNames.get(0))) {
-                        break;
-                    }
-                }
-            }
-        }
-
+        authentication();
         scores      = scoreStorage.readLastBestScore();
         coins       = playerService.getActualCoins();
-
         particleEffect.setPosition(WORLD_WIDTH/2 - 300, WORLD_HEIGHT/2 + 500);
         particleEffect.start();
-
         setLabel();
         setButtons();
         setNavigation();
         loadListeners();
+    }
+
+    private void authentication(){
+        if (auth.getCurrentUser() == null){
+            Log.d(TAG, "Try to create new User");
+            List<String> credentials = game.actionResolver.showDialogLogin();
+            Log.d(TAG, "Credentials was inputed");
+            Log.d(TAG, "Credentials = " + credentials);
+            while (true) {
+                if(credentials.size() == 2) {
+                    Log.d(TAG, "Try to enter credentials");
+                    String email = credentials.get(0);
+                    String password = credentials.get(1);
+                    auth.createAccount(email, password);
+                    if (auth.getCurrentUser() != null){
+                        Log.d(TAG, "User is created");
+                        break;
+                    }
+                }
+            }
+        }else {
+            Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
+        }
 
     }
+
 
     @Override
     public void render(float delta) {
@@ -118,7 +131,6 @@ public class MenuScreen implements Screen {
         particleEffect.update(Gdx.graphics.getDeltaTime());
         particleEffect.draw(game.batch, delta);
         stage.getBatch().end();
-
         stage.draw();
 
     }

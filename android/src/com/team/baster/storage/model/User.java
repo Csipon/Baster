@@ -9,7 +9,7 @@ package com.team.baster.storage.model;
 // STUB
 public class User {
     private Integer id;
-    private String login = "player";
+    private String login;
 
     public User(Integer id, String login) {
         this.id = id;
