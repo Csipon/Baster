@@ -19,7 +19,6 @@ public class FirebaseAuthentication {
         this.activity = activity;
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-
     }
 
     public void createAccount(String email, String password) {

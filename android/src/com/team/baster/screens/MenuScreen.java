@@ -40,8 +40,8 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
 
 public class MenuScreen implements Screen {
 
-    private static final String EMAIL = "*@gmail.com";
-    private static final String PASSWORD = "*";
+    private static final String EMAIL = "oxeygenoxeygen@gmail.com";
+    private static final String PASSWORD = "wsgf1996";
     private static final String TAG = "FirebaseAuthentication";
 
     private Stage stage;
@@ -72,6 +72,7 @@ public class MenuScreen implements Screen {
     private ParticleEffect particleEffect;
     private FirebaseAuthentication auth;
 
+    private List<String> credentials;
     public MenuScreen(BasterGame game) {
         auth = FirebaseAuthentication.auth;
         initSetting();
@@ -80,13 +81,13 @@ public class MenuScreen implements Screen {
         particleEffect  = new ParticleEffect();
         initObj();
         initTexture();
+//        credentials = game.actionResolver.showDialogLogin();
     }
 
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        authentication();
         scores      = scoreStorage.readLastBestScore();
         coins       = playerService.getActualCoins();
         particleEffect.setPosition(WORLD_WIDTH/2 - 300, WORLD_HEIGHT/2 + 500);
@@ -95,15 +96,15 @@ public class MenuScreen implements Screen {
         setButtons();
         setNavigation();
         loadListeners();
+        game.adController.showBannedAd();
+//        authentication();
     }
 
     private void authentication(){
         if (auth.getCurrentUser() == null){
             Log.d(TAG, "Try to create new User");
-            List<String> credentials = game.actionResolver.showDialogLogin();
-            Log.d(TAG, "Credentials was inputed");
             Log.d(TAG, "Credentials = " + credentials);
-            while (true) {
+            do {
                 if(credentials.size() == 2) {
                     Log.d(TAG, "Try to enter credentials");
                     String email = credentials.get(0);
@@ -111,10 +112,10 @@ public class MenuScreen implements Screen {
                     auth.createAccount(email, password);
                     if (auth.getCurrentUser() != null){
                         Log.d(TAG, "User is created");
-                        break;
                     }
                 }
-            }
+            }while (credentials.size() != 2);
+
         }else {
             Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
         }

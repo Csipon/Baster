@@ -72,7 +72,6 @@ public class GameOverScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-
         bg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/bg.9.png"))));
         loadLabel();
         loadImgButton();
@@ -158,6 +157,8 @@ public class GameOverScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(135/255f, 206/255f, 235/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        game.adController.showInterstellar();
 
         stage.act();
         stage.draw();

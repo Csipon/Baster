@@ -32,7 +32,7 @@ public class ActionResolverAndroid implements ActionResolver {
     EditText passwordEdit;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
-    private ArrayList<String> myList;
+    private ArrayList<String> myList = new ArrayList<>();
 
     public ActionResolverAndroid(Context context) {
         handler = new Handler();
@@ -97,26 +97,21 @@ public class ActionResolverAndroid implements ActionResolver {
 
     @Override
     public List<String> showDialogLogin() {
-        myList = new ArrayList<>();
+        handler.post(() -> {
+            final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
+            dialog.setContentView(R.layout.dialog_login);
+            dialog.setCancelable(false);
+            dialog.show();
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
+            Button button = dialog.findViewById(R.id.Go);
 
-                final Dialog dialog = new Dialog(context);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-                dialog.setContentView(R.layout.dialog_login);
-                dialog.setCancelable(false);
-                dialog.show();
-
-                Button button = dialog.findViewById(R.id.Go);
-
-                button.setOnClickListener(myClickListener(dialog));
-
-            }
+            button.setOnClickListener(myClickListener(dialog));
         });
+
+
 
         return myList;
     }
@@ -133,8 +128,8 @@ public class ActionResolverAndroid implements ActionResolver {
 
                 //TODO valid for password
                 if(playerService.validatePlayerName(login)) {
-                    myList.add(login);
-                    myList.add(password);
+                    myList.add(0, login);
+                    myList.add(1, password);
                     dialog.dismiss();
                 } else {
                     dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);

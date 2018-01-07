@@ -146,6 +146,7 @@ public class BasterScreen implements Screen {
 
     @Override
     public void show() {
+        game.adController.hideBannerAd();
 
     }
 
