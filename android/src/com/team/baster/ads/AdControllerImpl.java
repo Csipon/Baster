@@ -31,6 +31,7 @@ public class AdControllerImpl implements AdController{
 
     public AdControllerImpl(AndroidApplication androidApplication) {
         this.androidApplication = androidApplication;
+        setupAds();
     }
 
 

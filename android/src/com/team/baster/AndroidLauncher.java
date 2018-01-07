@@ -33,7 +33,6 @@ public class AndroidLauncher extends AndroidApplication{
         config.useCompass = false;
         AdController adController = new AdControllerImpl(this);
         View gameView = initializeForView(new BasterGame(actionResolverAndroid, this, adController), config);
-        adController.setupAds();
         setContentView(adController.setBannerOnView(gameView));
     }
 }
