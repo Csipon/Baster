@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.team.baster.R;
+import com.team.baster.screens.MenuScreen;
 import com.team.baster.service.PlayerService;
 import com.team.baster.service.ScoreService;
 import com.team.baster.service.ServiceFactory;
@@ -30,6 +31,7 @@ public class ActionResolverAndroid implements ActionResolver {
     private Context context;
     EditText nameEdit;
     EditText passwordEdit;
+    private MenuScreen menuScreen;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
     private ArrayList<String> myList = new ArrayList<>();
@@ -98,6 +100,7 @@ public class ActionResolverAndroid implements ActionResolver {
     @Override
     public List<String> showDialogLogin() {
         handler.post(() -> {
+
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -109,11 +112,11 @@ public class ActionResolverAndroid implements ActionResolver {
             Button button = dialog.findViewById(R.id.Go);
 
             button.setOnClickListener(myClickListener(dialog));
+
+
         });
-
-
-
         return myList;
+
     }
 
     private View.OnClickListener myClickListener(final Dialog dialog) {

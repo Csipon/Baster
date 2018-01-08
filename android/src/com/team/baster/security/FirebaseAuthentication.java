@@ -1,8 +1,12 @@
 package com.team.baster.security;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -22,31 +26,38 @@ public class FirebaseAuthentication {
     }
 
     public void createAccount(String email, String password) {
-        Log.d(TAG, "createAccount:" + email);
+        Log.d(TAG, "in create method with params :" + email + password);
+        System.out.println("in create method with params :" + email + password);
 
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(activity, task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "createUserWithEmail:success");
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                    }
-                });
+        Task<AuthResult> task = mAuth.createUserWithEmailAndPassword(email, password);
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "createUserWithEmail:success");
+                    System.out.println("createUserWithEmail:success");
+
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                    System.out.println("createUserWithEmail:failure");
+                }
+
+//            }
+//        });
     }
 
     public void signIn(String email, String password) {
+
         Log.d(TAG, "signIn:" + email);
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(activity, task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithEmail:success");
-                    } else {
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                    }
-                    if (!task.isSuccessful()) {
-                        Log.w(TAG, "Auth failed");
-                    }
-                });
+        Task<AuthResult> task = mAuth.signInWithEmailAndPassword(email, password);
+        if (task.isSuccessful()) {
+            Log.d(TAG, "signInWithEmail:success");
+
+        } else {
+            Log.w(TAG, "signInWithEmail:failure", task.getException());
+        }
+
     }
 
     public void signOut() {

@@ -29,6 +29,7 @@ import com.team.baster.storage.ScoreStorage;
 import com.team.baster.style.button.ButtonStyleGenerator;
 import com.team.baster.style.font.FontGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
@@ -81,8 +82,11 @@ public class MenuScreen implements Screen {
         particleEffect  = new ParticleEffect();
         initObj();
         initTexture();
-//        credentials = game.actionResolver.showDialogLogin();
+
+        credentials = game.actionResolver.showDialogLogin();
     }
+
+
 
 
     @Override
@@ -97,24 +101,29 @@ public class MenuScreen implements Screen {
         setNavigation();
         loadListeners();
         game.adController.showBannedAd();
-//        authentication();
+        authentication();
     }
 
     private void authentication(){
         if (auth.getCurrentUser() == null){
             Log.d(TAG, "Try to create new User");
             Log.d(TAG, "Credentials = " + credentials);
-            do {
+            while(true) {
                 if(credentials.size() == 2) {
                     Log.d(TAG, "Try to enter credentials");
                     String email = credentials.get(0);
                     String password = credentials.get(1);
+                    System.out.println(email);
+                    System.out.println(password);
                     auth.createAccount(email, password);
-                    if (auth.getCurrentUser() != null){
+                    if (auth.getCurrentUser() != null) {
                         Log.d(TAG, "User is created");
+                        break;
                     }
+                } else {
+                    System.out.println("no creadentials");
                 }
-            }while (credentials.size() != 2);
+            }
 
         }else {
             Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
@@ -298,7 +307,7 @@ public class MenuScreen implements Screen {
         scoreStorage            = new ScoreStorage();
         buttonStyleGenerator    = new ButtonStyleGenerator();
         fontGenerator           = new FontGenerator();
-        playerService.getCurrentUser();
+//        playerService.getCurrentUser();
     }
 
     private void initTexture() {
