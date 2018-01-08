@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.team.baster.GameConstants;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.style.button.ButtonStyleGenerator;
 import com.team.baster.style.font.FontGenerator;
@@ -76,6 +77,7 @@ public class GameOverScreen implements Screen {
         loadLabel();
         loadImgButton();
         loadTable();
+        game.adController.setInterstitialCount(GameConstants.INTERSTITIAL_COUNT);
     }
 
     private void loadLabel() {

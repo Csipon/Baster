@@ -21,6 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.security.FirebaseAuthentication;
 import com.team.baster.service.PlayerService;
@@ -29,7 +31,6 @@ import com.team.baster.storage.ScoreStorage;
 import com.team.baster.style.button.ButtonStyleGenerator;
 import com.team.baster.style.font.FontGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.team.baster.GameConstants.WORLD_HEIGHT;
@@ -40,9 +41,8 @@ import static com.team.baster.GameConstants.WORLD_WIDTH;
  */
 
 public class MenuScreen implements Screen {
-
-    private static final String EMAIL = "*@gmail.com";
-    private static final String PASSWORD = "*";
+    private static final String EMAIL = "oxeygenoxeygen@gmail.com";
+    private static final String PASSWORD = "wsgf1996";
     private static final String TAG = "FirebaseAuthentication";
 
     private Stage stage;
@@ -106,71 +106,31 @@ public class MenuScreen implements Screen {
         setNavigation();
         loadListeners();
         game.adController.showBannedAd();
-
     }
 
-    public boolean authentication(List<String> credentials){
+    public Task<AuthResult> authentication(String email, String password){
         if (auth.getCurrentUser() == null){
             Log.d(TAG, "Try to login");
-            Log.d(TAG, "Credentials = " + credentials);
+            Log.d(TAG, "Email = " + email + ", password = " + password);
 
-            if(credentials.size() == 2) {
+            if(email != null && password != null && email.length() > 3 && password.length() >= 8) {
                 Log.d(TAG, "Try to enter credentials");
-                String email = credentials.get(0);
-                String password = credentials.get(1);
-                //auth.createAccount(email, password)
-                auth.signIn(email, password);
-                if (auth.getCurrentUser() != null) {
-                    Log.d(TAG, "User is looged in");
-                    //break;
-                    game.actionResolver.dissmisLoginDialog();
-                    return true;
-                }
-            } else {
-                System.out.println("no creadentials");
-                return false;
+               return auth.signIn(email, password);
             }
-            //}
-
-        }else {
-            Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
-            System.out.println("Current user not null = " + auth.getCurrentUser().getEmail());
-            return true;
         }
-        return false;
-
+        return null;
     }
 
-    public boolean registration(List<String> credentials){
+    public Task<AuthResult> registration(String email, String password){
         if (auth.getCurrentUser() == null){
             Log.d(TAG, "Try to create new User");
-            Log.d(TAG, "Credentials = " + credentials);
-            System.out.println("Try to create new User");
-
-            if(credentials.size() == 2) {
+            if(email != null && password != null && email.length() > 3 && password.length() >= 8) {
                 Log.d(TAG, "Try to enter credentials");
-                String email = credentials.get(0);
-                String password = credentials.get(1);
-                auth.createAccount(email, password);
-                if (auth.getCurrentUser() != null) {
-                    Log.d(TAG, "User is created");
-                    game.actionResolver.dissmisLoginDialog();
+                return auth.createAccount(email, password);
 
-                    return true;
-                }
-            } else {
-                System.out.println("no creadentials");
-                return false;
             }
-
-
-        }else {
-            Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
-            System.out.println("Current user not null = " + auth.getCurrentUser().getEmail());
-            return true;
         }
-        return false;
-
+        return null;
     }
 
 

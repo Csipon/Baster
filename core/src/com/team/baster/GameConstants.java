@@ -23,7 +23,7 @@ public class GameConstants {
     public static final float PART_ACCELERATION         = 0.025f;
 
 
-    public static final int INTERSTITIAL_COUNT = 2;
+    public static final int INTERSTITIAL_COUNT = 1;
 
     public static int RICK_WIDTH                = 256;
     public static int RICK_HEIGHT               = 256;

@@ -23,16 +23,17 @@ public class AndroidLauncher extends AndroidApplication{
         super.onCreate(savedInstanceState);
 
         SQLiteJDBC.jdbc = new SQLiteJDBC(this);
-        FirebaseAuthentication.auth = new FirebaseAuthentication(this);
         RequestUtil.instance = new RequestUtil(this);
-
         actionResolverAndroid = new ActionResolverAndroid(this);
         config = new AndroidApplicationConfiguration();
 
+        AdController adController = new AdControllerImpl(this);
+        BasterGame basterGame = new BasterGame(actionResolverAndroid, this, adController);
+        FirebaseAuthentication.auth = new FirebaseAuthentication(this, basterGame);
+
         config.useAccelerometer = false;
         config.useCompass = false;
-        AdController adController = new AdControllerImpl(this);
-        View gameView = initializeForView(new BasterGame(actionResolverAndroid, this, adController), config);
+        View gameView = initializeForView(basterGame, config);
         setContentView(adController.setBannerOnView(gameView));
     }
 }

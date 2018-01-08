@@ -38,7 +38,7 @@ public class AdControllerImpl implements AdController{
     public void setupAds() {
         bannerAd = new AdView(androidApplication);
         bannerAd.setVisibility(View.INVISIBLE);
-        bannerAd.setBackgroundColor(0xff000000); // black
+//        bannerAd.setBackgroundColor(0xff000000); // black
         bannerAd.setAdUnitId(BANNER_AD_UNIT_ID);
         bannerAd.setAdSize(AdSize.SMART_BANNER);
 
@@ -112,7 +112,6 @@ public class AdControllerImpl implements AdController{
                 interstitialAd.setAdListener(new AdListener(){
                     @Override
                     public void onAdClosed() {
-//                        Gdx.app.postRunnable(then);
                         AdRequest.Builder builder = new AdRequest.Builder();
                         AdRequest ad = builder.build();
                         interstitialAd.loadAd(ad);

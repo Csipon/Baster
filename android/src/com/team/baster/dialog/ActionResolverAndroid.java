@@ -1,9 +1,10 @@
 package com.team.baster.dialog;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -12,6 +13,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.team.baster.AndroidLauncher;
 import com.team.baster.R;
 import com.team.baster.screens.MenuScreen;
 import com.team.baster.service.PlayerService;
@@ -26,19 +31,18 @@ import java.util.List;
  */
 
 public class ActionResolverAndroid implements ActionResolver {
+    private static final String TAG = "AUTHENTICATION";
 
     private Handler handler;
     private static ScoreService scoreService = ServiceFactory.getScoreService();
-    private Context context;
+    private AndroidLauncher context;
     EditText nameEdit;
     EditText passwordEdit;
     private MenuScreen menuScreen;
     private Dialog dialogLogin;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
-    private ArrayList<String> myList = new ArrayList<>();
-
-    public ActionResolverAndroid(Context context) {
+    public ActionResolverAndroid(AndroidLauncher context) {
         handler = new Handler();
         this.context = context;
     }
@@ -133,24 +137,34 @@ public class ActionResolverAndroid implements ActionResolver {
                 nameEdit = dialog.findViewById(R.id.nickname);
                 passwordEdit = dialog.findViewById(R.id.password);
 
-                myList = new ArrayList<>();
                 String login = nameEdit.getText().toString();
                 String password = passwordEdit.getText().toString();
 
                 //TODO valid for password
                 if(playerService.validatePlayerName(login)) {
-                    myList.add(0, login);
-                    myList.add(1, password);
-
-                    if(menuScreen.registration(myList)) {
-
-                    } else {
-                        ((TextView)dialog.findViewById(R.id.Error)).setText("Something went wrong");
-                        ((TextView)dialog.findViewById(R.id.Error)).setVisibility(View.VISIBLE);
+                    Task<AuthResult> authTask = menuScreen.registration(login, password);
+                    if (authTask == null){
+                        dissmisLoginDialog();
+                    }else {
+                        authTask.addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "createUserWithEmail:success");
+                                    dissmisLoginDialog();
+                                } else {
+                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                    ((TextView) dialog.findViewById(R.id.Error)).setText(task.getException().getMessage());
+                                    (dialog.findViewById(R.id.Error)).setVisibility(View.VISIBLE);
+                                }
+                            }
+                        });
                     }
                 } else {
                     dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
                 }
+
+
             }
         };
     }
@@ -163,22 +177,29 @@ public class ActionResolverAndroid implements ActionResolver {
                 passwordEdit = dialog.findViewById(R.id.password);
 
                 System.out.println("in login click listener");
-                myList = new ArrayList<>();
                 String login = nameEdit.getText().toString();
                 String password = passwordEdit.getText().toString();
 
                 //TODO valid for password
                 if(playerService.validatePlayerName(login)) {
-                    myList.add(0, login);
-                    myList.add(1, password);
-
-                    if(menuScreen.authentication(myList)) {
-
-                    } else {
-                        ((TextView)dialog.findViewById(R.id.Error)).setText("Something went wrong");
-                        ((TextView)dialog.findViewById(R.id.Error)).setVisibility(View.VISIBLE);
+                    Task<AuthResult> authTask = menuScreen.authentication(login, password);
+                    if (authTask == null){
+                        dissmisLoginDialog();
+                    }else {
+                        authTask.addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "signInWithEmail:success");
+                                    dissmisLoginDialog();
+                                } else {
+                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                    ((TextView) dialog.findViewById(R.id.Error)).setText(task.getException().getMessage());
+                                    (dialog.findViewById(R.id.Error)).setVisibility(View.VISIBLE);
+                                }
+                            }
+                        });
                     }
-
                 } else {
                     dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
                 }
