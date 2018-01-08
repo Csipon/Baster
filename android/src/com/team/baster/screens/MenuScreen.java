@@ -73,7 +73,6 @@ public class MenuScreen implements Screen {
     private ParticleEffect particleEffect;
     private FirebaseAuthentication auth;
 
-    private List<String> credentials;
     public MenuScreen(BasterGame game) {
         auth = FirebaseAuthentication.auth;
         initSetting();
@@ -83,7 +82,13 @@ public class MenuScreen implements Screen {
         initObj();
         initTexture();
 
-        credentials = game.actionResolver.showDialogLogin();
+        if(auth.getCurrentUser() == null) {
+            game.actionResolver.showDialogLogin(this);
+        } else {
+            Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
+            System.out.println("Current user not null = " + auth.getCurrentUser().getEmail());
+        }
+
     }
 
 
@@ -101,33 +106,70 @@ public class MenuScreen implements Screen {
         setNavigation();
         loadListeners();
         game.adController.showBannedAd();
-        authentication();
+
     }
 
-    private void authentication(){
+    public boolean authentication(List<String> credentials){
         if (auth.getCurrentUser() == null){
-            Log.d(TAG, "Try to create new User");
+            Log.d(TAG, "Try to login");
             Log.d(TAG, "Credentials = " + credentials);
-            while(true) {
-                if(credentials.size() == 2) {
-                    Log.d(TAG, "Try to enter credentials");
-                    String email = credentials.get(0);
-                    String password = credentials.get(1);
-                    System.out.println(email);
-                    System.out.println(password);
-                    auth.createAccount(email, password);
-                    if (auth.getCurrentUser() != null) {
-                        Log.d(TAG, "User is created");
-                        break;
-                    }
-                } else {
-                    System.out.println("no creadentials");
+
+            if(credentials.size() == 2) {
+                Log.d(TAG, "Try to enter credentials");
+                String email = credentials.get(0);
+                String password = credentials.get(1);
+                //auth.createAccount(email, password)
+                auth.signIn(email, password);
+                if (auth.getCurrentUser() != null) {
+                    Log.d(TAG, "User is looged in");
+                    //break;
+                    game.actionResolver.dissmisLoginDialog();
+                    return true;
                 }
+            } else {
+                System.out.println("no creadentials");
+                return false;
             }
+            //}
 
         }else {
             Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
+            System.out.println("Current user not null = " + auth.getCurrentUser().getEmail());
+            return true;
         }
+        return false;
+
+    }
+
+    public boolean registration(List<String> credentials){
+        if (auth.getCurrentUser() == null){
+            Log.d(TAG, "Try to create new User");
+            Log.d(TAG, "Credentials = " + credentials);
+            System.out.println("Try to create new User");
+
+            if(credentials.size() == 2) {
+                Log.d(TAG, "Try to enter credentials");
+                String email = credentials.get(0);
+                String password = credentials.get(1);
+                auth.createAccount(email, password);
+                if (auth.getCurrentUser() != null) {
+                    Log.d(TAG, "User is created");
+                    game.actionResolver.dissmisLoginDialog();
+
+                    return true;
+                }
+            } else {
+                System.out.println("no creadentials");
+                return false;
+            }
+
+
+        }else {
+            Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
+            System.out.println("Current user not null = " + auth.getCurrentUser().getEmail());
+            return true;
+        }
+        return false;
 
     }
 

@@ -9,6 +9,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.team.baster.R;
@@ -32,6 +33,7 @@ public class ActionResolverAndroid implements ActionResolver {
     EditText nameEdit;
     EditText passwordEdit;
     private MenuScreen menuScreen;
+    private Dialog dialogLogin;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
     private ArrayList<String> myList = new ArrayList<>();
@@ -98,34 +100,40 @@ public class ActionResolverAndroid implements ActionResolver {
     }
 
     @Override
-    public List<String> showDialogLogin() {
+    public void showDialogLogin(MenuScreen menuScreen) {
         handler.post(() -> {
 
-            final Dialog dialog = new Dialog(context);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-            dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-            dialog.setContentView(R.layout.dialog_login);
-            dialog.setCancelable(false);
-            dialog.show();
+            this.menuScreen = menuScreen;
+            dialogLogin = new Dialog(context);
+            dialogLogin.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogLogin.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialogLogin.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
+            dialogLogin.setContentView(R.layout.dialog_login);
+            dialogLogin.setCancelable(false);
+            dialogLogin.show();
 
-            Button button = dialog.findViewById(R.id.Go);
+            Button registrationButton = dialogLogin.findViewById(R.id.registration);
+            Button loginButton = dialogLogin.findViewById(R.id.login);
 
-            button.setOnClickListener(myClickListener(dialog));
-
+            registrationButton.setOnClickListener(RegistrationClickListener(dialogLogin));
+            loginButton.setOnClickListener(LoginClickListener(dialogLogin));
 
         });
-        return myList;
 
     }
 
-    private View.OnClickListener myClickListener(final Dialog dialog) {
+    public void dissmisLoginDialog() {
+        dialogLogin.dismiss();
+    }
+
+    private View.OnClickListener RegistrationClickListener(final Dialog dialog) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nameEdit = dialog.findViewById(R.id.nickname);
                 passwordEdit = dialog.findViewById(R.id.password);
 
+                myList = new ArrayList<>();
                 String login = nameEdit.getText().toString();
                 String password = passwordEdit.getText().toString();
 
@@ -133,7 +141,44 @@ public class ActionResolverAndroid implements ActionResolver {
                 if(playerService.validatePlayerName(login)) {
                     myList.add(0, login);
                     myList.add(1, password);
-                    dialog.dismiss();
+
+                    if(menuScreen.registration(myList)) {
+
+                    } else {
+                        ((TextView)dialog.findViewById(R.id.Error)).setText("Something went wrong");
+                        ((TextView)dialog.findViewById(R.id.Error)).setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
+                }
+            }
+        };
+    }
+
+    private View.OnClickListener LoginClickListener(final Dialog dialog) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nameEdit = dialog.findViewById(R.id.nickname);
+                passwordEdit = dialog.findViewById(R.id.password);
+
+                System.out.println("in login click listener");
+                myList = new ArrayList<>();
+                String login = nameEdit.getText().toString();
+                String password = passwordEdit.getText().toString();
+
+                //TODO valid for password
+                if(playerService.validatePlayerName(login)) {
+                    myList.add(0, login);
+                    myList.add(1, password);
+
+                    if(menuScreen.authentication(myList)) {
+
+                    } else {
+                        ((TextView)dialog.findViewById(R.id.Error)).setText("Something went wrong");
+                        ((TextView)dialog.findViewById(R.id.Error)).setVisibility(View.VISIBLE);
+                    }
+
                 } else {
                     dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
                 }

@@ -53,18 +53,44 @@
         android:textSize="13dp"
         />
 
-    <Button
-        android:id="@+id/Go"
-        android:layout_width="100dp"
-        android:layout_marginTop="20dp"
-        android:layout_height="35dp"
-        android:layout_gravity="center"
-        android:textStyle="bold"
-        android:background="@android:color/holo_green_dark"
-        android:textColor="@android:color/white"
-        android:text="GO"
-        android:textSize="18dp"
-        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+
+        >
+
+        <Button
+            android:id="@+id/registration"
+            android:layout_width="120dp"
+            android:layout_height="35dp"
+            android:textStyle="bold"
+            android:layout_margin="10dp"
+            android:background="@android:color/holo_green_dark"
+            android:textColor="@android:color/white"
+            android:text="Registration"
+            android:textSize="18dp"
+            />
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:textStyle="bold"
+            android:layout_margin="10dp"
+            android:background="@android:color/holo_green_dark"
+            android:textColor="@android:color/white"
+            android:text="Login"
+            android:textSize="18dp"
+            />
+
+
+    </LinearLayout>
+
+
 
 
 </LinearLayout>
