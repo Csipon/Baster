@@ -183,6 +183,7 @@ public class ActionResolverAndroid implements ActionResolver {
                 //TODO valid for password
                 if(playerService.validatePlayerName(login)) {
                     Task<AuthResult> authTask = menuScreen.authentication(login, password);
+                    Log.d(TAG, "Auth task = " + authTask);
                     if (authTask == null){
                         dissmisLoginDialog();
                     }else {

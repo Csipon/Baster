@@ -27,9 +27,10 @@ public class FirebaseAuthentication {
     }
 
     public Task<AuthResult> createAccount(String email, String password) {
-        Log.d(TAG, "in create method with params :" + email + password);
-
-        return mAuth.createUserWithEmailAndPassword(email, password);
+        Log.d(TAG, "============================== createAccount:" + email);
+        Task<AuthResult> userWithEmailAndPassword = mAuth.createUserWithEmailAndPassword(email, password);
+        Log.d(TAG, "============================== createAccount: END");
+        return userWithEmailAndPassword;
     }
 
     public Task<AuthResult> signIn(String email, String password) {
@@ -51,6 +52,9 @@ public class FirebaseAuthentication {
     }
 
     public FirebaseUser getCurrentUser() {
+        if (currentUser == null){
+            currentUser = mAuth.getCurrentUser();
+        }
         return currentUser;
     }
 }

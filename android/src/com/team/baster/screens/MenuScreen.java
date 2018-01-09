@@ -79,14 +79,12 @@ public class MenuScreen implements Screen {
         particleEffect  = new ParticleEffect();
         initObj();
         initTexture();
-
+        Log.d(TAG, "Current user  = " + auth.getCurrentUser());
         if(auth.getCurrentUser() == null) {
             game.actionResolver.showDialogLogin(this);
         } else {
             Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
-            System.out.println("Current user not null = " + auth.getCurrentUser().getEmail());
         }
-
     }
 
 
@@ -270,6 +268,8 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.actionResolver.showDialog();
+                auth.signOut();
+                game.actionResolver.showDialogLogin(MenuScreen.this);
             }
         });
 
