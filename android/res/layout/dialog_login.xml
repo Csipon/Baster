@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="300dp"
+    android:layout_marginTop="40dp"
     android:background="@drawable/bg300_400"
     android:layout_height="300dp">
 
@@ -12,45 +13,33 @@
         android:gravity="center"
         android:textStyle="bold"
         android:textColor="@android:color/white"
-        android:text="Provide your nickname and password: "
+        android:text="Provide your email and password:"
         android:textSize="18dp"
         />
 
     <EditText
-        android:id="@+id/nickname"
+        android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:textAlignment="center"
         android:gravity="center"
         android:textStyle="bold"
-        android:hint="Nickname"
-        android:textSize="16dp"
+        android:hint="Email"
+        android:textSize="18dp"
         />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:textAlignment="center"
         android:gravity="center"
         android:textStyle="bold"
         android:password="true"
         android:hint="Password"
-        android:textSize="16dp"
-        />
-
-    <TextView
-        android:id="@+id/Error"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:textColor="@android:color/holo_red_dark"
-        android:text="Nickname size must contains min 2 characters"
-        android:textSize="13dp"
+        android:textSize="18dp"
         />
 
 

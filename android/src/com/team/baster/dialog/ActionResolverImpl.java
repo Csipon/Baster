@@ -5,7 +5,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.team.baster.AndroidLauncher;
 import com.team.baster.R;
+import com.team.baster.asynch.LoginAsyncTask;
 import com.team.baster.screens.MenuScreen;
 import com.team.baster.service.PlayerService;
 import com.team.baster.service.ScoreService;
@@ -25,24 +29,25 @@ import com.team.baster.service.ServiceFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 /**
  * Created by Smeet on 31.10.2017.
  */
 
-public class ActionResolverAndroid implements ActionResolver {
+public class ActionResolverImpl implements ActionResolver {
     private static final String TAG = "AUTHENTICATION";
 
     private Handler handler;
     private static ScoreService scoreService = ServiceFactory.getScoreService();
     private AndroidLauncher context;
-    EditText nameEdit;
+    EditText emailEdit;
     EditText passwordEdit;
     private MenuScreen menuScreen;
     private Dialog dialogLogin;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
-    public ActionResolverAndroid(AndroidLauncher context) {
+    public ActionResolverImpl(AndroidLauncher context) {
         handler = new Handler();
         this.context = context;
     }
@@ -89,7 +94,14 @@ public class ActionResolverAndroid implements ActionResolver {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+                Toast toast = new Toast(context);
+                toast.setGravity(Gravity.TOP, 0, 0);
+
+                View view = View.inflate(context, R.layout.toast_message, context.findViewById(R.id.toast_layout_wrapper));
+                toast.setView(view);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                ((TextView) toast.getView().findViewById(R.id.toastMessage)).setText(text);
+                toast.show();
             }
         });
     }
@@ -134,15 +146,12 @@ public class ActionResolverAndroid implements ActionResolver {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nameEdit = dialog.findViewById(R.id.nickname);
+                emailEdit = dialog.findViewById(R.id.email);
                 passwordEdit = dialog.findViewById(R.id.password);
 
-                String login = nameEdit.getText().toString();
-                String password = passwordEdit.getText().toString();
-
                 //TODO valid for password
-                if(playerService.validatePlayerName(login)) {
-                    Task<AuthResult> authTask = menuScreen.registration(login, password);
+                if(playerService.validatePlayerName(getEmail())) {
+                    Task<AuthResult> authTask = menuScreen.registration(getEmail(), getPassword());
                     if (authTask == null){
                         dissmisLoginDialog();
                     }else {
@@ -154,14 +163,17 @@ public class ActionResolverAndroid implements ActionResolver {
                                     dissmisLoginDialog();
                                 } else {
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    ((TextView) dialog.findViewById(R.id.Error)).setText(task.getException().getMessage());
-                                    (dialog.findViewById(R.id.Error)).setVisibility(View.VISIBLE);
+                                    //((TextView) dialog.findViewById(R.id.Error)).setText(task.getException().getMessage());
+                                    //(dialog.findViewById(R.id.Error)).setVisibility(View.VISIBLE);
+                                    showToast("Error");
+
                                 }
                             }
                         });
                     }
                 } else {
-                    dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
+                    //dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
+                    showToast("Error");
                 }
 
 
@@ -169,42 +181,32 @@ public class ActionResolverAndroid implements ActionResolver {
         };
     }
 
+
+
     private View.OnClickListener LoginClickListener(final Dialog dialog) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nameEdit = dialog.findViewById(R.id.nickname);
+
+                emailEdit = dialog.findViewById(R.id.email);
                 passwordEdit = dialog.findViewById(R.id.password);
 
-                System.out.println("in login click listener");
-                String login = nameEdit.getText().toString();
-                String password = passwordEdit.getText().toString();
+                if(playerService.validatePlayerName(getEmail())) {
+                    new LoginAsyncTask(getEmail(), getPassword(), ActionResolverImpl.this, context, dialog).execute();
 
-                //TODO valid for password
-                if(playerService.validatePlayerName(login)) {
-                    Task<AuthResult> authTask = menuScreen.authentication(login, password);
-                    Log.d(TAG, "Auth task = " + authTask);
-                    if (authTask == null){
-                        dissmisLoginDialog();
-                    }else {
-                        authTask.addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "signInWithEmail:success");
-                                    dissmisLoginDialog();
-                                } else {
-                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                    ((TextView) dialog.findViewById(R.id.Error)).setText(task.getException().getMessage());
-                                    (dialog.findViewById(R.id.Error)).setVisibility(View.VISIBLE);
-                                }
-                            }
-                        });
-                    }
                 } else {
-                    dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
+                    //dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
+                    showToast("Error");
                 }
             }
         };
+    }
+
+    private String getEmail() {
+        return emailEdit.getText().toString();
+    }
+
+    private String getPassword() {
+        return passwordEdit.getText().toString();
     }
 }

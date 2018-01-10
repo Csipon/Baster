@@ -1,6 +1,7 @@
 package com.team.baster.screens;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -104,18 +105,18 @@ public class MenuScreen implements Screen {
         game.adController.showBannedAd();
     }
 
-    public Task<AuthResult> authentication(String email, String password){
-        if (auth.getCurrentUser() == null){
-            Log.d(TAG, "Try to login");
-            Log.d(TAG, "Email = " + email + ", password = " + password);
-
-            if(email != null && password != null && email.length() > 3 && password.length() >= 8) {
-                Log.d(TAG, "Try to enter credentials");
-               return auth.signIn(email, password);
-            }
-        }
-        return null;
-    }
+//    public Task<AuthResult> authentication(String email, String password){
+//        if (auth.getCurrentUser() == null){
+//            Log.d(TAG, "Try to login");
+//            Log.d(TAG, "Email = " + email + ", password = " + password);
+//
+//            if(email != null && password != null && email.length() > 3 && password.length() >= 8) {
+//                Log.d(TAG, "Try to enter credentials");
+//               return auth.signIn(email, password);
+//            }
+//        }
+//        return null;
+//    }
 
     public Task<AuthResult> registration(String email, String password){
         if (auth.getCurrentUser() == null){
@@ -267,8 +268,9 @@ public class MenuScreen implements Screen {
         coinsImgBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.actionResolver.showDialog();
                 auth.signOut();
+                auth.getCurrentUser();
+                game.actionResolver.showToast("Successfully logged out");
                 game.actionResolver.showDialogLogin(MenuScreen.this);
             }
         });

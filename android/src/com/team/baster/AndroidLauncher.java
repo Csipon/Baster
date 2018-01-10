@@ -7,7 +7,7 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.team.baster.ads.AdController;
 import com.team.baster.ads.AdControllerImpl;
-import com.team.baster.dialog.ActionResolverAndroid;
+import com.team.baster.dialog.ActionResolverImpl;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.security.FirebaseAuthentication;
 import com.team.baster.storage.core.SQLiteJDBC;
@@ -16,7 +16,7 @@ import util.RequestUtil;
 
 public class AndroidLauncher extends AndroidApplication{
     public static AndroidApplicationConfiguration config;
-    public ActionResolverAndroid actionResolverAndroid;
+    public ActionResolverImpl actionResolverAndroid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,7 @@ public class AndroidLauncher extends AndroidApplication{
 
         SQLiteJDBC.jdbc = new SQLiteJDBC(this);
         RequestUtil.instance = new RequestUtil(this);
-        actionResolverAndroid = new ActionResolverAndroid(this);
+        actionResolverAndroid = new ActionResolverImpl(this);
         config = new AndroidApplicationConfiguration();
 
         AdController adController = new AdControllerImpl(this);

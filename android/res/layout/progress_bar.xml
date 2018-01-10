@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    android:layout_height="80dp">
+
+    <ProgressBar
+        android:layout_gravity="center"
+        android:layout_width="70dp"
+        android:indeterminateDrawable="@drawable/animated_bar"
+        android:indeterminateOnly="true"
+        android:layout_height="70dp" />
+
+</LinearLayout>
