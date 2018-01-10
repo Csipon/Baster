@@ -48,7 +48,9 @@ public class FirebaseAuthentication {
 
     public void sendEmailVerification() {
         FirebaseUser user = mAuth.getCurrentUser();
-        user.sendEmailVerification();
+        if (user != null) {
+            user.sendEmailVerification();
+        }
     }
 
     public FirebaseUser getCurrentUser() {

@@ -6,9 +6,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +27,6 @@ import com.team.baster.service.ServiceFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by Smeet on 31.10.2017.
@@ -40,10 +37,10 @@ public class ActionResolverImpl implements ActionResolver {
 
     private Handler handler;
     private static ScoreService scoreService = ServiceFactory.getScoreService();
-    private AndroidLauncher context;
-    EditText emailEdit;
-    EditText passwordEdit;
-    private MenuScreen menuScreen;
+    public AndroidLauncher context;
+    private EditText emailEdit;
+    private EditText passwordEdit;
+    public MenuScreen menuScreen;
     private Dialog dialogLogin;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
@@ -118,7 +115,6 @@ public class ActionResolverImpl implements ActionResolver {
     @Override
     public void showDialogLogin(MenuScreen menuScreen) {
         handler.post(() -> {
-
             this.menuScreen = menuScreen;
             dialogLogin = new Dialog(context);
             dialogLogin.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -175,14 +171,13 @@ public class ActionResolverImpl implements ActionResolver {
                     //dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
                     showToast("Error");
                 }
-
-
             }
         };
     }
 
 
 
+    @SuppressWarnings("unchecked")
     private View.OnClickListener LoginClickListener(final Dialog dialog) {
         return new View.OnClickListener() {
             @Override
@@ -192,7 +187,7 @@ public class ActionResolverImpl implements ActionResolver {
                 passwordEdit = dialog.findViewById(R.id.password);
 
                 if(playerService.validatePlayerName(getEmail())) {
-                    new LoginAsyncTask(getEmail(), getPassword(), ActionResolverImpl.this, context, dialog).execute();
+                    new LoginAsyncTask(getEmail(), getPassword(), ActionResolverImpl.this, dialog).execute();
 
                 } else {
                     //dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);

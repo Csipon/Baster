@@ -1,7 +1,6 @@
 package com.team.baster.screens;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -104,20 +103,6 @@ public class MenuScreen implements Screen {
         loadListeners();
         game.adController.showBannedAd();
     }
-
-//    public Task<AuthResult> authentication(String email, String password){
-//        if (auth.getCurrentUser() == null){
-//            Log.d(TAG, "Try to login");
-//            Log.d(TAG, "Email = " + email + ", password = " + password);
-//
-//            if(email != null && password != null && email.length() > 3 && password.length() >= 8) {
-//                Log.d(TAG, "Try to enter credentials");
-//               return auth.signIn(email, password);
-//            }
-//        }
-//        return null;
-//    }
-
     public Task<AuthResult> registration(String email, String password){
         if (auth.getCurrentUser() == null){
             Log.d(TAG, "Try to create new User");
