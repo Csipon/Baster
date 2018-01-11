@@ -17,7 +17,7 @@ import com.team.baster.security.FirebaseAuthentication;
  * Created by Smeet on 10.01.2018.
  */
 
-public class LoginAsyncTask extends AsyncTask {
+public class RegistrationAsyncTask extends AsyncTask {
 
     private static final String TAG = "FirebaseAuthentication";
     private String email;
@@ -27,7 +27,7 @@ public class LoginAsyncTask extends AsyncTask {
     private Dialog dialog;
     private FirebaseAuthentication auth;
 
-    public LoginAsyncTask(String email, String password, ActionResolverImpl actionResolver, Dialog dialog) {
+    public RegistrationAsyncTask(String email, String password, ActionResolverImpl actionResolver, Dialog dialog) {
         this.email = email;
         this.password = password;
         this.actionResolver = actionResolver;
@@ -48,23 +48,23 @@ public class LoginAsyncTask extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] objects) {
         if (!validateCredantials(email, password)){
-            Log.w(TAG, "signInWithEmail:failure");
+            Log.w(TAG, "createUserWithEmail:failure");
             progressDialog.dismiss();//loader
             actionResolver.showToast("Error");
 
         }else {
-            authentication(email, password).addOnCompleteListener(actionResolver.context, new OnCompleteListener<AuthResult>() {
+            registration(email, password).addOnCompleteListener(actionResolver.context, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithEmail:success");
+                        Log.d(TAG, "createUserWithEmail:success");
                         progressDialog.dismiss();
-                        dialog.dismiss();
-                        actionResolver.showToast("Hello " + task.getResult().getUser().getEmail());
+                        //dialog.dismiss();
+                        actionResolver.showToast("Success " + task.getResult().getUser().getEmail());
                     } else {
                         progressDialog.dismiss();
                         if (task.getException() != null) {
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             actionResolver.showToast(task.getException().getMessage());
                         }else {
                             actionResolver.showToast("Error");
@@ -79,13 +79,7 @@ public class LoginAsyncTask extends AsyncTask {
 
     @Override
     protected void onPostExecute(Object o) {
-
         super.onPostExecute(o);
-    }
-
-    private Task<AuthResult> authentication(String email, String password){
-        Log.d(TAG, "Email = " + email + ", password = " + password);
-        return auth.signIn(email, password);
     }
 
     private boolean validateCredantials(String email, String password){
@@ -96,5 +90,11 @@ public class LoginAsyncTask extends AsyncTask {
             Log.d(TAG, "Bad credentials");
             return false;
         }
+    }
+
+    private Task<AuthResult> registration(String email, String password){
+        Log.d(TAG, "Email = " + email + ", password = " + password);
+        return auth.createAccount(email, password);
+
     }
 }

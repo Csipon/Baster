@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.team.baster.AndroidLauncher;
 import com.team.baster.R;
 import com.team.baster.asynch.LoginAsyncTask;
+import com.team.baster.asynch.RegistrationAsyncTask;
 import com.team.baster.screens.MenuScreen;
 import com.team.baster.service.PlayerService;
 import com.team.baster.service.ScoreService;
@@ -138,35 +139,17 @@ public class ActionResolverImpl implements ActionResolver {
         dialogLogin.dismiss();
     }
 
+    @SuppressWarnings("unchecked")
     private View.OnClickListener RegistrationClickListener(final Dialog dialog) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 emailEdit = dialog.findViewById(R.id.email);
                 passwordEdit = dialog.findViewById(R.id.password);
 
-                //TODO valid for password
                 if(playerService.validatePlayerName(getEmail())) {
-                    Task<AuthResult> authTask = menuScreen.registration(getEmail(), getPassword());
-                    if (authTask == null){
-                        dissmisLoginDialog();
-                    }else {
-                        authTask.addOnCompleteListener(context, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "createUserWithEmail:success");
-                                    dissmisLoginDialog();
-                                } else {
-                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    //((TextView) dialog.findViewById(R.id.Error)).setText(task.getException().getMessage());
-                                    //(dialog.findViewById(R.id.Error)).setVisibility(View.VISIBLE);
-                                    showToast("Error");
-
-                                }
-                            }
-                        });
-                    }
+                    new RegistrationAsyncTask(getEmail(), getPassword(), ActionResolverImpl.this, dialog).execute();
                 } else {
                     //dialog.findViewById(R.id.Error).setVisibility(View.VISIBLE);
                     showToast("Error");

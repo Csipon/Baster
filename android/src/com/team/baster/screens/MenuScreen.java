@@ -79,16 +79,8 @@ public class MenuScreen implements Screen {
         particleEffect  = new ParticleEffect();
         initObj();
         initTexture();
-        Log.d(TAG, "Current user  = " + auth.getCurrentUser());
-        if(auth.getCurrentUser() == null) {
-            game.actionResolver.showDialogLogin(this);
-        } else {
-            Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
-        }
+        checkUser();
     }
-
-
-
 
     @Override
     public void show() {
@@ -102,17 +94,6 @@ public class MenuScreen implements Screen {
         setNavigation();
         loadListeners();
         game.adController.showBannedAd();
-    }
-    public Task<AuthResult> registration(String email, String password){
-        if (auth.getCurrentUser() == null){
-            Log.d(TAG, "Try to create new User");
-            if(email != null && password != null && email.length() > 3 && password.length() >= 8) {
-                Log.d(TAG, "Try to enter credentials");
-                return auth.createAccount(email, password);
-
-            }
-        }
-        return null;
     }
 
 
@@ -301,6 +282,15 @@ public class MenuScreen implements Screen {
         mainBg  = new TextureRegion(new Texture(Gdx.files.internal("icons/main-bg.png")));
         bg      = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/bg.9.png"))));
         particleEffect.load(Gdx.files.internal("particles/rain.p"), Gdx.files.internal("particles"));
+    }
+
+    private void checkUser() {
+        Log.d(TAG, "Current user  = " + auth.getCurrentUser());
+        if(auth.getCurrentUser() == null) {
+            game.actionResolver.showDialogLogin(this);
+        } else {
+            Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
+        }
     }
 
 }
