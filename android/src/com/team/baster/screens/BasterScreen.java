@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -19,9 +20,12 @@ import com.team.baster.controller.ScoreController;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.UnitGeneration;
 import com.team.baster.model.Burger;
+import com.team.baster.model.DoubleDynamicBlock;
 import com.team.baster.model.DynamicBlock;
+import com.team.baster.model.GroundDynamicBlock;
 import com.team.baster.model.HorizBlock;
 import com.team.baster.model.Pill;
+import com.team.baster.model.Thunder;
 import com.team.baster.model.VertBlock;
 
 import static com.team.baster.GameConstants.DEFAULT_SPEED;
@@ -40,14 +44,19 @@ public class BasterScreen implements Screen {
 
     private OrthographicCamera camera;
     private Texture blockImg;
+    private Texture groundBlockImg;
     private Texture tubeTopImg;
     private Texture tubeBodyImg;
     private Texture tubeBotImg;
+    private Texture doubleDynamicBlockImg;
     private Texture airplaneLeftImg;
     private Texture airplaneRightImg;
     private Texture backgroundImg;
     private Texture paratrooperImg;
-    private TextureAtlas rickAtlas;
+//    private TextureAtlas rickAtlas;
+//    private Animation<TextureAtlas.AtlasRegion> rickAnimation;
+    private TextureAtlas thunderAtlas;
+    private Animation<TextureAtlas.AtlasRegion> thunderAnimation;
 
     private ShapeRenderer shapeRenderer;
 
@@ -63,7 +72,6 @@ public class BasterScreen implements Screen {
     private Texture pillImg;
 
     private ParticleEffect particleEffect;
-//    private Animation<TextureAtlas.AtlasRegion> rickAnimation;
     private float timePassed = 0;
 
 
@@ -142,13 +150,13 @@ public class BasterScreen implements Screen {
         airplaneRightImg.dispose();
         backgroundImg.dispose();
         paratrooperImg.dispose();
-        rickAtlas.dispose();
+        doubleDynamicBlockImg.dispose();
+//        rickAtlas.dispose();
     }
 
     @Override
     public void show() {
         AndroidInstanceHolder.getAdController().hideBannerAd();
-
     }
 
 
@@ -159,16 +167,20 @@ public class BasterScreen implements Screen {
 
     @SuppressWarnings("uncheced")
     private void initTexture() {
+        doubleDynamicBlockImg = new Texture("ice_block.png");
         airplaneLeftImg     = new Texture("air_left.png");
         airplaneRightImg    = new Texture("air_right.png");
         burgerImg           = new Texture("burger.png");
         pillImg             = new Texture("pills.png");
         backgroundImg       = new Texture("bg_sky.jpg");
-        blockImg            = new Texture("block.jpg");
+        blockImg            = new Texture("block.png");
+        groundBlockImg      = new Texture("ground_block.png");
         tubeTopImg          = new Texture("mario_tube_top.png");
         tubeBodyImg         = new Texture("mario_tube_body.png");
         tubeBotImg          = new Texture("mario_tube_bot.png");
         paratrooperImg      = new Texture("paratrooper_720.png");
+        thunderAtlas = new TextureAtlas(Gdx.files.internal("thunder/thunder.atlas"));
+        thunderAnimation = new Animation<>(1/15f, thunderAtlas.getRegions());
 //        rickAtlas           = new TextureAtlas(Gdx.files.internal("rick/rick.atlas"));
 //        rickAnimation       = new Animation<>(1/10f, rickAtlas.getRegions());
     }
@@ -204,7 +216,6 @@ public class BasterScreen implements Screen {
     }
 
     private void drawBackground() {
-
         for(Rectangle bg : backgroundController.background) {
             game.batch.draw(backgroundImg, bg.x, bg.y, bg.width, bg.height);
         }
@@ -223,11 +234,13 @@ public class BasterScreen implements Screen {
     }
 
     private void drawBlocks() {
-
         for(UnitGeneration unit : blockController.units) {
-
             for(Rectangle block : unit.blocks) {
-                if (block instanceof DynamicBlock) {
+                if (block instanceof DoubleDynamicBlock){
+                    game.batch.draw(doubleDynamicBlockImg, block.x, block.y, block.width, block.height);
+                }else if (block instanceof GroundDynamicBlock){
+                    game.batch.draw(groundBlockImg, block.x, block.y, block.width, block.height);
+                }else if (block instanceof DynamicBlock) {
                     if (((DynamicBlock) block).isLeft()){
                         game.batch.draw(airplaneLeftImg, block.x, block.y, block.width, block.height);
                     }else {
@@ -243,6 +256,8 @@ public class BasterScreen implements Screen {
                     }else if (((VertBlock) block).isBot){
                         game.batch.draw(tubeBotImg, block.x, block.y, block.width, block.height);
                     }
+                }else if(block instanceof Thunder){
+                    game.batch.draw(thunderAnimation.getKeyFrame(timePassed, true), block.x, block.y, block.width, block.height);
                 }
             }
 

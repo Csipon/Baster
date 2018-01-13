@@ -33,6 +33,9 @@ public class GameConstants {
     public static int ITEM_TOP_VERT_HEIGHT      = 40;
     public static int ITEM_VERT_WIDTH           = 70;
     public static int ITEM_VERT_HEIGHT          = 120;
+    public static int ITEM_THUNDER_WIDTH          = 100;
+    public static int ITEM_THUNDER_HEIGHT          = 720;
+    public static int ITEM_DOUBLE_DYNAMIC_BLOCK_SIDE          = 100;
     public static int PARATROOPER_BODY_WIDTH    = 130;
     public static int PARATROOPER_BODY_HEIGHT   = 230;
     public static int PARATROOPER_WIDTH         = 50;

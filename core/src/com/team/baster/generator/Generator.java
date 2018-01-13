@@ -4,12 +4,17 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.team.baster.model.ActionItem;
 import com.team.baster.model.Burger;
+import com.team.baster.model.DoubleDynamicBlock;
 import com.team.baster.model.DynamicBlock;
+import com.team.baster.model.EnumTypeOfBlock;
+import com.team.baster.model.GroundDynamicBlock;
 import com.team.baster.model.HorizBlock;
 import com.team.baster.model.Pill;
+import com.team.baster.model.Thunder;
 import com.team.baster.model.VertBlock;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import static com.team.baster.GameConstants.*;
 
@@ -21,9 +26,12 @@ public class Generator {
 
     public Array<UnitGeneration> units;
     private static final int COUNT_OF_BLOCKS = 3;
+    private Random random;
+    private EnumTypeOfBlock previousTypeOfBlock;
 
     public Generator() {
         this.units = new Array<>();
+        this.random = new Random();
         initUnits();
     }
 
@@ -32,15 +40,42 @@ public class Generator {
         dynamicBlock();
         tonelBlocks();
         makeFiveBlock();
+        doubleDynamicBlock();
+        thunderBlock();
+    }
+
+    public UnitGeneration generateUnit(){
+        UnitGeneration unitGeneration = units.get(random.nextInt(units.size));
+        if (unitGeneration.typeOfBlock != previousTypeOfBlock){
+            previousTypeOfBlock = unitGeneration.typeOfBlock;
+            return unitGeneration.getCopy();
+        }
+        return generateUnit();
+    }
+
+    private void doubleDynamicBlock() {
+        UnitGeneration unitGeneration = new UnitGeneration();
+        unitGeneration.typeOfBlock = EnumTypeOfBlock.DOUBLE_DYNAMIC_BLOCK;
+        DoubleDynamicBlock leftSide = new DoubleDynamicBlock();
+        leftSide.setLeftSideBlock();
+        leftSide.y = BUFFER_Y - ITEM_DOUBLE_DYNAMIC_BLOCK_SIDE;
+        DoubleDynamicBlock rightSide = new DoubleDynamicBlock();
+        rightSide.setRightSideBlock();
+        rightSide.y = BUFFER_Y - ITEM_DOUBLE_DYNAMIC_BLOCK_SIDE;
+        unitGeneration.blocks.add(leftSide);
+        unitGeneration.blocks.add(rightSide);
+        unitGeneration.minPointY = (int) leftSide.y;
+        units.add(unitGeneration);
     }
 
 
     private void dynamicBlock(){
         UnitGeneration unitGeneration   = new UnitGeneration();
+        unitGeneration.typeOfBlock = EnumTypeOfBlock.DYNAMIC_BLOCK;
         DynamicBlock rectangle          = new DynamicBlock();
         rectangle.x                     = WORLD_WIDTH / 2;
         rectangle.y                     = BUFFER_Y - ITEM_AIRPLANE_HEIGHT;
-        rectangle.moveLeft();
+        rectangle.makeRandMove();
         unitGeneration.blocks.add(rectangle);
         unitGeneration.minPointY        = (int) rectangle.y;
         units.add(unitGeneration);
@@ -49,6 +84,7 @@ public class Generator {
 
     private void tonelBlocks(){
         UnitGeneration unitGeneration = new UnitGeneration();
+        unitGeneration.typeOfBlock = EnumTypeOfBlock.VERT_BLOCK;
         int currentY = BUFFER_Y;
         currentY    -= ITEM_TOP_VERT_HEIGHT;
         unitGeneration.blocks.addAll(Arrays.asList(makeTopBlocks(currentY)));
@@ -58,6 +94,30 @@ public class Generator {
             unitGeneration.actionItems.addAll(Arrays.asList(makeActionItems(currentY, i)));
         }
         unitGeneration.minPointY = currentY;
+        units.add(unitGeneration);
+    }
+
+    private void thunderBlock(){
+        UnitGeneration unitGeneration = new UnitGeneration();
+        unitGeneration.typeOfBlock = EnumTypeOfBlock.THUNDER;
+        Thunder thunderLeft = new Thunder();
+        Thunder thunderRight = new Thunder();
+        thunderLeft.x = 0;
+        thunderLeft.y = BUFFER_Y - ITEM_THUNDER_HEIGHT;
+        thunderRight.x = WORLD_WIDTH - ITEM_THUNDER_WIDTH;
+        thunderRight.y = BUFFER_Y - ITEM_THUNDER_HEIGHT;
+
+        GroundDynamicBlock groundFirstBlock = new GroundDynamicBlock();
+        GroundDynamicBlock groundLastBlock = new GroundDynamicBlock();
+        groundFirstBlock.y = BUFFER_Y - ITEM_DOUBLE_DYNAMIC_BLOCK_SIDE * 2;
+        groundLastBlock.y = thunderRight.y + ITEM_DOUBLE_DYNAMIC_BLOCK_SIDE;
+        unitGeneration.blocks.add(thunderLeft);
+        unitGeneration.blocks.add(thunderRight);
+        unitGeneration.blocks.add(groundFirstBlock);
+        unitGeneration.blocks.add(groundLastBlock);
+
+        unitGeneration.minPointY = (int) thunderLeft.y;
+
         units.add(unitGeneration);
     }
 
@@ -132,7 +192,8 @@ public class Generator {
     }
 
     private void makeFiveBlock(){
-        UnitGeneration unit = new UnitGeneration();
+        UnitGeneration unitGeneration = new UnitGeneration();
+        unitGeneration.typeOfBlock = EnumTypeOfBlock.HORiZONTAL_BLOCK;
         HorizBlock rect1    = new HorizBlock();
         HorizBlock rect2    = new HorizBlock();
         rect1.x             = 0;
@@ -167,18 +228,17 @@ public class Generator {
         b2.x      = WORLD_WIDTH / 2 - ACTION_ITEM_SIDE / 2;
         b2.y      = rect5.y;
 
-        unit.blocks.add(rect1);
-        unit.blocks.add(rect2);
-        unit.blocks.add(rect3);
-        unit.blocks.add(rect4);
-        unit.blocks.add(rect5);
-        unit.actionItems.add(p1);
-        unit.actionItems.add(p2);
-        unit.actionItems.add(b1);
-        unit.actionItems.add(b2);
-        unit.minPointY = (int) rect5.y;
+        unitGeneration.blocks.add(rect1);
+        unitGeneration.blocks.add(rect2);
+        unitGeneration.blocks.add(rect3);
+        unitGeneration.blocks.add(rect4);
+        unitGeneration.blocks.add(rect5);
+        unitGeneration.actionItems.add(p1);
+        unitGeneration.actionItems.add(p2);
+        unitGeneration.actionItems.add(b1);
+        unitGeneration.actionItems.add(b2);
+        unitGeneration.minPointY = (int) rect5.y;
 
-        units.add(unit);
+        units.add(unitGeneration);
     }
-
 }

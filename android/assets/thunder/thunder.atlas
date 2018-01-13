@@ -1,0 +1,33 @@
+
+thunder.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+thunder1
+  rotate: false
+  xy: 1, 1
+  size: 100, 720
+  orig: 100, 720
+  offset: 0, 0
+  index: -1
+thunder2
+  rotate: false
+  xy: 103, 1
+  size: 100, 720
+  orig: 100, 720
+  offset: 0, 0
+  index: -1
+thunder4
+  rotate: false
+  xy: 103, 1
+  size: 100, 720
+  orig: 100, 720
+  offset: 0, 0
+  index: -1
+thunder3
+  rotate: false
+  xy: 205, 1
+  size: 100, 720
+  orig: 100, 720
+  offset: 0, 0
+  index: -1

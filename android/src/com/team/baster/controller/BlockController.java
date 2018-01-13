@@ -1,12 +1,9 @@
 package com.team.baster.controller;
 
-import android.graphics.Rect;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import com.team.baster.asynch.SimpleAsyncTask;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.generator.Generator;
@@ -24,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 import static com.team.baster.CollisionChecker.intersect;
 import static com.team.baster.GameConstants.HORIZONTAL_SPEED;
@@ -41,7 +36,6 @@ public class BlockController {
     private static ScoreService scoreService    = ServiceFactory.getScoreService();
     private static PlayerService playerService  = ServiceFactory.getPlayerService();
     public List<UnitGeneration> units;
-    private Random random;
     private BasterGame game;
     private Generator generator;
     private HeroController heroController;
@@ -51,7 +45,6 @@ public class BlockController {
         this.game                   = game;
         this.heroController         = heroController;
         this.paratrooperController  = paratrooperController;
-        random                      = new Random();
         units                       = new ArrayList<>();
         generator                   = new Generator();
     }
@@ -111,7 +104,6 @@ public class BlockController {
     }
 
     private void cleanUnits(){
-
         Iterator<UnitGeneration> iterator = units.iterator();
         while(iterator.hasNext()) {
             UnitGeneration unit = iterator.next();
@@ -176,7 +168,7 @@ public class BlockController {
     }
 
     public void dropItem() {
-        units.add(generator.units.get(random.nextInt(generator.units.size)).getCopy());
+        units.add(generator.generateUnit());
     }
 
 }
