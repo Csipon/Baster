@@ -13,6 +13,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.team.baster.AndroidInstanceHolder;
+import com.team.baster.asynch.AdAsyncTask;
 
 /**
  * Created by Pasha on 07.01.2018.
@@ -29,8 +31,8 @@ public class AdControllerImpl implements AdController{
     private AndroidApplication androidApplication;
 
 
-    public AdControllerImpl(AndroidApplication androidApplication) {
-        this.androidApplication = androidApplication;
+    public AdControllerImpl() {
+        this.androidApplication = AndroidInstanceHolder.getAndroidLauncher();
         setupAds();
     }
 
@@ -44,9 +46,7 @@ public class AdControllerImpl implements AdController{
 
         interstitialAd = new InterstitialAd(androidApplication);
         interstitialAd.setAdUnitId(INTERSTITIAL_AD_UNIT_ID);
-        AdRequest.Builder builder = new AdRequest.Builder();
-        AdRequest ad = builder.build();
-        interstitialAd.loadAd(ad);
+        new AdAsyncTask().execute();
     }
 
 
@@ -131,6 +131,10 @@ public class AdControllerImpl implements AdController{
     @Override
     public void setInterstitialCount(int countInterstitial) {
         this.interstitialCount = countInterstitial;
+    }
+
+    public InterstitialAd getInterstitialAd() {
+        return interstitialAd;
     }
 
     private void decrementInterstitialCount(){

@@ -1,15 +1,11 @@
 package com.team.baster.domain;
 
-import android.content.Context;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.team.baster.ads.AdController;
-import com.team.baster.dialog.ActionResolver;
 import com.team.baster.screens.MenuScreen;
 
 
@@ -18,14 +14,8 @@ public class BasterGame extends Game {
     public SpriteBatch batch;
     public BitmapFont font;
     public BitmapFont customFont;
-    public ActionResolver actionResolver;
-    public Context context;
-    public AdController adController;
 
-    public BasterGame(ActionResolver actionResolver, Context context, AdController adController) {
-        this.actionResolver = actionResolver;
-        this.adController = adController;
-        this.context = context;
+    public BasterGame() {
     }
 
     @Override

@@ -1,8 +1,9 @@
 package com.team.baster.storage.core;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.team.baster.AndroidInstanceHolder;
 
 
 /**
@@ -14,8 +15,8 @@ public class SQLiteJDBC extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 5;
     public static SQLiteJDBC jdbc;
 
-    public SQLiteJDBC(Context context) {
-        super(context,  "/data/data/com.team.baster/baster.db", null, DATABASE_VERSION);
+    public SQLiteJDBC() {
+        super(AndroidInstanceHolder.getAndroidLauncher(),  "/data/data/com.team.baster/baster.db", null, DATABASE_VERSION);
     }
 
     public void onCreate(SQLiteDatabase db) {

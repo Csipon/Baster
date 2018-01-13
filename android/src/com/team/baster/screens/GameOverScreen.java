@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.team.baster.AndroidInstanceHolder;
 import com.team.baster.GameConstants;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.style.button.ButtonStyleGenerator;
@@ -77,7 +78,7 @@ public class GameOverScreen implements Screen {
         loadLabel();
         loadImgButton();
         loadTable();
-        game.adController.setInterstitialCount(GameConstants.INTERSTITIAL_COUNT);
+        AndroidInstanceHolder.getAdController().setInterstitialCount(GameConstants.INTERSTITIAL_COUNT);
     }
 
     private void loadLabel() {
@@ -160,7 +161,7 @@ public class GameOverScreen implements Screen {
         Gdx.gl.glClearColor(135/255f, 206/255f, 235/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        game.adController.showInterstellar();
+        AndroidInstanceHolder.getAdController().showInterstellar();
 
         stage.act();
         stage.draw();

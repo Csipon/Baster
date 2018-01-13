@@ -1,27 +1,19 @@
 package com.team.baster.security;
 
-import android.app.Activity;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.team.baster.domain.BasterGame;
 
 public class FirebaseAuthentication {
     private static final String TAG = "FirebaseAuthentication";
-
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
-    public static FirebaseAuthentication auth;
-    private Activity activity;
-    private BasterGame basterGame;
 
-    public FirebaseAuthentication(Activity activity, BasterGame basterGame) {
-        this.activity = activity;
-        this.basterGame = basterGame;
+    public FirebaseAuthentication() {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
     }

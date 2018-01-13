@@ -1,14 +1,12 @@
 package util;
 
-import android.content.Context;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.team.baster.AndroidInstanceHolder;
 import com.team.baster.AndroidLauncher;
 
 import org.json.JSONArray;
@@ -24,8 +22,8 @@ public class RequestUtil {
     private RequestQueue queue;
     public static RequestUtil instance;
 
-    public RequestUtil(Context context) {
-        this.queue = Volley.newRequestQueue(context);
+    public RequestUtil() {
+        this.queue = Volley.newRequestQueue(AndroidInstanceHolder.getAndroidLauncher());
     }
 
 

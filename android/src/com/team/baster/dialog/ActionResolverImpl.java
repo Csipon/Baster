@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.team.baster.AndroidInstanceHolder;
 import com.team.baster.AndroidLauncher;
 import com.team.baster.R;
 import com.team.baster.asynch.LoginAsyncTask;
@@ -37,16 +38,15 @@ public class ActionResolverImpl implements ActionResolver {
 
     private Handler handler;
     private static ScoreService scoreService = ServiceFactory.getScoreService();
-    public AndroidLauncher context;
+    public AndroidLauncher context = AndroidInstanceHolder.getAndroidLauncher();
     private EditText emailEdit;
     private EditText passwordEdit;
     public MenuScreen menuScreen;
     private Dialog dialogLogin;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
-    public ActionResolverImpl(AndroidLauncher context) {
+    public ActionResolverImpl() {
         handler = new Handler();
-        this.context = context;
     }
 
     public void showDialogWithBestScore() {

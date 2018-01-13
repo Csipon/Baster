@@ -10,8 +10,8 @@ public class GameConstants {
 
     private static final int DEFAULT_WORLD_WIDTH    = 720;
     public static final String DEFAULT_PLAYER_NAME  = "player";
-    public static final int WORLD_WIDTH             = Gdx.graphics.getWidth();
-    public static final int WORLD_HEIGHT            = Gdx.graphics.getHeight();
+    public static int WORLD_WIDTH;
+    public static int WORLD_HEIGHT;
 
     public static final int DEFAULT_SPEED               = 300;
     public static final int HORIZONTAL_SPEED            = 200;
@@ -49,9 +49,11 @@ public class GameConstants {
     public static final long MIN_GENER_TIME     = 10_000_000_000L;
     public static final long MAX_GENER_TIME     = 15_000_000_000L;
 
-
+    public static GameConstants constants = new GameConstants();
 
     public GameConstants() {
+        WORLD_WIDTH             = Gdx.graphics.getWidth();
+        WORLD_HEIGHT            = Gdx.graphics.getHeight();
         double differenceWidth = WORLD_WIDTH / DEFAULT_WORLD_WIDTH;
         if (WORLD_WIDTH != DEFAULT_WORLD_WIDTH) {
             RICK_WIDTH              *= differenceWidth;

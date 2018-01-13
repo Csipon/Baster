@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team.baster.domain.BasterGame;
@@ -38,8 +37,8 @@ public class ScoreScreen implements Screen {
     private Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
-    private Image backImg;
     private Table scoreTable;
+    private Image backImg;
 
     private List<Long> scores;
 

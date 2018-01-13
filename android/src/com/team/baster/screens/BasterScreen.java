@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.team.baster.AndroidInstanceHolder;
 import com.team.baster.controller.BackgroundController;
 import com.team.baster.controller.BlockController;
 import com.team.baster.controller.HeroController;
@@ -146,7 +147,7 @@ public class BasterScreen implements Screen {
 
     @Override
     public void show() {
-        game.adController.hideBannerAd();
+        AndroidInstanceHolder.getAdController().hideBannerAd();
 
     }
 

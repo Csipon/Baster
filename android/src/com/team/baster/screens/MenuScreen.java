@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.team.baster.AndroidInstanceHolder;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.security.FirebaseAuthentication;
 import com.team.baster.service.PlayerService;
@@ -72,7 +73,7 @@ public class MenuScreen implements Screen {
     private FirebaseAuthentication auth;
 
     public MenuScreen(BasterGame game) {
-        auth = FirebaseAuthentication.auth;
+        auth = AndroidInstanceHolder.getAuth();
         initSetting();
         this.game       = game;
         stage           = new Stage(viewport, game.batch);
@@ -81,7 +82,7 @@ public class MenuScreen implements Screen {
         initTexture();
         Log.d(TAG, "Current user  = " + auth.getCurrentUser());
         if(auth.getCurrentUser() == null) {
-            game.actionResolver.showDialogLogin(this);
+            AndroidInstanceHolder.getActionResolverAndroid().showDialogLogin(this);
         } else {
             Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
         }
@@ -101,8 +102,10 @@ public class MenuScreen implements Screen {
         setButtons();
         setNavigation();
         loadListeners();
-        game.adController.showBannedAd();
+        AndroidInstanceHolder.getAdController().showBannedAd();
     }
+
+
     public Task<AuthResult> registration(String email, String password){
         if (auth.getCurrentUser() == null){
             Log.d(TAG, "Try to create new User");
@@ -246,7 +249,7 @@ public class MenuScreen implements Screen {
         achieveImgBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.actionResolver.showDialog();
+                AndroidInstanceHolder.getActionResolverAndroid().showDialog();
             }
         });
 
@@ -255,8 +258,8 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 auth.signOut();
                 auth.getCurrentUser();
-                game.actionResolver.showToast("Successfully logged out");
-                game.actionResolver.showDialogLogin(MenuScreen.this);
+                AndroidInstanceHolder.getActionResolverAndroid().showToast("Successfully logged out");
+                AndroidInstanceHolder.getActionResolverAndroid().showDialogLogin(MenuScreen.this);
             }
         });
 
@@ -270,14 +273,14 @@ public class MenuScreen implements Screen {
         rankImgBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.actionResolver.showDialog();
+                AndroidInstanceHolder.getActionResolverAndroid().showDialog();
             }
         });
 
         scoreImgButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.actionResolver.showDialogWithBestScore();
+                AndroidInstanceHolder.getActionResolverAndroid().showDialogWithBestScore();
             }
         });
     }
