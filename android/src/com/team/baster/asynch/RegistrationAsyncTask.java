@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.team.baster.AndroidInstanceHolder;
 import com.team.baster.R;
 import com.team.baster.dialog.ActionResolverImpl;
 import com.team.baster.security.FirebaseAuthentication;
@@ -32,7 +33,7 @@ public class RegistrationAsyncTask extends AsyncTask {
         this.password = password;
         this.actionResolver = actionResolver;
         this.dialog = dialog;
-        auth = FirebaseAuthentication.auth;
+        auth = AndroidInstanceHolder.getAuth();
 
     }
 
