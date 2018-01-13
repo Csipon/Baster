@@ -2,15 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:id="@+id/toast_layout_wrapper"
-    android:layout_width="150dp"
+    android:layout_width="200dp"
     android:layout_height="70dp"
-    android:layout_marginTop="5dp"
-
+    android:paddingTop="3dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:layout_marginTop="10dp"
+    android:background="#5580a3"
     >
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:background="@drawable/warning"
         />
 
     <TextView
@@ -18,8 +23,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textColor="@color/common_google_signin_btn_text_light"
-        android:textSize="18dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="20dp"
 
         />
 

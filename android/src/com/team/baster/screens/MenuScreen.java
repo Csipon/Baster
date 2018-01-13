@@ -21,8 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.team.baster.AndroidInstanceHolder;
 import com.team.baster.domain.BasterGame;
 import com.team.baster.security.FirebaseAuthentication;
@@ -86,6 +84,7 @@ public class MenuScreen implements Screen {
         } else {
             Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
         }
+        checkUser();
     }
 
 
@@ -103,19 +102,6 @@ public class MenuScreen implements Screen {
         setNavigation();
         loadListeners();
         AndroidInstanceHolder.getAdController().showBannedAd();
-    }
-
-
-    public Task<AuthResult> registration(String email, String password){
-        if (auth.getCurrentUser() == null){
-            Log.d(TAG, "Try to create new User");
-            if(email != null && password != null && email.length() > 3 && password.length() >= 8) {
-                Log.d(TAG, "Try to enter credentials");
-                return auth.createAccount(email, password);
-
-            }
-        }
-        return null;
     }
 
 
@@ -304,6 +290,15 @@ public class MenuScreen implements Screen {
         mainBg  = new TextureRegion(new Texture(Gdx.files.internal("icons/main-bg.png")));
         bg      = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icons/bg.9.png"))));
         particleEffect.load(Gdx.files.internal("particles/rain.p"), Gdx.files.internal("particles"));
+    }
+
+    private void checkUser() {
+        Log.d(TAG, "Current user  = " + auth.getCurrentUser());
+        if(auth.getCurrentUser() == null) {
+            AndroidInstanceHolder.getActionResolverAndroid().showDialogLogin(this);
+        } else {
+            Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
+        }
     }
 
 }
