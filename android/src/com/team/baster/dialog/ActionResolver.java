@@ -11,5 +11,5 @@ public interface ActionResolver {
     void showDialog();
     void showDialogWithBestScore();
     void showDialogLogin(MenuScreen menuScreen);
-    void dissmisLoginDialog();
+    void showDialogSetting(MenuScreen menuScreen);
 }

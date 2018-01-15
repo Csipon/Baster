@@ -19,15 +19,16 @@ public class AndroidLauncher extends AndroidApplication{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidInstanceHolder.setAndroidLauncher(this);
+        new StartupAsyncTask().execute();
+
         SQLiteJDBC.jdbc = new SQLiteJDBC();
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useAccelerometer = false;
         config.useCompass = false;
         BasterGame basterGame = new BasterGame();
-        AndroidInstanceHolder.setActionResolverAndroid(new ActionResolverImpl());
+        AndroidInstanceHolder.setActionResolverAndroid(new ActionResolverImpl(this));
         AndroidInstanceHolder.setConfig(config);
         AndroidInstanceHolder.setGame(basterGame);
-        new StartupAsyncTask().execute();
         RequestUtil.instance = new RequestUtil();
         AndroidInstanceHolder.setAdController(new AdControllerImpl());
         AndroidInstanceHolder.setAuth(new FirebaseAuthentication());

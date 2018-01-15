@@ -79,11 +79,7 @@ public class MenuScreen implements Screen {
         initObj();
         initTexture();
         Log.d(TAG, "Current user  = " + auth.getCurrentUser());
-        if(auth.getCurrentUser() == null) {
-            AndroidInstanceHolder.getActionResolverAndroid().showDialogLogin(this);
-        } else {
-            Log.d(TAG, "Current user not null = " + auth.getCurrentUser().getEmail());
-        }
+
         checkUser();
     }
 
@@ -217,7 +213,7 @@ public class MenuScreen implements Screen {
         achieveImgBtn   = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/quality.png", 7, 7));
         rankImgBtn      = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/ranking.png", 7, 7));
         marketImgBtn    = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/shop.png", 7, 7));
-        coinsImgBtn     = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/coins.png", 7, 7));
+        coinsImgBtn     = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/tools.png", 7, 7));
         scoreImgButton  = new ImageButton(buttonStyleGenerator.generateButtonStyle("icons/score.png", 7,7));
     }
 
@@ -242,10 +238,7 @@ public class MenuScreen implements Screen {
         coinsImgBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                auth.signOut();
-                auth.getCurrentUser();
-                AndroidInstanceHolder.getActionResolverAndroid().showToast("Successfully logged out");
-                AndroidInstanceHolder.getActionResolverAndroid().showDialogLogin(MenuScreen.this);
+                AndroidInstanceHolder.getActionResolverAndroid().showDialogSetting(MenuScreen.this);
             }
         });
 

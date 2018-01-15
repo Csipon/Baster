@@ -39,15 +39,17 @@ public class ActionResolverImpl implements ActionResolver {
 
     private Handler handler;
     private static ScoreService scoreService = ServiceFactory.getScoreService();
-    public AndroidLauncher context = AndroidInstanceHolder.getAndroidLauncher();
+    public AndroidLauncher context;
     private EditText emailEdit;
     private EditText passwordEdit;
     public MenuScreen menuScreen;
     private Dialog dialogLogin;
+    private Dialog dialogSetting;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
-    public ActionResolverImpl() {
+    public ActionResolverImpl(AndroidLauncher context) {
         handler = new Handler();
+        this.context = context;
     }
 
     public void showDialogWithBestScore() {
@@ -113,6 +115,7 @@ public class ActionResolverImpl implements ActionResolver {
         });
     }
 
+
     @Override
     public void showDialogLogin(MenuScreen menuScreen) {
         handler.post(() -> {
@@ -128,19 +131,35 @@ public class ActionResolverImpl implements ActionResolver {
             Button registrationButton = dialogLogin.findViewById(R.id.registration);
             Button loginButton = dialogLogin.findViewById(R.id.login);
 
-            registrationButton.setOnClickListener(RegistrationClickListener(dialogLogin));
-            loginButton.setOnClickListener(LoginClickListener(dialogLogin));
+            registrationButton.setOnClickListener(registrationClickListener(dialogLogin));
+            loginButton.setOnClickListener(loginClickListener(dialogLogin));
 
         });
 
     }
 
-    public void dissmisLoginDialog() {
-        dialogLogin.dismiss();
+    @Override
+    public void showDialogSetting(MenuScreen menuScreen) {
+        handler.post(() -> {
+            this.menuScreen = menuScreen;
+            dialogSetting = new Dialog(context);
+            dialogSetting.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogSetting.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialogSetting.getWindow().getAttributes().windowAnimations = R.style.DialogThemeSide;
+            dialogSetting.setContentView(R.layout.dialog_settings);
+            dialogSetting.setCancelable(true);
+            dialogSetting.show();
+
+            Button btnLogout = dialogSetting.findViewById(R.id.logout);
+            btnLogout.setOnClickListener(logoutClickListener(menuScreen));
+
+
+
+        });
     }
 
     @SuppressWarnings("unchecked")
-    private View.OnClickListener RegistrationClickListener(final Dialog dialog) {
+    private View.OnClickListener registrationClickListener(final Dialog dialog) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,10 +177,24 @@ public class ActionResolverImpl implements ActionResolver {
         };
     }
 
+    @SuppressWarnings("unchecked")
+    private View.OnClickListener logoutClickListener(final MenuScreen menuScreen) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AndroidInstanceHolder.getAuth().signOut();
+                AndroidInstanceHolder.getAuth().getCurrentUser();
+                AndroidInstanceHolder.getActionResolverAndroid().showToast("Successfully logged out");
+                dialogSetting.dismiss();
+                AndroidInstanceHolder.getActionResolverAndroid().showDialogLogin(menuScreen);
+            }
+        };
+    }
+
 
 
     @SuppressWarnings("unchecked")
-    private View.OnClickListener LoginClickListener(final Dialog dialog) {
+    private View.OnClickListener loginClickListener(final Dialog dialog) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {

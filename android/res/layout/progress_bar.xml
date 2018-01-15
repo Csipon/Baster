@@ -9,9 +9,9 @@
 
     <ProgressBar
         android:layout_gravity="center"
-        android:layout_width="70dp"
+        android:layout_width="55dp"
         android:indeterminateDrawable="@drawable/animated_bar"
         android:indeterminateOnly="true"
-        android:layout_height="70dp" />
+        android:layout_height="55dp" />
 
 </LinearLayout>
