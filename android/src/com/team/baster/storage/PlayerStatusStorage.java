@@ -3,6 +3,7 @@ package com.team.baster.storage;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 
 import com.team.baster.model.PlayerStatus;
 import com.team.baster.storage.core.SQLiteJDBC;
@@ -37,22 +38,35 @@ public class PlayerStatusStorage  {
     private SQLiteDatabase readableDB;
 
     public PlayerStatusStorage() {
-        jdbc = SQLiteJDBC.jdbc;
-        writableDB = jdbc.getWritableDatabase();
-        readableDB = jdbc.getReadableDatabase();
-        readPlayerStatus();
+        new AsyncTask(){
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                readPlayerStatus();
+                return objects;
+            }
+        }.execute();
     }
 
+    private void init(){
+        if (writableDB == null || readableDB == null) {
+            jdbc = SQLiteJDBC.getJdbc();
+            writableDB = jdbc.getWritableDatabase();
+            readableDB = jdbc.getReadableDatabase();
+        }
+    }
 
     public void update(Integer coins, Integer score){
+        init();
         update( null, coins, score, null);
     }
 
     public void update(Integer experience){
+        init();
         update(null,null, null, experience);
     }
 
     public void update(String playerName, Integer coins, Integer score, Integer experience){
+        init();
         ContentValues values     = new ContentValues();
         String where             = COLUMN_ID + " = ?";
         String[] whereParams     = new String[]{String.valueOf(ID)};
@@ -80,6 +94,7 @@ public class PlayerStatusStorage  {
     }
 
     public PlayerStatus readPlayerStatus() {
+        init();
         Cursor curs = readableDB.query(
                 TABLE_NAME,                                 // The table to query
                 TABLE_COLUMNS,                              // The columns to return

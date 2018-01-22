@@ -13,10 +13,10 @@ public class AdAsyncTask extends AsyncTask {
 
     @Override
     protected Object doInBackground(Object[] objects) {
-
         AdRequest.Builder builder = new AdRequest.Builder();
         AdRequest ad = builder.build();
-        AndroidInstanceHolder.getAndroidLauncher().runOnUiThread(() -> AndroidInstanceHolder.getAdController().getInterstitialAd().loadAd(ad));
+        AndroidInstanceHolder.getAndroidLauncher().runOnUiThread(
+                () -> AndroidInstanceHolder.getAdController().getInterstitialAd().loadAd(ad));
         return objects;
     }
 }

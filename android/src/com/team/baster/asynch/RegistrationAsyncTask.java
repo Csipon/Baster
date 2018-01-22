@@ -54,7 +54,7 @@ public class RegistrationAsyncTask extends AsyncTask {
             actionResolver.showToast("Error");
 
         }else {
-            registration(email, password).addOnCompleteListener(actionResolver.context, new OnCompleteListener<AuthResult>() {
+            registration(email, password).addOnCompleteListener(AndroidInstanceHolder.getAndroidLauncher(), new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {

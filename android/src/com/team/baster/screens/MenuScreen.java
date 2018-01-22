@@ -70,17 +70,17 @@ public class MenuScreen implements Screen {
     private ParticleEffect particleEffect;
     private FirebaseAuthentication auth;
 
-    public MenuScreen(BasterGame game) {
+    public MenuScreen() {
         auth = AndroidInstanceHolder.getAuth();
         initSetting();
-        this.game       = game;
+        this.game       = (BasterGame) AndroidInstanceHolder.getGame();
         stage           = new Stage(viewport, game.batch);
         particleEffect  = new ParticleEffect();
         initObj();
         initTexture();
         Log.d(TAG, "Current user  = " + auth.getCurrentUser());
 
-        checkUser();
+//        checkUser();
     }
 
 

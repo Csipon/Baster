@@ -1,7 +1,6 @@
 package com.team.baster.asynch;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.view.Window;
@@ -25,7 +24,7 @@ public class StartupAsyncTask extends AsyncTask {
         progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         progressDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-        progressDialog.setContentView(R.layout.logo);
+//        progressDialog.setContentView(R.layout.logo);
         progressDialog.setCancelable(false);
         progressDialog.show();
     }

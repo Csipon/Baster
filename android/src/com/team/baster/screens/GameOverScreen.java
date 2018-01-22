@@ -150,7 +150,7 @@ public class GameOverScreen implements Screen {
         imgButtonMenu.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MenuScreen(game));
+                game.setScreen(new MenuScreen());
                 dispose();
             }
         });

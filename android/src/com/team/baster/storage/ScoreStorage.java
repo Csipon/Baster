@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.badlogic.gdx.utils.Array;
 import com.team.baster.storage.core.SQLiteJDBC;
 import com.team.baster.storage.model.Score;
 
@@ -38,12 +37,19 @@ public class ScoreStorage {
     private SQLiteDatabase readableDB;
 
     public ScoreStorage() {
-        SQLiteJDBC jdbc = SQLiteJDBC.jdbc;
-        writableDB = jdbc.getWritableDatabase();
-        readableDB = jdbc.getReadableDatabase();
+
     }
 
+
+    private void init(){
+        if (writableDB == null || readableDB == null) {
+            SQLiteJDBC jdbc = SQLiteJDBC.getJdbc();
+            writableDB = jdbc.getWritableDatabase();
+            readableDB = jdbc.getReadableDatabase();
+        }
+    }
     public void save(int score, String login) {
+        init();
         ContentValues values = new ContentValues();
         String nowDate = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
         values.put(COLUMN_SCORE, score);
@@ -54,6 +60,7 @@ public class ScoreStorage {
     }
 
     public long saveForQueue(Score score) {
+        init();
         ContentValues values = new ContentValues();
         String nowDate = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
         values.put(COLUMN_SCORE, score.getScore());
@@ -66,6 +73,7 @@ public class ScoreStorage {
 
     // TODO: 09.11.17 save scores for backup, maybe use batch insert if we can do it in SQLLite
     public long saveForQueue(List<Score> scores) {
+        init();
         writableDB.beginTransaction();
         for (Score score : scores) {
             saveForQueue(score);
@@ -76,6 +84,7 @@ public class ScoreStorage {
     }
 
     public List<Score> readFromBackupQueue() {
+        init();
         readableDB.beginTransaction();
         List<Score> result = new ArrayList<>();
         try {
@@ -115,6 +124,7 @@ public class ScoreStorage {
 
 
     public List<Long> readLastBestScore() {
+        init();
         // How you want the results sorted in the resulting Cursor
         String sortOrder = COLUMN_SCORE + " DESC";
         Cursor curs = readableDB.query(

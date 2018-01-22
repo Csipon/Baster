@@ -13,7 +13,7 @@ import com.team.baster.AndroidInstanceHolder;
 public class SQLiteJDBC extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 5;
-    public static SQLiteJDBC jdbc;
+    private volatile static SQLiteJDBC jdbc;
 
     public SQLiteJDBC() {
         super(AndroidInstanceHolder.getAndroidLauncher(),  "/data/data/com.team.baster/baster.db", null, DATABASE_VERSION);
@@ -40,5 +40,12 @@ public class SQLiteJDBC extends SQLiteOpenHelper {
         db.execSQL(SqlConstant.DROP_TABLE_ACTUAL_PLAYER_STATUS);
         db.execSQL(SqlConstant.DROP_TABLE_ORDERS);
         onCreate(db);
+    }
+
+    public static SQLiteJDBC getJdbc() {
+        if (jdbc == null){
+            jdbc = new SQLiteJDBC();
+        }
+        return jdbc;
     }
 }

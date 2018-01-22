@@ -14,7 +14,6 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.team.baster.AndroidInstanceHolder;
-import com.team.baster.asynch.AdAsyncTask;
 
 /**
  * Created by Pasha on 07.01.2018.
@@ -38,6 +37,7 @@ public class AdControllerImpl implements AdController{
 
 
     public void setupAds() {
+        long start = System.nanoTime();
         bannerAd = new AdView(androidApplication);
         bannerAd.setVisibility(View.INVISIBLE);
 //        bannerAd.setBackgroundColor(0xff000000); // black
@@ -46,7 +46,9 @@ public class AdControllerImpl implements AdController{
 
         interstitialAd = new InterstitialAd(androidApplication);
         interstitialAd.setAdUnitId(INTERSTITIAL_AD_UNIT_ID);
-        new AdAsyncTask().execute();
+        long end = System.nanoTime();// 28436654
+        System.out.println("====================================== " + (end - start));
+//        new AdAsyncTask().execute();
     }
 
 

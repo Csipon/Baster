@@ -1,10 +1,9 @@
 package com.team.baster.dialog;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -14,11 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.team.baster.AndroidInstanceHolder;
-import com.team.baster.AndroidLauncher;
 import com.team.baster.R;
 import com.team.baster.asynch.LoginAsyncTask;
 import com.team.baster.asynch.RegistrationAsyncTask;
@@ -34,12 +29,12 @@ import java.util.List;
  * Created by Smeet on 31.10.2017.
  */
 
-public class ActionResolverImpl implements ActionResolver {
+public class ActionResolverImpl implements ActionResolver{
     private static final String TAG = "AUTHENTICATION";
 
     private Handler handler;
     private static ScoreService scoreService = ServiceFactory.getScoreService();
-    public AndroidLauncher context;
+    public Context context;
     private EditText emailEdit;
     private EditText passwordEdit;
     public MenuScreen menuScreen;
@@ -47,13 +42,23 @@ public class ActionResolverImpl implements ActionResolver {
     private Dialog dialogSetting;
     private PlayerService playerService = ServiceFactory.getPlayerService();
 
-    public ActionResolverImpl(AndroidLauncher context) {
-        handler = new Handler();
+    public ActionResolverImpl(Context context) {
         this.context = context;
+        init();
     }
 
+    private void init(){
+        if (handler == null) {
+            AndroidInstanceHolder.getAndroidLauncher().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    handler = new Handler();
+                }
+            });
+        }
+    }
     public void showDialogWithBestScore() {
-
+        init();
 //        context.startActivity(new Intent(context, MyListActivity.class));
 
         handler.post(new Runnable() {
@@ -91,13 +96,14 @@ public class ActionResolverImpl implements ActionResolver {
     }
 
     public void showToast(final CharSequence text) {
+        init();
         handler.post(new Runnable() {
             @Override
             public void run() {
                 Toast toast = new Toast(context);
                 toast.setGravity(Gravity.TOP, 0, 0);
 
-                View view = View.inflate(context, R.layout.toast_message, context.findViewById(R.id.toast_layout_wrapper));
+                View view = View.inflate(context, R.layout.toast_message, AndroidInstanceHolder.getAndroidLauncher().findViewById(R.id.toast_layout_wrapper));
                 toast.setView(view);
                 toast.setDuration(Toast.LENGTH_SHORT);
                 ((TextView) toast.getView().findViewById(R.id.toastMessage)).setText(text);
@@ -108,6 +114,7 @@ public class ActionResolverImpl implements ActionResolver {
 
     @Override
     public void showDialog() {
+        init();
         handler.post(() -> {
             Dialog dialog = new Dialog(context);
             dialog.setTitle("Available soon");
@@ -118,6 +125,7 @@ public class ActionResolverImpl implements ActionResolver {
 
     @Override
     public void showDialogLogin(MenuScreen menuScreen) {
+        init();
         handler.post(() -> {
             this.menuScreen = menuScreen;
             dialogLogin = new Dialog(context);
@@ -140,6 +148,7 @@ public class ActionResolverImpl implements ActionResolver {
 
     @Override
     public void showDialogSetting(MenuScreen menuScreen) {
+        init();
         handler.post(() -> {
             this.menuScreen = menuScreen;
             dialogSetting = new Dialog(context);
